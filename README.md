@@ -37,3 +37,14 @@ Hydropathy Plot Generator:
 Implementation
 
 	Genomalysis is implemented in Java, although some components may integrate with other tools that are implemented in different languages. The user interface is implemented in using Swing, and uses an event-based model to interact with the core components of the system. User interface elements include the main window (which shows up when you launch the application) and various dialogs. Genomalysis can be extended by classes that implement the IProteinSequenceFilter interface or the IProteinDiagnosticsTool interface. A plugin framework is used to read the contents of jar files and discover classes that implement these interfaces - once discovered, they will be displayed in the user interface and can be used to mine and analyze protein sequences. Users can also make use of the “sequence cache” - this provides the ability to hand-pick different sequences, group them together, and save/load these groups to/from FASTA files. This serves as a sort of crude clipboard functionality, and may be improved in the future.
+
+Building
+
+Currently somewhat of a mess, but here is the current process:
+
+from the root of the project, run: sbt stage package
+The main application is built at Genomalysis/target/universal/stage/bin/genomalysis.bat
+After running the build, create a "plugins" directory in Genomalysis/target/universal/stage/bin/ and copy the following into it:
+ClustalWTool/target/scala-2.10/clustalw-tool_2.10-1.0.jar
+HydropathyPlot/target/scala-2.10/hydropathy-plots_2.10-1.0.jar
+StandardFilters/target/scala-2.10/standard-filters_2.10-1.0.jar
