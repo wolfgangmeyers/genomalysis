@@ -6,6 +6,8 @@ Summary
 
 Genomalysis is a java application that allows users to perform data mining operations and analysis on the proteomes of various species. In addition to providing a rich graphical user interface, Genomalysis provides a platform on which end users can develop their own instruments to mine and analyze protein sequences. Genomalysis can open and parse proteome files in the FASTA file format. By providing an extensible mechanism to do bulk processing on protein sequences, Genomalysis has the potential to speed up research efforts by orders of magnitude.
 
+The idea for Genomalysis was thought up by Ben Patterson, a gifted biologist with a graduate degree from Humboldt State University. Some of the research that was facilitated by Genomalysis is mentioned in his [master's thesis](http://humboldt-dspace.calstate.edu/bitstream/handle/2148/332/INNATE%20IMMUNITY%20OF%20THE%20NEMATODE%20WORM%20CAENORHABDITIS%20ELEGANS%2c%20ITS%20INTERACTION%20WITH%20THE%20BACTERIAL%20PATHOGEN%20BURKHOLDERIA%20THAILANDENSIS%2c%20AND%20THE%20NATURE%20OF%20DEFENSIN-LIKE%20PEPTIDES.pdf?sequence=1) ("Bioinformatics of Defensin-like proteins"). Original implementation in java/swing by Wolfgang Meyers.
+
 Data mining
 ---------------------
 
