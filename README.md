@@ -42,9 +42,12 @@ Building
 
 Currently somewhat of a mess, but here is the current process:
 
-from the root of the project, run: sbt stage package
+from the root of the project, run: 
+	sbt stage package
 The main application is built at Genomalysis/target/universal/stage/bin/genomalysis.bat
 After running the build, create a "plugins" directory in Genomalysis/target/universal/stage/bin/ and copy the following into it:
-ClustalWTool/target/scala-2.10/clustalw-tool_2.10-1.0.jar
-HydropathyPlot/target/scala-2.10/hydropathy-plots_2.10-1.0.jar
-StandardFilters/target/scala-2.10/standard-filters_2.10-1.0.jar
+	ClustalWTool/target/scala-2.10/clustalw-tool_2.10-1.0.jar
+	
+	HydropathyPlot/target/scala-2.10/hydropathy-plots_2.10-1.0.jar
+	
+	StandardFilters/target/scala-2.10/standard-filters_2.10-1.0.jar
