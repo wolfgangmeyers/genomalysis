@@ -73,7 +73,6 @@ public class FrmMain extends JFrame
     private PluginInstanceManager<IProteinDiagnosticsTool> diagnosticsInstanceManager = null;
     private FilterDialog filterDialog = new FilterDialog(this, true);
     private InstancePanel diagnosticInstancePanel = null;
-    private DiagnosticsDialog diagnosticsDlg = null;
     private SequenceCacheControl sequenceCacheControl = new SequenceCacheControl();
     private int selectedFilterInstanceIndex = -1;
     private JPopupMenu availableFiltersPopupMenu;
@@ -192,7 +191,6 @@ public class FrmMain extends JFrame
         this.pluginManager.addPluginInterface(IProteinSequenceFilter.class);
         this.pluginManager.addPluginInterface(IProteinDiagnosticsTool.class);
         this.pluginManager.findPlugins();
-        this.diagnosticsDlg = new DiagnosticsDialog(this);
 
         this.sequenceCacheControl.addObserver(new IObserver() {
 

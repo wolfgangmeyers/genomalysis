@@ -30,7 +30,7 @@ import org.genomalysis.proteintools.SequenceTransformer;
  *
  * @author ameyers
  */
-public class FilterControl {
+public class FilterControl implements IObservable {
 	private CountingFilter readFilter = new CountingFilter();
 	private CountingFilter writeFilter = new CountingFilter();
 	private PauseFilter pauseFilter = new PauseFilter();
@@ -41,38 +41,23 @@ public class FilterControl {
 	private boolean running = false;
 	private SequenceTransformer xformer = new SequenceTransformer();
 	private Thread backgroundThread = null;
-	private List<IObserver> observers = new ArrayList<IObserver>();
 	private ISequenceIO sequenceIO = SequenceIOImpl.getDefaultIO();
+	
+	private EventSupport eventSupport = new EventSupport();
 
-	public void addObserver(IObserver observer) {
-		synchronized (observers) {
-			if (!observers.contains(observer)) {
-				observers.add(observer);
-			}
-		}
-	}
-
-	public void removeObserver(IObserver observer) {
-		synchronized (observers) {
-			observers.remove(observer);
-		}
-	}
-
-	private void notifyObserversOfError(String errorMessage) {
-		synchronized (observers) {
-			for (IObserver observer : observers) {
-				observer.showError(errorMessage);
-			}
-		}
-	}
-
-	private void notifyObservers() {
-		synchronized (observers) {
-			for (IObserver observer : observers) {
-				observer.update();
-			}
-		}
-	}
+//	public void addObserver(IObserver observer) {
+//		synchronized (observers) {
+//			if (!observers.contains(observer)) {
+//				observers.add(observer);
+//			}
+//		}
+//	}
+//
+//	public void removeObserver(IObserver observer) {
+//		synchronized (observers) {
+//			observers.remove(observer);
+//		}
+//	}
 
 	public FilterControl() {
 		progressControl.setReadFilter(readFilter);
@@ -123,7 +108,7 @@ public class FilterControl {
 			updateInterval = 1;
 		this.readFilter.setCountingInterval(updateInterval);
 		this.running = true;
-		notifyObservers();
+		eventSupport.notifyObservers();
 		backgroundThread = new Thread(new Runnable() {
 
 			public void run() {
@@ -142,8 +127,8 @@ public class FilterControl {
 					running = false;
 					Logger.getLogger(FilterControl.class.getName()).log(
 							Level.SEVERE, null, ex);
-					notifyObservers();
-					notifyObserversOfError(ex.getClass().getSimpleName() + ": "
+					eventSupport.notifyObservers();
+					eventSupport.notifyObserversOfError(ex.getClass().getSimpleName() + ": "
 							+ ex.getMessage());
 				}
 			}
@@ -173,7 +158,7 @@ public class FilterControl {
 						Level.SEVERE, null, ex);
 			}
 		}
-		notifyObservers();
+		eventSupport.notifyObservers();
 	}
 
 	public boolean isPaused() {
@@ -185,7 +170,7 @@ public class FilterControl {
 			pauseFilter.UnPause();
 		else
 			pauseFilter.Pause();
-		notifyObservers();
+		eventSupport.notifyObservers();
 	}
 
 	public File getInputFile() {
@@ -194,7 +179,7 @@ public class FilterControl {
 
 	public void setInputFile(File inputFile) {
 		this.inputFile = inputFile;
-		notifyObservers();
+		eventSupport.notifyObservers();
 	}
 
 	public File getOutputFile() {
@@ -203,7 +188,7 @@ public class FilterControl {
 
 	public void setOutputFile(File outputFile) {
 		this.outputFile = outputFile;
-		notifyObservers();
+		eventSupport.notifyObservers();
 	}
 
 	public boolean isRunning() {
@@ -221,6 +206,16 @@ public class FilterControl {
 	public void setFilterInstances(
 			List<PluginInstance<IProteinSequenceFilter>> filterInstances) {
 		this.filterInstances = filterInstances;
+	}
+
+	@Override
+	public void addObserver(IObserver observer) {
+		eventSupport.addObserver(observer);
+	}
+
+	@Override
+	public void removeObserver(IObserver observer) {
+		eventSupport.addObserver(observer);
 	}
 
 }
