@@ -30,7 +30,7 @@ Source: "D:\java-workspace\Genomalysis\dna-icon.ico"; DestDir: "{app}"; Flags: i
 
 [Icons]
 Name: "{group}\Genomalysis"; Filename: "{app}\bin\genomalysis.bat"; IconFilename: "{app}\dna-icon.ico"
-Name: "{commondesktop}\Genomalysis"; Filename: "{app}\bin\Genomalysis"; IconFilename: "{app}\dna-icon.ico"
+Name: "{commondesktop}\Genomalysis"; Filename: "{app}\bin\genomalysis.bat"; IconFilename: "{app}\dna-icon.ico"
 
 [Run]
 Filename: "{app}\bin\genomalysis.bat"; Description: "{cm:LaunchProgram,{#StringChange('Genomalysis', '&', '&&')}}"; Flags: nowait postinstall skipifsilent
