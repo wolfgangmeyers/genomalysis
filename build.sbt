@@ -12,6 +12,8 @@ lazy val HydropathyPlot = project.dependsOn(Genomalysis)
 
 lazy val ClustalWTool = project.dependsOn(Genomalysis)
 
+lazy val PrediSi = project.dependsOn(Genomalysis)
+
 autoScalaLibrary := false
 
 crossPaths := false
