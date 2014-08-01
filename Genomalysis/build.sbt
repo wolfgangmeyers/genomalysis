@@ -15,4 +15,6 @@ mainClass in (Compile) := Some("org.genomalysis.ui.FrmMain")
 
 libraryDependencies += "jfree" % "jfreechart" % "1.0.13"
 
+libraryDependencies += "jgoodies" % "looks" % "1.2.2"
+
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java

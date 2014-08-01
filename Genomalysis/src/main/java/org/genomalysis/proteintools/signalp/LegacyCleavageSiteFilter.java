@@ -22,14 +22,14 @@ import org.genomalysis.proteintools.SequenceIOImpl;
 
 @Documentation("CleavageSiteFilter:   This filter uses the SignalP program to predict cleavage sites and secretion signals. Sequences without cleavage sites and secretion signals will not pass this filter. Make sure you have SignalP installed and on your PATH variable before using this filter. SignalP can be downloaded for academic and research use at: http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?signalp")
 @Author(Name="Wolfgang Meyers", EmailAddress="wolfgangmeyers@gmail.com")
-public class CleavageSiteFilter
+public class LegacyCleavageSiteFilter
   implements IProteinSequenceFilter
 {
   private static String newline;
   private SignalPOutputParser parser;
   private ISequenceIO io;
 
-  public CleavageSiteFilter()
+  public LegacyCleavageSiteFilter()
   {
     this.parser = new SignalPOutputParser();
     this.io = SequenceIOImpl.getDefaultIO(); }

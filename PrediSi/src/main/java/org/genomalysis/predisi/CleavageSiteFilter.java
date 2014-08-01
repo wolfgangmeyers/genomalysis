@@ -8,14 +8,12 @@ import jspp.SearchMatrix;
 import jspp.SignalPeptidePredictor;
 
 import org.genomalysis.plugin.configuration.annotations.Author;
-import org.genomalysis.plugin.configuration.annotations.Configurator;
 import org.genomalysis.plugin.configuration.annotations.Documentation;
-import org.genomalysis.plugin.configuration.dialogs.GenericConfigurator;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.InitializationException;
 import org.genomalysis.proteintools.ProteinSequence;
 
-@Documentation("CleavageSiteFilter:   This filter uses the PrediSi library to predict cleavage sites and secretion signals. Sequences without cleavage sites and secretion signals will not pass this filter.")
+@Documentation("CleavageSiteFilter:   This filter uses the PrediSi library (http://www.predisi.de/home.html) to predict cleavage sites and secretion signals. Sequences without cleavage sites and secretion signals will not pass this filter.")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
 public class CleavageSiteFilter implements IProteinSequenceFilter {
 
@@ -27,6 +25,7 @@ public class CleavageSiteFilter implements IProteinSequenceFilter {
 		ObjectInputStream oin = null;
 
 		try {
+			//TODO: make this configurable?
 			ins = getClass().getResourceAsStream("eukarya.smx");
 			oin = new ObjectInputStream(ins);
 			SearchMatrix smp = (SearchMatrix) oin.readObject();
