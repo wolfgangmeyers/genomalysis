@@ -233,10 +233,7 @@ public class FilterDialog extends javax.swing.JDialog {
 
                     public void processCompleted() {
                         JOptionPane.showMessageDialog(mainPanel, "Done!");
-                        mainPanel.remove(filterProgressPanel);
                         _update();
-                        dlg.pack();
-                        dlg.setVisible(false);
                     }
                 });
             }
