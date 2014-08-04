@@ -45,20 +45,6 @@ public class FilterControl implements IObservable {
 	
 	private EventSupport eventSupport = new EventSupport();
 
-//	public void addObserver(IObserver observer) {
-//		synchronized (observers) {
-//			if (!observers.contains(observer)) {
-//				observers.add(observer);
-//			}
-//		}
-//	}
-//
-//	public void removeObserver(IObserver observer) {
-//		synchronized (observers) {
-//			observers.remove(observer);
-//		}
-//	}
-
 	public FilterControl() {
 		progressControl.setReadFilter(readFilter);
 		progressControl.setWriteFilter(writeFilter);

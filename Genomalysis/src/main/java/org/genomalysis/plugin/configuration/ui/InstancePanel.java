@@ -19,8 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.genomalysis.control.IObserver;
 import org.genomalysis.plugin.AbstractPluginManager;
-import org.genomalysis.plugin.IObserver;
 import org.genomalysis.plugin.PluginInstance;
 import org.genomalysis.plugin.PluginInstanceManager;
 import org.genomalysis.plugin.configuration.ConfigurationException;

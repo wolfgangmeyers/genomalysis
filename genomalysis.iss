@@ -15,7 +15,7 @@ AppSupportURL=http://www.genomalysis.org
 AppUpdatesURL=http://www.genomalysis.org
 DefaultDirName=C:\Genomalysis
 DefaultGroupName=Genomalysis
-OutputBaseFilename=setup
+OutputBaseFilename=genomalysis-setup
 Compression=lzma
 SolidCompression=yes
 

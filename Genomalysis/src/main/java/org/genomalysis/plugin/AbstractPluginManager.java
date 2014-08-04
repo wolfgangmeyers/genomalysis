@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.genomalysis.control.EventSupport;
+import org.genomalysis.control.IObserver;
 import org.genomalysis.plugin.configuration.ConfigurationTables;
 import org.genomalysis.plugin.configuration.IPropertyConfigurator;
 import org.genomalysis.plugin.configuration.PropertyConfiguratorTable;
@@ -19,14 +21,11 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * Map from interface name to list of implementing classes
 	 */
 	private Map<String, List<Class<?>>> pluginTypes;
-	private List<IObserver> observers;
 	protected List<Class<?>> pluginInterfaces;
+	private EventSupport eventSupport = new EventSupport();
 
 	public AbstractPluginManager() {
 		this.pluginTypes = new HashMap<>();
-
-		this.observers = new ArrayList<>();
-
 		this.pluginInterfaces = new ArrayList<>();
 	}
 
@@ -140,9 +139,7 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * @param observer
 	 */
 	public void addObserver(IObserver observer) {
-		if (!(this.observers.contains(observer))) {
-			this.observers.add(observer);
-		}
+		eventSupport.addObserver(observer);
 	}
 
 	/**
@@ -151,9 +148,7 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * @param observer
 	 */
 	public void removeObserver(IObserver observer) {
-		if (this.observers.contains(observer)) {
-			this.observers.remove(observer);
-		}
+		eventSupport.removeObserver(observer);
 	}
 
 	/**
@@ -198,10 +193,7 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * Notifies observers that the state of this plugin manager has changed.
 	 */
 	protected void notifyObservers() {
-		System.out.println("AbstractPluginManager::notifyObservers");
-		for (IObserver observer : this.observers) {
-			observer.update();
-		}
+		eventSupport.notifyObservers();
 	}
 
 	/**
@@ -211,9 +203,6 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * @param errorMsg
 	 */
 	protected void notifyObserversOfError(String errorMsg) {
-		System.out.println("AbstractPluginManager::notifyObserversOfError");
-		for (IObserver observer : this.observers) {
-			observer.showError(errorMsg);
-		}
+		eventSupport.notifyObserversOfError(errorMsg);
 	}
 }

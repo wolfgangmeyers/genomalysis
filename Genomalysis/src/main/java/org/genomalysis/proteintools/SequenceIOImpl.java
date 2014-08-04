@@ -21,7 +21,7 @@ import java.util.List;
 import org.genomalysis.plugin.configuration.annotations.Author;
 import org.genomalysis.plugin.configuration.annotations.Documentation;
 
-@Documentation("Default implementation of the ISequenceIO interface reads and writesfiles of FASTA format.")
+@Documentation("Default implementation of the ISequenceIO interface reads and writes files of FASTA format.")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
 public class SequenceIOImpl
         implements ISequenceIO {

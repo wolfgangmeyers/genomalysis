@@ -28,7 +28,7 @@ public class ClustalWFilter
 
   public void initialize() throws InitializationException {
     try {
-      ProcessBuilder pb = new ProcessBuilder(new String[] { "clustalw" });
+      ProcessBuilder pb = new ProcessBuilder(new String[] { "clustalo" });
       pb.start();
       ProteinSequence sequence = ProteinSequence.parse(getSequenceData());
       if ((sequence.getHeader() == null) || (sequence.getData() == null))

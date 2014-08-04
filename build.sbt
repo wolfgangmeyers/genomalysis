@@ -14,6 +14,8 @@ lazy val ClustalWTool = project.dependsOn(Genomalysis)
 
 lazy val PrediSi = project.dependsOn(Genomalysis)
 
+lazy val TMPrediction = project.dependsOn(Genomalysis)
+
 autoScalaLibrary := false
 
 crossPaths := false
