@@ -13,6 +13,10 @@ exportJars := true
 
 mainClass in (Compile) := Some("org.genomalysis.ui.FrmMain")
 
+javacOptions ++= Seq("-g:lines,vars,source")
+
+javacOptions in doc := Seq()
+
 libraryDependencies += "jfree" % "jfreechart" % "1.0.13"
 
 libraryDependencies += "jgoodies" % "looks" % "1.2.2"

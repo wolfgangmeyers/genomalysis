@@ -84,7 +84,7 @@ public class InstancePanel<T> extends JPanel {
 						.getPluginInstances();
 				while (instances.hasNext()) {
 					PluginInstance<T> instance = instances.next();
-					pluginModel.add(model.size(), instance);
+					pluginModel.add(pluginModel.size(), instance);
 				}
 				lstPluginInstances.setModel(pluginModel);
 			}
