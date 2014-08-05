@@ -5,3 +5,4 @@ bin/
 lib/
 target/
 *.exe
+bin-backup/

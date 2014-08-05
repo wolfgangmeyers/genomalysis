@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.genomalysis.plugin.configuration.annotations.Author;
 import org.genomalysis.plugin.configuration.annotations.Documentation;
 
@@ -68,6 +69,14 @@ public class SequenceTransformer
                         try{
                             sequenceMatches = sequenceMatches && filter.filterProteinSequence(sequence);
                         }catch(RuntimeException ex){
+                            System.out.println("Error while processing the following sequence:");
+                            System.out.println(sequence.getHeader());
+                            System.out.println(sequence.getData());
+                            try {
+                                FileUtils.write(new File("error-sequence.txt"), sequence.getData());
+                                System.out.println("Sequence data written to error-sequence.txt");
+                            } catch (IOException ignored) {
+                            }
                             throw new RuntimeException(filter.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
                         }
                     }

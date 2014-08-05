@@ -67,9 +67,10 @@ public class LegacyTmapPredictionFilter implements IProteinSequenceFilter {
 			in.close();
 			String outputString = new String(buffer);
 
+			String header = sequence.getHeader() == null ? "NO HEADER" : sequence.getHeader();
 			List segments = this.outputParser.getPredictedSegments(
 					outputString,
-					sequence.getHeader().split(" ")[0].substring(1));
+					header.split(" ")[0].substring(1));
 			result = (segments.size() >= this.minimumSegments)
 					&& (segments.size() <= this.maximumSegments);
 		} catch (InterruptedException ex) {
@@ -81,23 +82,23 @@ public class LegacyTmapPredictionFilter implements IProteinSequenceFilter {
 		return result;
 	}
 
-	@PropertyGetter(PropertyName = "Minimum Segments")
-	public int getMinimumSegments() {
-		return this.minimumSegments;
-	}
+    @PropertyGetter(PropertyName = "Minimum Segments")
+    public int getMinimumSegments() {
+        return this.minimumSegments;
+    }
 
-	@PropertySetter(PropertyName = "Minimum Segments")
-	public void setMinimumSegments(int minimumSegments) {
-		this.minimumSegments = minimumSegments;
-	}
+    @PropertySetter(PropertyName = "Minimum Segments")
+    public void setMinimumSegments(int minimumSegments) {
+        this.minimumSegments = minimumSegments;
+    }
 
-	@PropertyGetter(PropertyName = "Maximum Segments")
-	public int getMaximumSegments() {
-		return this.maximumSegments;
-	}
+    @PropertyGetter(PropertyName = "Maximum Segments")
+    public int getMaximumSegments() {
+        return this.maximumSegments;
+    }
 
-	@PropertySetter(PropertyName = "Maximum Segments")
-	public void setMaximumSegments(int maximumSegments) {
-		this.maximumSegments = maximumSegments;
-	}
+    @PropertySetter(PropertyName = "Maximum Segments")
+    public void setMaximumSegments(int maximumSegments) {
+        this.maximumSegments = maximumSegments;
+    }
 }
