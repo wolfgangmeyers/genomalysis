@@ -1,14 +1,11 @@
 package org.genomalysis.plugin.configuration.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.PrintStream;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,16 +27,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.genomalysis.plugin.FilePluginManager;
 import org.genomalysis.plugin.PluginInstanceManager;
 import org.genomalysis.plugin.PluginLoader;
+import org.genomalysis.plugin.PluginManager;
 import org.genomalysis.plugin.configuration.ConfigurationTables;
-import org.genomalysis.plugin.configuration.DocumentationTable;
 
 public class PluginExplorer extends JFrame
 {
   private PluginLoader pluginLoader;
-  private FilePluginManager pluginManager;
+  private PluginManager pluginManager;
   private List<PluginInstanceManager<?>> instanceManagers;
   private List<Class<?>> foundTypes = new ArrayList();
   private JFileChooser fileDlg = new JFileChooser();
@@ -65,7 +61,7 @@ public class PluginExplorer extends JFrame
     initComponents();
 
     this.pluginLoader = PluginLoader.getInstance();
-    this.pluginManager = new FilePluginManager();
+    this.pluginManager = new PluginManager();
     this.pluginManager.setDaemon(false);
     this.instanceManagers = new ArrayList();
     this.fileDlg.setFileFilter(this.jarFilter);

@@ -1,5 +1,7 @@
 package org.genomalysis.plugin;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,18 +17,24 @@ import org.genomalysis.plugin.configuration.PropertyConfiguratorTable;
 import org.genomalysis.plugin.configuration.annotations.Configurator;
 import org.genomalysis.plugin.configuration.dialogs.GenericConfigurator;
 
-public abstract class AbstractPluginManager implements IPluginFoundCallback {
+public class PluginManager implements IPluginFoundCallback, Runnable {
 
 	/**
 	 * Map from interface name to list of implementing classes
 	 */
-	private Map<String, List<Class<?>>> pluginTypes;
+	private Map<String, List<PluginInstanceFactory<?>>> pluginTypes;
 	protected List<Class<?>> pluginInterfaces;
 	private EventSupport eventSupport = new EventSupport();
+	private boolean running;
+    private boolean daemon;
+    private FileFilter jarFilter;
 
-	public AbstractPluginManager() {
+	public PluginManager() {
 		this.pluginTypes = new HashMap<>();
 		this.pluginInterfaces = new ArrayList<>();
+		this.running = false;
+        this.daemon = true;
+        this.jarFilter = new JarFilter();
 	}
 
 	/**
@@ -35,9 +43,9 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * @param pluginInterface
 	 * @return
 	 */
-	public List<Class<?>> getPluginTypes(Class<?> pluginInterface) {
+	public List<PluginInstanceFactory<?>> getPluginTypes(Class<?> pluginInterface) {
 		String classname = pluginInterface.getName();
-		List<Class<?>> result = null;
+		List<PluginInstanceFactory<?>> result = null;
 		result = this.pluginTypes.get(classname);
 		if (result == null) {
 			result = new ArrayList<>();
@@ -127,11 +135,128 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 		return configurator;
 	}
 
-	/**
-	 * Implemented by FilePluginManager. Called on startup.
-	 */
-	public abstract void findPlugins();
+	public void stop() {
+        this.running = false;
+    }
 
+    /**
+     * Searches the plugins directory for jar files and auto-discovers
+     * implementations of Genomalysis plugins.
+     */
+    public void findPlugins() {
+        File pluginDir;
+        System.out.println("FilePluginManager::findPlugins");
+        // if the plugin manager is in daemon mode, it will listen
+        // for jar files to be added in the background. This might be overkill...
+        if (this.daemon) {
+            if (!(this.running)) {
+                this.running = true;
+                pluginDir = new File("plugins");
+                if (!(pluginDir.exists())) {
+                    pluginDir.mkdir();
+                }
+
+                Thread daemon = new Thread(this);
+                daemon.setDaemon(true);
+                daemon.start();
+            }
+        } else {
+            pluginDir = new File("plugins");
+            List<File> plugins = new ArrayList<>();
+            Class<?>[] pluginInterfaceArray = new Class<?>[this.pluginInterfaces
+                    .size()];
+            pluginInterfaceArray = (Class[]) this.pluginInterfaces
+                    .toArray(pluginInterfaceArray);
+            System.out.println("FilePluginManager(findPlugins): I have "
+                    + pluginInterfaceArray.length + " plugins to search for.");
+            scanPlugins(plugins, pluginDir, pluginInterfaceArray);
+        }
+    }
+
+    public void run() {
+        System.out.println("FilePluginManager::run");
+
+        File pluginDir = new File("plugins");
+        List<File> plugins = new ArrayList<>();
+        Class<?>[] pluginInterfaceArray = new Class<?>[this.pluginInterfaces
+                .size()];
+        pluginInterfaceArray = (Class[]) this.pluginInterfaces
+                .toArray(pluginInterfaceArray);
+        if (this.running) {
+            try {
+                scanPlugins(plugins, pluginDir, pluginInterfaceArray);
+                Thread.sleep(5000L);
+            } catch (InterruptedException ex) {
+                this.running = false;
+            }
+        }
+    }
+
+    /**
+     * Adds all jar files that are in pluginDir but that have not yet been
+     * scanned to the classpath. Proceeds to use PluginLoader to go through all
+     * of the classes in the jar file, using a callback (this plugin manager) to
+     * register newly found plugin implementations.
+     * 
+     * If any new jar files are loaded, observers of this plugin manager are
+     * notified that its state has changed.
+     * 
+     * @param plugins
+     * @param pluginDir
+     * @param pluginInterfaceArray
+     */
+    private void scanPlugins(List<File> plugins, File pluginDir,
+            Class<?>[] pluginInterfaceArray) {
+        File scanned;
+        File[] pluginScan = pluginDir.listFiles(this.jarFilter);
+        boolean updateRequired = false;
+
+        // this is the part where we add files to the classpath
+        for (int i = 0; i < pluginScan.length; i++) {
+            scanned = pluginScan[i];
+            if (!(plugins.contains(scanned))) {
+                PluginClassLoader.getInstance().addPluginFile(scanned);
+            }
+
+        }
+
+        // this is the part where we scan each jar file and load plugin
+        // implementation classes from it.
+        for (int i = 0; i < pluginScan.length; i++) {
+            scanned = pluginScan[i];
+
+            if (!(plugins.contains(scanned))) {
+                try {
+                    PluginLoader.getInstance().loadPlugins(scanned,
+                            pluginInterfaceArray, this);
+                    updateRequired = true;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    notifyObserversOfError("Problem loading plugin file: "
+                            + ex.getMessage());
+                }
+                plugins.add(scanned);
+            }
+        }
+
+        if (updateRequired) {
+            notifyObservers();
+        }
+    }
+
+    public boolean isDaemon() {
+        return this.daemon;
+    }
+
+    public void setDaemon(boolean daemon) {
+        this.daemon = daemon;
+    }
+
+    class JarFilter implements FileFilter {
+        public boolean accept(File file) {
+            return file.getName().endsWith(".jar");
+        }
+    }
 	/**
 	 * Registers an observer that can listen for state changes in the plugin
 	 * manager.
@@ -167,7 +292,8 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 	 * Implementation of IPluginFoundCallback - called by PluginManager
 	 * subclasses to register implementations of the plugin interface.
 	 */
-	public void pluginFound(Class<?> pluginInterface, Class<?> pluginClass) {
+	@SuppressWarnings("unchecked")
+    public void pluginFound(Class<?> pluginInterface, Class<?> pluginClass) {
 		System.out.println("AbstractPluginManager::pluginFound");
 
 		String classname = pluginInterface.getName();
@@ -179,13 +305,13 @@ public abstract class AbstractPluginManager implements IPluginFoundCallback {
 			ex.printStackTrace();
 		}
 
-		List<Class<?>> plugins = this.pluginTypes.get(classname);
+		List<PluginInstanceFactory<?>> plugins = this.pluginTypes.get(classname);
 		if (plugins == null) {
 			plugins = new ArrayList<>();
 			this.pluginTypes.put(classname, plugins);
 		}
 		if (!(plugins.contains(pluginClass))) {
-			plugins.add(pluginClass);
+			plugins.add(new ClassPluginInstanceFactory<Object>((Class<Object>)pluginClass));
 		}
 	}
 

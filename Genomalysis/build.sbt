@@ -25,4 +25,8 @@ libraryDependencies += "com.google.code.gson" % "gson" % "2.2.4"
 
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
+libraryDependencies += "com.fifesoft" % "rsyntaxtextarea" % "2.5.3"
+
+libraryDependencies += "jython" % "jython" % "2.2-beta1"
+
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java

@@ -20,8 +20,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.genomalysis.control.IObserver;
-import org.genomalysis.plugin.AbstractPluginManager;
+import org.genomalysis.plugin.PluginManager;
 import org.genomalysis.plugin.PluginInstance;
+import org.genomalysis.plugin.PluginInstanceFactory;
 import org.genomalysis.plugin.PluginInstanceManager;
 import org.genomalysis.plugin.configuration.ConfigurationException;
 import org.genomalysis.plugin.configuration.ConfigurationTables;
@@ -34,7 +35,7 @@ public class InstancePanel<T> extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private PluginInstanceManager<T> instanceManager;
-	private AbstractPluginManager pluginManager;
+	private PluginManager pluginManager;
 	private IObserver observer;
 	private RenameDialog dlg;
 	private JButton btnClose;
@@ -58,7 +59,7 @@ public class InstancePanel<T> extends JPanel {
 	private JList<String> lstPluginTypes;
 
 	public InstancePanel(final PluginInstanceManager<T> instanceManager,
-			AbstractPluginManager pluginManager, boolean closeable) {
+			PluginManager pluginManager, boolean closeable) {
 		this.observer = null;
 		this.dlg = null;
 
@@ -103,7 +104,7 @@ public class InstancePanel<T> extends JPanel {
 	}
 
 	public InstancePanel(PluginInstanceManager<T> instanceManager,
-			AbstractPluginManager pluginManager) {
+			PluginManager pluginManager) {
 		this(instanceManager, pluginManager, false);
 	}
 
@@ -340,10 +341,10 @@ public class InstancePanel<T> extends JPanel {
 	private void btnInfoActionPerformed(ActionEvent evt) {
 		String documentation = null;
 		if (this.lstPluginTypes.getSelectedIndex() != -1) {
-			Class<?> clazz = this.instanceManager
-					.getPluginClass(this.lstPluginTypes.getSelectedIndex());
+			PluginInstanceFactory<?> factory = this.instanceManager
+					.getInstanceFactory(this.lstPluginTypes.getSelectedIndex());
 			documentation = ConfigurationTables.getDocumentationTable()
-					.getDocumentation(clazz);
+					.getDocumentation(factory);
 			DocViewer.showDocumentation(this, documentation);
 		}
 	}

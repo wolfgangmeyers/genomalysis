@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -51,9 +52,10 @@ import org.apache.commons.io.IOUtils;
 import org.genomalysis.control.IObserver;
 import org.genomalysis.control.SequenceCacheControl;
 import org.genomalysis.control.SequencePagerControl;
-import org.genomalysis.plugin.FilePluginManager;
 import org.genomalysis.plugin.PluginInstance;
+import org.genomalysis.plugin.PluginInstanceFactory;
 import org.genomalysis.plugin.PluginInstanceManager;
+import org.genomalysis.plugin.PluginManager;
 import org.genomalysis.plugin.configuration.ConfigurationException;
 import org.genomalysis.plugin.configuration.IPropertyConfigurator;
 import org.genomalysis.plugin.configuration.ui.InstancePanel;
@@ -65,15 +67,13 @@ import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
 
-import javax.swing.JButton;
-
 public class FrmMain extends JFrame implements
 		org.genomalysis.control.IObserver {
 
 	private static final long serialVersionUID = 1L;
 	private SequencePagerControl pagerControl = new SequencePagerControl();
 	private JFileChooser fileDlg = new JFileChooser();
-	private FilePluginManager pluginManager = new FilePluginManager();
+	private PluginManager pluginManager = new PluginManager();
 	private PluginInstanceManager<IProteinSequenceFilter> filterInstanceManager = null;
 	private PluginInstanceManager<IProteinDiagnosticsTool> diagnosticsInstanceManager = null;
 	private FilterDialog filterDialog = new FilterDialog(this, true);
@@ -1203,11 +1203,11 @@ public class FrmMain extends JFrame implements
 	}
 
 	private void btnFilterInfoActionPerformed(ActionEvent evt) {
-		Class filterClass = this.filterInstanceManager
-				.getPluginClass(this.lstSequenceFilters.getSelectedIndex());
-		String documentation = this.pluginManager.getDocumentation(filterClass);
+		PluginInstanceFactory<?> factory = this.filterInstanceManager
+				.getInstanceFactory(this.lstSequenceFilters.getSelectedIndex());
+		String documentation = factory.getDocumentation();
 		DocViewer.showDocumentation(this.panelFilterSequences, documentation,
-				filterClass.getSimpleName() + " Documentation");
+				factory.getName() + " Documentation");
 	}
 
 	private void btnRenameFilterInstanceActionPerformed(ActionEvent evt) {

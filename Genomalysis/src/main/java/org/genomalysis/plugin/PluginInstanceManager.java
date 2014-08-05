@@ -30,7 +30,7 @@ public class PluginInstanceManager<T> implements IObserver {
 	private EventSupport eventSupport = new EventSupport();
 	private Class<T> clazz;
 	private List<PluginInstance<T>> pluginInstances = new ArrayList<PluginInstance<T>>();
-	private AbstractPluginManager pluginManager;
+	private PluginManager pluginManager;
 	private boolean showingSimpleNames = true;
 	private final Gson gson = new GsonBuilder().registerTypeAdapter(
 			PluginInstance.class, new PluginInstanceSerializer()).create();
@@ -49,6 +49,7 @@ public class PluginInstanceManager<T> implements IObserver {
 					.getName());
 			result.addProperty("instanceData",
 					gson.toJson(p.getPluginInstance()));
+			result.addProperty("instanceName", p.getName());
 			return result;
 		}
 
@@ -61,6 +62,10 @@ public class PluginInstanceManager<T> implements IObserver {
 				Class<?> instanceClass = (Class<?>) Class.forName(className);
 				String instanceData = obj.get("instanceData").getAsString();
 				Object instance = gson.fromJson(instanceData, instanceClass);
+				if (obj.has("instanceName")) {
+				    String instanceName = obj.get("instanceName").getAsString();
+				    return new PluginInstance<Object>(instance, instanceName);
+				}
 				return new PluginInstance<Object>(instance);
 			} catch (ClassNotFoundException e) {
 				throw new JsonParseException(e);
@@ -84,7 +89,7 @@ public class PluginInstanceManager<T> implements IObserver {
 	}
 
 	public PluginInstanceManager(Class<T> clazz,
-			AbstractPluginManager pluginManager) {
+			PluginManager pluginManager) {
 		this.clazz = clazz;
 		this.pluginManager = pluginManager;
 		pluginManager.addObserver(this);
@@ -120,12 +125,11 @@ public class PluginInstanceManager<T> implements IObserver {
 	}
 
 	public String[] getAvailablePlugins() {
-		List<Class<?>> pluginTypes = this.pluginManager
+		List<PluginInstanceFactory<?>> pluginTypes = this.pluginManager
 				.getPluginTypes(this.clazz);
 		List<String> pluginTypeNames = new ArrayList<String>();
-		for (Class<?> pluginType : pluginTypes) {
-			String pluginTypeName = (this.showingSimpleNames) ? pluginType
-					.getSimpleName() : pluginType.getName();
+		for (PluginInstanceFactory<?> pluginType : pluginTypes) {
+			String pluginTypeName = pluginType.getName();
 			pluginTypeNames.add(pluginTypeName);
 		}
 		String[] result = new String[pluginTypeNames.size()];
@@ -166,11 +170,11 @@ public class PluginInstanceManager<T> implements IObserver {
 		this.pluginInstances.clear();
 	}
 
-	public Class<?> getPluginClass(int index) {
-		Class<?> result = null;
-		List<Class<?>> classes = this.pluginManager.getPluginTypes(this.clazz);
-		if ((index >= 0) && (index < classes.size()))
-			result = (Class<?>) classes.get(index);
+	public PluginInstanceFactory<?> getInstanceFactory(int index) {
+	    PluginInstanceFactory<?> result = null;
+		List<PluginInstanceFactory<?>> factories = this.pluginManager.getPluginTypes(this.clazz);
+		if ((index >= 0) && (index < factories.size()))
+			result = factories.get(index);
 
 		return result;
 	}
@@ -187,17 +191,13 @@ public class PluginInstanceManager<T> implements IObserver {
 
 	public void addPluginInstance(int index) throws ConfigurationException {
 		if (index >= 0) {
-			List<Class<?>> pluginTypes = this.pluginManager
+			List<PluginInstanceFactory<?>> pluginTypes = this.pluginManager
 					.getPluginTypes(this.clazz);
 			if (index < pluginTypes.size()) {
 				try {
-					Class<?> pluginType = pluginTypes.get(index);
-					Constructor<?> ctor = pluginType
-							.getConstructor(new Class[0]);
+					PluginInstanceFactory<?> pluginType = pluginTypes.get(index);
 					@SuppressWarnings("unchecked")
-					T instance = (T) ctor.newInstance(new Object[0]);
-					PluginInstance<T> instanceWrapper = new PluginInstance<>(
-							instance);
+					PluginInstance<T> instanceWrapper = (PluginInstance<T>)pluginType.createInstance();
 					addPluginInstance(instanceWrapper);
 				} catch (Exception ex) {
 					Logger.getLogger(PluginInstanceManager.class.getName())
