@@ -1578,8 +1578,7 @@ public class FrmMain extends JFrame implements
 			public void run() {
 				try {
 					UIManager
-							.setLookAndFeel(com.jgoodies.plaf.windows.ExtWindowsLookAndFeel.class
-									.getName());
+							.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				} catch (ClassNotFoundException | InstantiationException
 						| IllegalAccessException
 						| UnsupportedLookAndFeelException e) {
