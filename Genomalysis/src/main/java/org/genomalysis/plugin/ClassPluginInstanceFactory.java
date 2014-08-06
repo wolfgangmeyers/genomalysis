@@ -12,7 +12,7 @@ public class ClassPluginInstanceFactory<T> implements PluginInstanceFactory<T>{
     
     @Override
     public PluginInstance<T> createInstance() throws Exception {
-        return new PluginInstance<T>(clazz.newInstance());
+        return new PluginInstance<T>(clazz.newInstance(), getName());
     }
 
     @Override

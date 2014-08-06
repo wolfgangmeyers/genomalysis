@@ -16,25 +16,28 @@ import org.genomalysis.plugin.configuration.IPropertyConfigurator;
 import org.genomalysis.plugin.configuration.PropertyConfiguratorTable;
 import org.genomalysis.plugin.configuration.annotations.Configurator;
 import org.genomalysis.plugin.configuration.dialogs.GenericConfigurator;
+import org.genomalysis.plugin.script.ScriptManager;
+import org.genomalysis.plugin.script.ScriptPlugin;
 
-public class PluginManager implements IPluginFoundCallback, Runnable {
+public class PluginManager implements IPluginFoundCallback {
 
 	/**
 	 * Map from interface name to list of implementing classes
 	 */
 	private Map<String, List<PluginInstanceFactory<?>>> pluginTypes;
+	private Map<String, PluginInstanceFactory<?>> factoriesByName;
 	protected List<Class<?>> pluginInterfaces;
 	private EventSupport eventSupport = new EventSupport();
-	private boolean running;
-    private boolean daemon;
     private FileFilter jarFilter;
+    private ScriptManager scriptManager;
 
 	public PluginManager() {
 		this.pluginTypes = new HashMap<>();
+		this.factoriesByName = new HashMap<>();
 		this.pluginInterfaces = new ArrayList<>();
-		this.running = false;
-        this.daemon = true;
         this.jarFilter = new JarFilter();
+        this.scriptManager = new ScriptManager();
+        addPluginInterface(ScriptPlugin.class);
 	}
 
 	/**
@@ -135,10 +138,6 @@ public class PluginManager implements IPluginFoundCallback, Runnable {
 		return configurator;
 	}
 
-	public void stop() {
-        this.running = false;
-    }
-
     /**
      * Searches the plugins directory for jar files and auto-discovers
      * implementations of Genomalysis plugins.
@@ -146,50 +145,30 @@ public class PluginManager implements IPluginFoundCallback, Runnable {
     public void findPlugins() {
         File pluginDir;
         System.out.println("FilePluginManager::findPlugins");
-        // if the plugin manager is in daemon mode, it will listen
-        // for jar files to be added in the background. This might be overkill...
-        if (this.daemon) {
-            if (!(this.running)) {
-                this.running = true;
-                pluginDir = new File("plugins");
-                if (!(pluginDir.exists())) {
-                    pluginDir.mkdir();
-                }
-
-                Thread daemon = new Thread(this);
-                daemon.setDaemon(true);
-                daemon.start();
-            }
-        } else {
-            pluginDir = new File("plugins");
-            List<File> plugins = new ArrayList<>();
-            Class<?>[] pluginInterfaceArray = new Class<?>[this.pluginInterfaces
-                    .size()];
-            pluginInterfaceArray = (Class[]) this.pluginInterfaces
-                    .toArray(pluginInterfaceArray);
-            System.out.println("FilePluginManager(findPlugins): I have "
-                    + pluginInterfaceArray.length + " plugins to search for.");
-            scanPlugins(plugins, pluginDir, pluginInterfaceArray);
-        }
-    }
-
-    public void run() {
-        System.out.println("FilePluginManager::run");
-
-        File pluginDir = new File("plugins");
+        
+        pluginDir = new File("plugins");
         List<File> plugins = new ArrayList<>();
         Class<?>[] pluginInterfaceArray = new Class<?>[this.pluginInterfaces
                 .size()];
         pluginInterfaceArray = (Class[]) this.pluginInterfaces
                 .toArray(pluginInterfaceArray);
-        if (this.running) {
+        System.out.println("FilePluginManager(findPlugins): I have "
+                + pluginInterfaceArray.length + " plugins to search for.");
+        scanPlugins(plugins, pluginDir, pluginInterfaceArray);
+        
+        // now, do a secondary lookup using script plugins
+        List<PluginInstanceFactory<?>> scriptPluginFactories = getPluginTypes(ScriptPlugin.class);
+        for (PluginInstanceFactory<?> factory : scriptPluginFactories) {
             try {
-                scanPlugins(plugins, pluginDir, pluginInterfaceArray);
-                Thread.sleep(5000L);
-            } catch (InterruptedException ex) {
-                this.running = false;
+                ScriptPlugin scriptPlugin = (ScriptPlugin)factory.createInstance().getPluginInstance();
+                scriptManager.registerScriptPlugin(scriptPlugin);
+            } catch (Exception e) {
+                System.out.println("Unable to instantiate script plugin " + factory.getName());
+                e.printStackTrace();
             }
         }
+        scriptManager.loadScripts(this.pluginInterfaces, this);
+        notifyObservers();
     }
 
     /**
@@ -244,14 +223,6 @@ public class PluginManager implements IPluginFoundCallback, Runnable {
         }
     }
 
-    public boolean isDaemon() {
-        return this.daemon;
-    }
-
-    public void setDaemon(boolean daemon) {
-        this.daemon = daemon;
-    }
-
     class JarFilter implements FileFilter {
         public boolean accept(File file) {
             return file.getName().endsWith(".jar");
@@ -287,32 +258,24 @@ public class PluginManager implements IPluginFoundCallback, Runnable {
 		return ConfigurationTables.getDocumentationTable().getDocumentation(
 				clazz);
 	}
-
-	/**
-	 * Implementation of IPluginFoundCallback - called by PluginManager
-	 * subclasses to register implementations of the plugin interface.
-	 */
-	@SuppressWarnings("unchecked")
-    public void pluginFound(Class<?> pluginInterface, Class<?> pluginClass) {
-		System.out.println("AbstractPluginManager::pluginFound");
-
-		String classname = pluginInterface.getName();
-
-		try {
-			ConfigurationTables.getReplacementTable().registerReplacement(
-					pluginInterface, pluginClass);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		List<PluginInstanceFactory<?>> plugins = this.pluginTypes.get(classname);
-		if (plugins == null) {
-			plugins = new ArrayList<>();
-			this.pluginTypes.put(classname, plugins);
-		}
-		if (!(plugins.contains(pluginClass))) {
-			plugins.add(new ClassPluginInstanceFactory<Object>((Class<Object>)pluginClass));
-		}
+	
+	@Override
+	public void pluginFound(Class<?> pluginInterface, PluginInstanceFactory<?> factory) {
+	    System.out.println("pluginFound " + pluginInterface.getName() + ", " + factory.getName());
+	    String classname = pluginInterface.getName();
+	    List<PluginInstanceFactory<?>> plugins = this.pluginTypes.get(classname);
+        if (plugins == null) {
+            plugins = new ArrayList<>();
+            this.pluginTypes.put(classname, plugins);
+        }
+        if(!plugins.contains(factory)) {
+            plugins.add(factory);
+        }
+        factoriesByName.put(factory.getName(), factory);
+	}
+	
+	public PluginInstanceFactory<?> getFactoryByName(String name) {
+	    return factoriesByName.get(name);
 	}
 
 	/**

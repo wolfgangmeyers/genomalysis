@@ -1,5 +1,6 @@
 package org.genomalysis.plugin;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -27,193 +28,225 @@ import com.google.gson.reflect.TypeToken;
 
 public class PluginInstanceManager<T> implements IObserver {
 
-	private EventSupport eventSupport = new EventSupport();
-	private Class<T> clazz;
-	private List<PluginInstance<T>> pluginInstances = new ArrayList<PluginInstance<T>>();
-	private PluginManager pluginManager;
-	private boolean showingSimpleNames = true;
-	private final Gson gson = new GsonBuilder().registerTypeAdapter(
-			PluginInstance.class, new PluginInstanceSerializer()).create();
+    private EventSupport eventSupport = new EventSupport();
+    private Class<T> clazz;
+    private List<PluginInstance<T>> pluginInstances = new ArrayList<PluginInstance<T>>();
+    private PluginManager pluginManager;
+    private boolean showingSimpleNames = true;
+    private final Gson gson = new GsonBuilder().registerTypeAdapter(
+            PluginInstance.class, new PluginInstanceSerializer()).create();
 
-	static class PluginInstanceSerializer implements
-			JsonDeserializer<PluginInstance<?>>,
-			JsonSerializer<PluginInstance<?>> {
+    class PluginInstanceSerializer implements
+            JsonDeserializer<PluginInstance<?>>,
+            JsonSerializer<PluginInstance<?>> {
 
-		private final Gson gson = new Gson();
+        private final Gson gson = new Gson();
 
-		@Override
-		public JsonElement serialize(PluginInstance<?> p, Type t,
-				JsonSerializationContext ctx) {
-			JsonObject result = new JsonObject();
-			result.addProperty("className", p.getPluginInstance().getClass()
-					.getName());
-			result.addProperty("instanceData",
-					gson.toJson(p.getPluginInstance()));
-			result.addProperty("instanceName", p.getName());
-			return result;
-		}
+        @Override
+        public JsonElement serialize(PluginInstance<?> p, Type t,
+                JsonSerializationContext ctx) {
+            JsonObject result = new JsonObject();
 
-		@Override
-		public PluginInstance<?> deserialize(JsonElement j, Type t,
-				JsonDeserializationContext ctx) throws JsonParseException {
-			try {
-				JsonObject obj = (JsonObject) j;
-				String className = obj.get("className").getAsString();
-				Class<?> instanceClass = (Class<?>) Class.forName(className);
-				String instanceData = obj.get("instanceData").getAsString();
-				Object instance = gson.fromJson(instanceData, instanceClass);
-				if (obj.has("instanceName")) {
-				    String instanceName = obj.get("instanceName").getAsString();
-				    return new PluginInstance<Object>(instance, instanceName);
-				}
-				return new PluginInstance<Object>(instance);
-			} catch (ClassNotFoundException e) {
-				throw new JsonParseException(e);
-			}
-		}
-	}
-	
-	public String save() {
-		Type t = new TypeToken<List<PluginInstance<?>>>() {}.getType();
-		return gson.toJson(pluginInstances, t);
-	}
-	
-	public void load(String data) {
-		Type t = new TypeToken<List<PluginInstance<T>>>() {}.getType();
-		List<PluginInstance<T>> result = gson.fromJson(data, t);
-		pluginInstances.clear();
-		for (PluginInstance<T> instance : result) {
-			addPluginInstance(instance);
-		}
-		notifyObservers();
-	}
+            Object pluginInstance = p.getPluginInstance();
+            if (pluginInstance instanceof Serializable) {
+                result.addProperty("instanceData",
+                        gson.toJson(p.getPluginInstance()));
+                result.addProperty("className", p.getPluginInstance()
+                        .getClass().getName());
+            } else {
+                result.addProperty("factoryName", p.getFactoryName());
+            }
+            result.addProperty("instanceName", p.getName());
+            return result;
+        }
 
-	public PluginInstanceManager(Class<T> clazz,
-			PluginManager pluginManager) {
-		this.clazz = clazz;
-		this.pluginManager = pluginManager;
-		pluginManager.addObserver(this);
+        @Override
+        public PluginInstance<?> deserialize(JsonElement j, Type t,
+                JsonDeserializationContext ctx) throws JsonParseException {
+            try {
+                JsonObject obj = (JsonObject) j;
+                String instanceName = obj.get("instanceName").getAsString();
 
-	}
+                if (obj.has("className")) {
+                    String className = obj.get("className").getAsString();
+                    Class<?> instanceClass = (Class<?>) Class
+                            .forName(className);
+                    Object instance = null;
+                    if (obj.has("instanceData")) {
+                        String instanceData = obj.get("instanceData")
+                                .getAsString();
+                        instance = gson.fromJson(instanceData, instanceClass);
+                    } else {
+                        try {
+                            instance = instanceClass.newInstance();
+                        } catch (InstantiationException
+                                | IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return new PluginInstance<Object>(instance, instanceName);
+                } else if (obj.has("factoryName")) {
+                    String factoryName = obj.get("factoryName").getAsString();
+                    PluginInstanceFactory<?> factory = pluginManager
+                            .getFactoryByName(factoryName);
+                    PluginInstance<?> instance = factory.createInstance();
+                    instance.setName(instanceName);
+                    return instance;
+                } else {
+                    throw new RuntimeException("className or factoryName is required");
+                }
 
-	public void dispose() {
-		this.pluginManager.removeObserver(this);
-	}
+            } catch (Exception e) {
+                throw new JsonParseException(e);
+            }
+        }
+    }
 
-	public void addObserver(IObserver observer) {
-		eventSupport.addObserver(observer);
-	}
+    public String save() {
+        Type t = new TypeToken<List<PluginInstance<?>>>() {
+        }.getType();
+        return gson.toJson(pluginInstances, t);
+    }
 
-	public void removeObserver(IObserver observer) {
-		eventSupport.removeObserver(observer);
-	}
+    public void load(String data) {
+        Type t = new TypeToken<List<PluginInstance<T>>>() {
+        }.getType();
+        List<PluginInstance<T>> result = gson.fromJson(data, t);
+        pluginInstances.clear();
+        for (PluginInstance<T> instance : result) {
+            addPluginInstance(instance);
+        }
+        notifyObservers();
+    }
 
-	private void notifyObservers() {
-		eventSupport.notifyObservers();
-	}
+    public PluginInstanceManager(Class<T> clazz, PluginManager pluginManager) {
+        this.clazz = clazz;
+        this.pluginManager = pluginManager;
+        pluginManager.addObserver(this);
 
-	private void notifyObserversOfError(String message) {
-		eventSupport.notifyObserversOfError(message);
-	}
+    }
 
-	public boolean isShowingSimpleNames() {
-		return this.showingSimpleNames;
-	}
+    public void dispose() {
+        this.pluginManager.removeObserver(this);
+    }
 
-	public void setShowingSimpleNames(boolean showingSimpleNames) {
-		this.showingSimpleNames = showingSimpleNames;
-	}
+    public void addObserver(IObserver observer) {
+        eventSupport.addObserver(observer);
+    }
 
-	public String[] getAvailablePlugins() {
-		List<PluginInstanceFactory<?>> pluginTypes = this.pluginManager
-				.getPluginTypes(this.clazz);
-		List<String> pluginTypeNames = new ArrayList<String>();
-		for (PluginInstanceFactory<?> pluginType : pluginTypes) {
-			String pluginTypeName = pluginType.getName();
-			pluginTypeNames.add(pluginTypeName);
-		}
-		String[] result = new String[pluginTypeNames.size()];
-		result = (String[]) pluginTypeNames.toArray(result);
-		return result;
-	}
+    public void removeObserver(IObserver observer) {
+        eventSupport.removeObserver(observer);
+    }
 
-	public boolean moveInstanceDown(PluginInstance<T> instance) {
-		boolean result = false;
-		int instanceIndex = this.pluginInstances.indexOf(instance);
-		if ((instanceIndex != -1)
-				&& (instanceIndex < this.pluginInstances.size() - 1)) {
-			this.pluginInstances.remove(instance);
-			this.pluginInstances.add(instanceIndex + 1, instance);
-			notifyObservers();
-			result = true;
-		}
-		return result;
-	}
+    private void notifyObservers() {
+        eventSupport.notifyObservers();
+    }
 
-	public boolean moveInstanceUp(PluginInstance<T> instance) {
-		boolean result = false;
-		int instanceIndex = this.pluginInstances.indexOf(instance);
-		if (instanceIndex > 0) {
-			this.pluginInstances.remove(instance);
-			this.pluginInstances.add(instanceIndex - 1, instance);
-			notifyObservers();
-			result = true;
-		}
-		return result;
-	}
+    private void notifyObserversOfError(String message) {
+        eventSupport.notifyObserversOfError(message);
+    }
 
-	public Iterator<PluginInstance<T>> getPluginInstances() {
-		return this.pluginInstances.iterator();
-	}
+    public boolean isShowingSimpleNames() {
+        return this.showingSimpleNames;
+    }
 
-	public void clearPluginInstnaces() {
-		this.pluginInstances.clear();
-	}
+    public void setShowingSimpleNames(boolean showingSimpleNames) {
+        this.showingSimpleNames = showingSimpleNames;
+    }
 
-	public PluginInstanceFactory<?> getInstanceFactory(int index) {
-	    PluginInstanceFactory<?> result = null;
-		List<PluginInstanceFactory<?>> factories = this.pluginManager.getPluginTypes(this.clazz);
-		if ((index >= 0) && (index < factories.size()))
-			result = factories.get(index);
+    public String[] getAvailablePlugins() {
+        List<PluginInstanceFactory<?>> pluginTypes = this.pluginManager
+                .getPluginTypes(this.clazz);
+        List<String> pluginTypeNames = new ArrayList<String>();
+        for (PluginInstanceFactory<?> pluginType : pluginTypes) {
+            String pluginTypeName = pluginType.getName();
+            pluginTypeNames.add(pluginTypeName);
+        }
+        String[] result = new String[pluginTypeNames.size()];
+        result = (String[]) pluginTypeNames.toArray(result);
+        return result;
+    }
 
-		return result;
-	}
+    public boolean moveInstanceDown(PluginInstance<T> instance) {
+        boolean result = false;
+        int instanceIndex = this.pluginInstances.indexOf(instance);
+        if ((instanceIndex != -1)
+                && (instanceIndex < this.pluginInstances.size() - 1)) {
+            this.pluginInstances.remove(instance);
+            this.pluginInstances.add(instanceIndex + 1, instance);
+            notifyObservers();
+            result = true;
+        }
+        return result;
+    }
 
-	public void removePluginInstance(PluginInstance<T> instance) {
-		this.pluginInstances.remove(instance);
-		notifyObservers();
-	}
+    public boolean moveInstanceUp(PluginInstance<T> instance) {
+        boolean result = false;
+        int instanceIndex = this.pluginInstances.indexOf(instance);
+        if (instanceIndex > 0) {
+            this.pluginInstances.remove(instance);
+            this.pluginInstances.add(instanceIndex - 1, instance);
+            notifyObservers();
+            result = true;
+        }
+        return result;
+    }
 
-	public void addPluginInstance(PluginInstance<T> instance) {
-		this.pluginInstances.add(instance);
-		notifyObservers();
-	}
+    public Iterator<PluginInstance<T>> getPluginInstances() {
+        return this.pluginInstances.iterator();
+    }
 
-	public void addPluginInstance(int index) throws ConfigurationException {
-		if (index >= 0) {
-			List<PluginInstanceFactory<?>> pluginTypes = this.pluginManager
-					.getPluginTypes(this.clazz);
-			if (index < pluginTypes.size()) {
-				try {
-					PluginInstanceFactory<?> pluginType = pluginTypes.get(index);
-					@SuppressWarnings("unchecked")
-					PluginInstance<T> instanceWrapper = (PluginInstance<T>)pluginType.createInstance();
-					addPluginInstance(instanceWrapper);
-				} catch (Exception ex) {
-					Logger.getLogger(PluginInstanceManager.class.getName())
-							.log(Level.SEVERE, null, ex);
-					throw new ConfigurationException(
-							"Unable to create plugin instance", ex);
-				}
-			}
-		}
-	}
+    public void clearPluginInstnaces() {
+        this.pluginInstances.clear();
+    }
 
-	public void update() {
-		notifyObservers();
-	}
+    public PluginInstanceFactory<?> getInstanceFactory(int index) {
+        PluginInstanceFactory<?> result = null;
+        List<PluginInstanceFactory<?>> factories = this.pluginManager
+                .getPluginTypes(this.clazz);
+        if ((index >= 0) && (index < factories.size()))
+            result = factories.get(index);
 
-	public void showError(String errorMsg) {
-		notifyObserversOfError(errorMsg);
-	}
+        return result;
+    }
+
+    public void removePluginInstance(PluginInstance<T> instance) {
+        this.pluginInstances.remove(instance);
+        notifyObservers();
+    }
+
+    public void addPluginInstance(PluginInstance<T> instance) {
+        this.pluginInstances.add(instance);
+        notifyObservers();
+    }
+
+    public void addPluginInstance(int index) throws ConfigurationException {
+        if (index >= 0) {
+            List<PluginInstanceFactory<?>> pluginTypes = this.pluginManager
+                    .getPluginTypes(this.clazz);
+            if (index < pluginTypes.size()) {
+                try {
+                    PluginInstanceFactory<?> pluginType = pluginTypes
+                            .get(index);
+                    @SuppressWarnings("unchecked")
+                    PluginInstance<T> instanceWrapper = (PluginInstance<T>) pluginType
+                            .createInstance();
+                    addPluginInstance(instanceWrapper);
+                } catch (Exception ex) {
+                    Logger.getLogger(PluginInstanceManager.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                    throw new ConfigurationException(
+                            "Unable to create plugin instance", ex);
+                }
+            }
+        }
+    }
+
+    public void update() {
+        notifyObservers();
+    }
+
+    public void showError(String errorMsg) {
+        notifyObserversOfError(errorMsg);
+    }
 }

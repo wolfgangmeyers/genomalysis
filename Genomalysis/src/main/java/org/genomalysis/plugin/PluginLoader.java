@@ -24,6 +24,7 @@ public class PluginLoader {
         return instance;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void loadPlugins(URL jarfile, Class[] pluginInterfaces, IPluginFoundCallback callback)
             throws IOException {
         System.out.println("PluginLoader::loadPlugins");
@@ -32,8 +33,8 @@ public class PluginLoader {
         for (Class<?> c : allClasses) {
             for(int i = 0; i < pluginInterfaces.length; i++){
                 Class pluginInterface = pluginInterfaces[i];
-                if(implementsInterface(c, pluginInterface) && hasDefaultConstructor(c)){
-                    callback.pluginFound(pluginInterface, c);
+                if(PluginUtil.implementsInterface(c, pluginInterface) && hasDefaultConstructor(c)){
+                    callback.pluginFound(pluginInterface, new ClassPluginInstanceFactory(c));
                 }
             }
         }
@@ -128,16 +129,6 @@ public class PluginLoader {
             Constructor constructor = clazz.getConstructor(new Class[0]);
             result = true;
         } catch (Exception ex) {
-        }
-        return result;
-    }
-
-    private boolean implementsInterface(Class subject, Class iface) {
-        boolean result = false;
-        try {
-            subject.asSubclass(iface);
-            result = true;
-        } catch (ClassCastException ex) {
         }
         return result;
     }

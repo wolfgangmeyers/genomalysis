@@ -6,23 +6,29 @@
 package org.genomalysis.proteintools;
 
 import org.genomalysis.plugin.configuration.annotations.Documentation;
+
 /**
  *
  * @author ameyers
  */
 
 @Documentation("Used to indicate that a sequence filter couldn't find necessary resources to run.")
-public class InitializationException extends Exception{
+public class InitializationException extends Exception {
     private String[] reasons;
-    
-    public String[] getReasons(){
+
+    public String[] getReasons() {
         return reasons;
     }
-    
-    public InitializationException(){
-        this.reasons = new String[]{"Plugin Initialization: Reason for error unknown"};
+
+    public InitializationException() {
+        this.reasons = new String[] { "Plugin Initialization: Reason for error unknown" };
     }
-    public InitializationException(String...reasons){
+
+    public InitializationException(String... reasons) {
         this.reasons = reasons;
+    }
+
+    public InitializationException(Exception e) {
+        this.reasons = new String[] { e.getMessage() };
     }
 }

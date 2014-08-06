@@ -62,7 +62,6 @@ public class PluginExplorer extends JFrame
 
     this.pluginLoader = PluginLoader.getInstance();
     this.pluginManager = new PluginManager();
-    this.pluginManager.setDaemon(false);
     this.instanceManagers = new ArrayList();
     this.fileDlg.setFileFilter(this.jarFilter);
 

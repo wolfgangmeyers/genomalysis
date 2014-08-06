@@ -16,6 +16,8 @@ lazy val PrediSi = project.dependsOn(Genomalysis)
 
 lazy val TMPrediction = project.dependsOn(Genomalysis)
 
+lazy val PythonScripts = project.dependsOn(Genomalysis)
+
 autoScalaLibrary := false
 
 crossPaths := false
