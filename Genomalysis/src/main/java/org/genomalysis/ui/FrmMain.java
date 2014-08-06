@@ -52,6 +52,8 @@ import org.apache.commons.io.IOUtils;
 import org.genomalysis.control.IObserver;
 import org.genomalysis.control.SequenceCacheControl;
 import org.genomalysis.control.SequencePagerControl;
+import org.genomalysis.history.FilterExecution;
+import org.genomalysis.history.HistoryManager;
 import org.genomalysis.plugin.PluginInstance;
 import org.genomalysis.plugin.PluginInstanceFactory;
 import org.genomalysis.plugin.PluginInstanceManager;
@@ -76,7 +78,8 @@ public class FrmMain extends JFrame implements
 	private PluginManager pluginManager = new PluginManager();
 	private PluginInstanceManager<IProteinSequenceFilter> filterInstanceManager = null;
 	private PluginInstanceManager<IProteinDiagnosticsTool> diagnosticsInstanceManager = null;
-	private FilterDialog filterDialog = new FilterDialog(this, true);
+	private HistoryManager historyManager = new HistoryManager(pluginManager, 5);
+	private FilterDialog filterDialog = new FilterDialog(this, historyManager, true);
 	private InstancePanel<IProteinDiagnosticsTool> diagnosticInstancePanel = null;
 	private SequenceCacheControl sequenceCacheControl = new SequenceCacheControl();
 	private int selectedFilterInstanceIndex = -1;
@@ -226,7 +229,19 @@ public class FrmMain extends JFrame implements
 		});
 
 		setupFilterInstanceOptions();
-
+		// pre-populate filters with the last known configuration
+        try {
+            Iterator<FilterExecution> executions = historyManager.getFilterExecutionHistory().iterator();
+            if (executions.hasNext()) {
+                FilterExecution lastExecution = executions.next();
+                for (PluginInstance<IProteinSequenceFilter> instance : lastExecution.getFilters()) {
+                    System.out.println("Pre-loading filter from last execution: " + instance);
+                    filterInstanceManager.addPluginInstance(instance);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 
 	private void setupFilterInstanceOptions() {
@@ -835,7 +850,7 @@ public class FrmMain extends JFrame implements
 		});
 		jPanel3.add(btnLoadConfiguration);
 		this.jPanel3.add(this.btnExecuteFilters);
-
+		
 		this.jPanel9.add(this.jPanel3, "Center");
 
 		this.panelFilterInstances.add(this.jPanel9, "North");

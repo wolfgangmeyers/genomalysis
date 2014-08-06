@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 
 import org.genomalysis.control.filters.CountingFilter;
 import org.genomalysis.control.filters.PauseFilter;
+import org.genomalysis.history.FilterExecution;
+import org.genomalysis.history.HistoryManager;
 import org.genomalysis.plugin.PluginInstance;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.ISequenceIO;
@@ -44,14 +46,25 @@ public class FilterControl implements IObservable {
     private ISequenceIO sequenceIO = SequenceIOImpl.getDefaultIO();
 
     private EventSupport eventSupport = new EventSupport();
+    private HistoryManager historyManager;
 
-    public FilterControl() {
+    public FilterControl(HistoryManager historyManager) {
+        this.historyManager = historyManager;
         progressControl.setReadFilter(readFilter);
         progressControl.setWriteFilter(writeFilter);
     }
 
     public void start(IProcessCompleteCallback callback)
             throws InitializationException, IOException {
+
+        FilterExecution current = new FilterExecution(
+                inputFile.getAbsolutePath(), outputFile.getAbsolutePath(),
+                filterInstances);
+        Iterator<FilterExecution> i = historyManager.getFilterExecutionHistory().iterator();
+        if (!i.hasNext() || !i.next().equals(current)) {
+            historyManager.addFilterExecution(current);
+        }
+
         this.progressControl.reset();
         final IProcessCompleteCallback processCallback = callback;
         final List<IProteinSequenceFilter> filters = new ArrayList<IProteinSequenceFilter>();
@@ -62,7 +75,9 @@ public class FilterControl implements IObservable {
             try {
                 instance.getPluginInstance().initialize();
             } catch (Exception e) {
-                throw new InitializationException("Unexpected error when initalizing " + instance.getName());
+                throw new InitializationException(
+                        "Unexpected error when initalizing "
+                                + instance.getName());
             }
             filters.add(instance.getPluginInstance());
         }
