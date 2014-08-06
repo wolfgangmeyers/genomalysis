@@ -53,7 +53,7 @@ public class HistoryManager {
             }.getType();
             history = gson.<List<FilterExecution>> fromJson(data, t);
             if (history == null) {
-                throw new RuntimeException();
+                history = new ArrayList<FilterExecution>();
             }
             return new ArrayList<FilterExecution>(history);
         } catch (Exception e) {

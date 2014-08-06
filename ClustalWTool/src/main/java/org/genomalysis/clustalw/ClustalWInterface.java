@@ -79,10 +79,10 @@ public class ClustalWInterface {
 		int strong = 0;
 		int weak = 0;
 
-		StringBuffer raw_output = new StringBuffer();
+		StringBuffer rawOutput = new StringBuffer();
 		for (Iterator i$ = lines.iterator(); i$.hasNext();) {
 			line = (String) i$.next();
-			raw_output.append(line + "\n");
+			rawOutput.append(line + "\n");
 		}
 
 		for (int i = 5; i < lines.size(); i += 4) {
@@ -102,12 +102,7 @@ public class ClustalWInterface {
 			}
 		}
 
-		double identity_percent = identity / sequenceLength;
-		double strong_percent = strong / sequenceLength;
-		double weak_percent = weak / sequenceLength;
-		double nomatch_percent = 1D - identity_percent + strong_percent
-				+ weak_percent;
-		return new ClustalWOutput(raw_output.toString(), identity_percent,
-				strong_percent, weak_percent, nomatch_percent);
+		
+		return new ClustalWOutput(rawOutput.toString(), sequenceLength, identity, strong, weak);
 	}
 }

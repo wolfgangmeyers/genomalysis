@@ -9,6 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintStream;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -20,237 +24,169 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class ClustalWFilterConfigurationDialog extends JDialog
-{
-  private ClustalWFilterConfiguration myConfig;
-  NumberFormat fmt = NumberFormat.getPercentInstance();
-  private JButton btnCancel;
-  private JButton btnOK;
-  private JCheckBox chkEnableIdentityThreshold;
-  private JCheckBox chkEnableStrongThreshold;
-  private JCheckBox chkEnableWeakThreshold;
-  private JLabel jLabel1;
-  private JLabel jLabel2;
-  private JLabel jLabel3;
-  private JPanel jPanel1;
-  private JPanel jPanel2;
-  private JPanel jPanel3;
-  private JPanel jPanel4;
-  private JPanel jPanel5;
-  private JPanel jPanel6;
-  private JPanel jPanel7;
-  private JPanel jPanel8;
-  private JPanel jPanel9;
-  private JLabel lblIdentityThreshold;
-  private JLabel lblStrongThreshold;
-  private JLabel lblWeakThreshold;
-  private JSlider sldrIdentityThreshold;
-  private JSlider sldrStrongThreshold;
-  private JSlider sldrWeakThreshold;
+import java.awt.FlowLayout;
+import javax.swing.SwingConstants;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
-  public ClustalWFilterConfigurationDialog(Frame parent)
-  {
-    super(parent, true);
-    initComponents();
-  }
+public class ClustalWFilterConfigurationDialog extends JDialog {
+    private ClustalWFilterConfiguration myConfig;
+    NumberFormat fmt = NumberFormat.getPercentInstance();
+    private JButton btnCancel;
+    private JButton btnOK;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
+    private JPanel rulesPanel;
+    private JPanel panel;
+    private JButton btnAddNewRule;
 
-  private void initComponents()
-  {
-    this.jPanel1 = new JPanel();
-    this.jPanel6 = new JPanel();
-    this.jLabel1 = new JLabel();
-    this.lblIdentityThreshold = new JLabel();
-    this.sldrIdentityThreshold = new JSlider();
-    this.jPanel7 = new JPanel();
-    this.chkEnableIdentityThreshold = new JCheckBox();
-    this.jPanel2 = new JPanel();
-    this.jPanel8 = new JPanel();
-    this.jLabel2 = new JLabel();
-    this.lblStrongThreshold = new JLabel();
-    this.sldrStrongThreshold = new JSlider();
-    this.chkEnableStrongThreshold = new JCheckBox();
-    this.jPanel3 = new JPanel();
-    this.jPanel9 = new JPanel();
-    this.jLabel3 = new JLabel();
-    this.lblWeakThreshold = new JLabel();
-    this.sldrWeakThreshold = new JSlider();
-    this.chkEnableWeakThreshold = new JCheckBox();
-    this.jPanel4 = new JPanel();
-    this.jPanel5 = new JPanel();
-    this.btnOK = new JButton();
-    this.btnCancel = new JButton();
+    private List<ClustalWRuleFragmentUI> ruleFragments = new LinkedList<ClustalWRuleFragmentUI>();
+    private JPanel panel_1;
+    private JPanel panel_2;
+    private JLabel lblSequenceData;
+    private JTextArea txtSequenceData;
 
-    setDefaultCloseOperation(2);
-    setTitle("Configure ClustalW Filter");
-    getContentPane().setLayout(new GridLayout(4, 0));
-
-    this.jPanel1.setLayout(new GridLayout(3, 0));
-
-    this.jLabel1.setText("Identity Threshold:");
-    this.jPanel6.add(this.jLabel1);
-
-    this.lblIdentityThreshold.setText("0%");
-    this.jPanel6.add(this.lblIdentityThreshold);
-
-    this.jPanel1.add(this.jPanel6);
-
-    this.sldrIdentityThreshold.setValue(0);
-    this.sldrIdentityThreshold.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent evt) {
-        sldrIdentityThresholdStateChanged(evt);
-      }
-
-    });
-    this.jPanel1.add(this.sldrIdentityThreshold);
-
-    this.jPanel7.setLayout(new BorderLayout());
-
-    this.chkEnableIdentityThreshold.setText("Enable");
-    this.jPanel7.add(this.chkEnableIdentityThreshold, "Center");
-
-    this.jPanel1.add(this.jPanel7);
-
-    getContentPane().add(this.jPanel1);
-
-    this.jPanel2.setLayout(new GridLayout(3, 0));
-
-    this.jLabel2.setText("Strong Threshold:");
-    this.jPanel8.add(this.jLabel2);
-
-    this.lblStrongThreshold.setText("0%");
-    this.jPanel8.add(this.lblStrongThreshold);
-
-    this.jPanel2.add(this.jPanel8);
-
-    this.sldrStrongThreshold.setValue(0);
-    this.sldrStrongThreshold.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent evt) {
-        sldrStrongThresholdStateChanged(evt);
-      }
-
-    });
-    this.jPanel2.add(this.sldrStrongThreshold);
-
-    this.chkEnableStrongThreshold.setText("Enable");
-    this.jPanel2.add(this.chkEnableStrongThreshold);
-
-    getContentPane().add(this.jPanel2);
-
-    this.jPanel3.setLayout(new GridLayout(3, 0));
-
-    this.jLabel3.setText("Weak Threshold:");
-    this.jPanel9.add(this.jLabel3);
-
-    this.lblWeakThreshold.setText("0%");
-    this.jPanel9.add(this.lblWeakThreshold);
-
-    this.jPanel3.add(this.jPanel9);
-
-    this.sldrWeakThreshold.setValue(0);
-    this.sldrWeakThreshold.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent evt) {
-        sldrWeakThresholdStateChanged(evt);
-      }
-
-    });
-    this.jPanel3.add(this.sldrWeakThreshold);
-
-    this.chkEnableWeakThreshold.setText("Enable");
-    this.jPanel3.add(this.chkEnableWeakThreshold);
-
-    getContentPane().add(this.jPanel3);
-
-    this.jPanel4.setLayout(new BorderLayout());
-
-    this.btnOK.setText("OK");
-    this.btnOK.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent evt) {
-        btnOKActionPerformed(evt);
-      }
-
-    });
-    this.jPanel5.add(this.btnOK);
-
-    this.btnCancel.setText("Cancel");
-    this.btnCancel.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent evt) {
-        btnCancelActionPerformed(evt);
-      }
-
-    });
-    this.jPanel5.add(this.btnCancel);
-
-    this.jPanel4.add(this.jPanel5, "South");
-
-    getContentPane().add(this.jPanel4);
-
-    pack();
-  }
-
-  private void btnOKActionPerformed(ActionEvent evt) {
-    boolean valid = (this.chkEnableIdentityThreshold.isEnabled()) || (this.chkEnableStrongThreshold.isEnabled()) || (this.chkEnableWeakThreshold.isEnabled());
-
-    if (valid) {
-      updateModel();
-      setVisible(false);
-    } else {
-      JOptionPane.showMessageDialog(this.jPanel1, "You must enable at least one threshold", "Error", 0);
+    public ClustalWFilterConfigurationDialog(Frame parent) {
+        super(parent, true);
+        initComponents();
     }
-  }
 
-  private void btnCancelActionPerformed(ActionEvent evt) {
-    setVisible(false);
-  }
+    private void initComponents() {
+        this.jPanel4 = new JPanel();
+        this.jPanel5 = new JPanel();
+        this.btnOK = new JButton();
+        this.btnCancel = new JButton();
 
-  private void sldrIdentityThresholdStateChanged(ChangeEvent evt) {
-    this.lblIdentityThreshold.setText(this.fmt.format(this.sldrIdentityThreshold.getValue() / 100.0D));
-  }
+        setDefaultCloseOperation(2);
+        setTitle("Configure ClustalW Filter");
+        GridLayout gridLayout = new GridLayout(0, 1);
+        gridLayout.setVgap(5);
+        gridLayout.setHgap(5);
+        getContentPane().setLayout(gridLayout);
 
-  private void sldrStrongThresholdStateChanged(ChangeEvent evt) {
-    this.lblStrongThreshold.setText(this.fmt.format(this.sldrStrongThreshold.getValue() / 100.0D));
-  }
+        this.btnOK.setText("OK");
+        this.btnOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnOKActionPerformed(evt);
+            }
 
-  private void sldrWeakThresholdStateChanged(ChangeEvent evt) {
-    this.lblWeakThreshold.setText(this.fmt.format(this.sldrWeakThreshold.getValue() / 100.0D));
-  }
+        });
+        this.jPanel5.add(this.btnOK);
 
-  public static void main(String[] args)
-  {
-    EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        JFrame frame = new JFrame();
-        ClustalWFilterConfiguration config = new ClustalWFilterConfiguration();
-        ClustalWFilterConfiguration newConfig = new ClustalWFilterConfigurationDialog(frame).showDialog(config);
-        System.out.println("Old config:\n\n" + config.toString() + "\n\n");
-        System.out.println("New config\n\n" + newConfig);
-      }
-    });
-  }
+        this.btnCancel.setText("Cancel");
+        this.btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
 
-  public ClustalWFilterConfiguration showDialog(ClustalWFilterConfiguration initialConfig) {
-    this.myConfig = initialConfig;
-    if (this.myConfig == null)
-      this.myConfig = new ClustalWFilterConfiguration();
-    updateUI();
-    setVisible(true);
-    return this.myConfig;
-  }
+        });
+        jPanel4.setLayout(new BorderLayout(0, 0));
 
-  private void updateUI() {
-    this.chkEnableIdentityThreshold.setSelected(this.myConfig.getIdentityConstraint().isEnabled());
-    this.chkEnableStrongThreshold.setSelected(this.myConfig.getStrongConstraint().isEnabled());
-    this.chkEnableWeakThreshold.setSelected(this.myConfig.getWeakConstraint().isEnabled());
-    this.sldrIdentityThreshold.setValue((int)(this.myConfig.getIdentityConstraint().getLowerBound() * 100.0D));
-    this.sldrStrongThreshold.setValue((int)(this.myConfig.getStrongConstraint().getLowerBound() * 100.0D));
-    this.sldrWeakThreshold.setValue((int)(this.myConfig.getWeakConstraint().getLowerBound() * 100.0D));
-  }
+        panel = new JPanel();
+        jPanel4.add(panel, BorderLayout.NORTH);
 
-  private void updateModel() {
-    this.myConfig.getIdentityConstraint().setEnabled(this.chkEnableIdentityThreshold.isSelected());
-    this.myConfig.getStrongConstraint().setEnabled(this.chkEnableStrongThreshold.isSelected());
-    this.myConfig.getWeakConstraint().setEnabled(this.chkEnableWeakThreshold.isSelected());
-    this.myConfig.getIdentityConstraint().setLowerBound(this.sldrIdentityThreshold.getValue() / 100.0D);
-    this.myConfig.getStrongConstraint().setLowerBound(this.sldrStrongThreshold.getValue() / 100.0D);
-    this.myConfig.getWeakConstraint().setLowerBound(this.sldrWeakThreshold.getValue() / 100.0D);
-  }
+        btnAddNewRule = new JButton("Add new rule");
+        btnAddNewRule.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                ClustalWRule newRule = ClustalWRule.defaultRule();
+                addNewRule(newRule);
+                pack();
+            }
+        });
+        panel.add(btnAddNewRule);
+
+        panel_1 = new JPanel();
+        jPanel4.add(panel_1, BorderLayout.CENTER);
+        panel_1.setLayout(new BorderLayout(0, 0));
+
+        rulesPanel = new JPanel();
+        panel_1.add(rulesPanel, BorderLayout.NORTH);
+        rulesPanel.setLayout(new GridLayout(0, 1, 0, 0));
+
+        ClustalWRuleFragmentUI initialRuleUI = new ClustalWRuleFragmentUI();
+        rulesPanel.add(initialRuleUI);
+
+        panel_2 = new JPanel();
+        panel_2.setBorder(new EmptyBorder(5, 5, 5, 5));
+        panel_1.add(panel_2, BorderLayout.CENTER);
+        panel_2.setLayout(new BorderLayout(0, 5));
+
+        lblSequenceData = new JLabel("Sequence Data");
+        lblSequenceData.setHorizontalAlignment(SwingConstants.CENTER);
+        panel_2.add(lblSequenceData, BorderLayout.NORTH);
+
+        txtSequenceData = new JTextArea();
+        txtSequenceData.setRows(8);
+        panel_2.add(txtSequenceData, BorderLayout.CENTER);
+        this.jPanel5.add(this.btnCancel);
+
+        this.jPanel4.add(this.jPanel5, BorderLayout.SOUTH);
+
+        getContentPane().add(this.jPanel4);
+
+        pack();
+    }
+    
+    private void addNewRule(ClustalWRule newRule) {
+        final ClustalWRuleFragmentUI newUI = new ClustalWRuleFragmentUI();
+        rulesPanel.add(newUI);
+        ruleFragments.add(newUI);
+        newUI.setRule(newRule);
+        newUI.getBtnDelete().addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rulesPanel.remove(newUI);
+                pack();
+            }
+        });
+    }
+
+    private void btnOKActionPerformed(ActionEvent evt) {
+        this.myConfig.getRules().clear();
+        for (ClustalWRuleFragmentUI fragment : ruleFragments) {
+            this.myConfig.getRules().add(fragment.getRule());
+        }
+        myConfig.setSequenceData(txtSequenceData.getText());
+        setVisible(false);
+    }
+
+    private void btnCancelActionPerformed(ActionEvent evt) {
+        setVisible(false);
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                JFrame frame = new JFrame();
+                ClustalWFilterConfiguration config = new ClustalWFilterConfiguration();
+                ClustalWFilterConfiguration newConfig = new ClustalWFilterConfigurationDialog(
+                        frame).showDialog(config);
+                System.out.println("Old config:\n\n" + config.toString()
+                        + "\n\n");
+                System.out.println("New config\n\n" + newConfig);
+            }
+        });
+    }
+
+    public ClustalWFilterConfiguration showDialog(
+            ClustalWFilterConfiguration initialConfig) {
+        this.myConfig = initialConfig;
+        if (this.myConfig == null) {
+            this.myConfig = new ClustalWFilterConfiguration(
+                    new ArrayList<ClustalWRule>(), "");
+        }
+        if (myConfig.getRules().isEmpty()) {
+            this.myConfig.getRules().add(ClustalWRule.defaultRule());
+        }
+        rulesPanel.removeAll();
+        ruleFragments.clear();
+        for (ClustalWRule rule : myConfig.getRules()) {
+            addNewRule(rule);
+        }
+        txtSequenceData.setText(myConfig.getSequenceData());
+        pack();
+        setVisible(true);
+        return this.myConfig;
+    }
 }

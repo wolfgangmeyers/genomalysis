@@ -1,43 +1,87 @@
 package org.genomalysis.clustalw;
 
-public class ClustalWFilterConfiguration
-{
-  private ClosenessConstraint identityConstraint;
-  private ClosenessConstraint strongConstraint;
-  private ClosenessConstraint weakConstraint;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
-  public ClustalWFilterConfiguration()
-  {
-    this.identityConstraint = new ClosenessConstraint();
-    this.strongConstraint = new ClosenessConstraint();
-    this.weakConstraint = new ClosenessConstraint(); }
+public class ClustalWFilterConfiguration implements Serializable {
 
-  public ClosenessConstraint getIdentityConstraint() {
-    return this.identityConstraint;
-  }
+    private static final long serialVersionUID = 1L;
+    private List<ClustalWRule> rules = new LinkedList<ClustalWRule>();
+    private String sequenceData = "";
 
-  public void setIdentityConstraint(ClosenessConstraint identityConstraint) {
-    this.identityConstraint = identityConstraint;
-  }
+    public List<ClustalWRule> getRules() {
+        return rules;
+    }
 
-  public ClosenessConstraint getStrongConstraint() {
-    return this.strongConstraint;
-  }
+    public void setRules(List<ClustalWRule> rules) {
+        this.rules = rules;
+    }
 
-  public void setStrongConstraint(ClosenessConstraint strongConstraint) {
-    this.strongConstraint = strongConstraint;
-  }
+    public String getSequenceData() {
+        return sequenceData;
+    }
 
-  public ClosenessConstraint getWeakConstraint() {
-    return this.weakConstraint;
-  }
+    public void setSequenceData(String sequenceData) {
+        this.sequenceData = sequenceData;
+    }
 
-  public void setWeakConstraint(ClosenessConstraint weakConstraint) {
-    this.weakConstraint = weakConstraint;
-  }
+    public ClustalWFilterConfiguration() {
+    }
 
-  public String toString()
-  {
-    return "Identity:\n" + this.identityConstraint.toString() + "Strong:\n" + this.strongConstraint.toString() + "Weak:\n" + this.weakConstraint.toString();
-  }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((rules == null) ? 0 : rules.hashCode());
+        result = prime * result
+                + ((sequenceData == null) ? 0 : sequenceData.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ClustalWFilterConfiguration other = (ClustalWFilterConfiguration) obj;
+        if (rules == null) {
+            if (other.rules != null)
+                return false;
+        } else if (!rules.equals(other.rules))
+            return false;
+        if (sequenceData == null) {
+            if (other.sequenceData != null)
+                return false;
+        } else if (!sequenceData.equals(other.sequenceData))
+            return false;
+        return true;
+    }
+
+    public ClustalWFilterConfiguration(List<ClustalWRule> rules,
+            String sequenceData) {
+        super();
+        this.rules = rules;
+        this.sequenceData = sequenceData;
+    }
+
+    private String sequenceDataPreview() {
+        if (sequenceData.length() < 8) {
+            return sequenceData;
+        } else {
+            return sequenceData.substring(0, 5) + "...";
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return "ClustalWFilterConfiguration [rules=" + rules
+                + ", sequenceData=" + sequenceDataPreview() + "]";
+    }
+    
+    
+
 }

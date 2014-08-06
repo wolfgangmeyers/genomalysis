@@ -1,63 +1,70 @@
 package org.genomalysis.clustalw;
 
-public class ClustalWOutput
-{
-  private double identity_percentage;
-  private double strong_percentage;
-  private double weak_percentage;
-  private double nomatch_percentage;
-  private String raw_output = "";
+public class ClustalWOutput {
 
-  public ClustalWOutput()
-  {
-  }
+    private int identityCount;
+    private int strongCount;
+    private int weakCount;
+    private int sequenceLength;
+    private String rawOutput = "";
 
-  public ClustalWOutput(String raw_output, double identity_percentage, double strong_percentage, double weak_percentage, double nomatch_percentage)
-  {
-    this.raw_output = raw_output;
-    this.identity_percentage = identity_percentage;
-    this.strong_percentage = strong_percentage;
-    this.weak_percentage = weak_percentage;
-    this.nomatch_percentage = nomatch_percentage;
-  }
+    public ClustalWOutput() {
+    }
 
-  public double getIdentity_percentage() {
-    return this.identity_percentage;
-  }
+    public ClustalWOutput(String raw_output, int sequenceLength,
+            int identityCount, int strongCount, int weakCount) {
+        this.rawOutput = raw_output;
+        this.sequenceLength = sequenceLength;
+        this.identityCount = identityCount;
+        this.strongCount = strongCount;
+        this.weakCount = weakCount;
+    }
 
-  public void setIdentity_percentage(double identity_percentage) {
-    this.identity_percentage = identity_percentage;
-  }
+    public int getIdentityCount() {
+        return identityCount;
+    }
 
-  public double getStrong_percentage() {
-    return this.strong_percentage;
-  }
+    public void setIdentityCount(int identityCount) {
+        this.identityCount = identityCount;
+    }
 
-  public void setStrong_percentage(double strong_percentage) {
-    this.strong_percentage = strong_percentage;
-  }
+    public int getStrongCount() {
+        return strongCount;
+    }
 
-  public double getWeak_percentage() {
-    return this.weak_percentage;
-  }
+    public void setStrongCount(int strongCount) {
+        this.strongCount = strongCount;
+    }
 
-  public void setWeak_percentage(double weak_percentage) {
-    this.weak_percentage = weak_percentage;
-  }
+    public int getWeakCount() {
+        return weakCount;
+    }
 
-  public double getNomatch_percentage() {
-    return this.nomatch_percentage;
-  }
+    public void setWeakCount(int weakCount) {
+        this.weakCount = weakCount;
+    }
 
-  public void setNomatch_percentage(double nomatch_percentage) {
-    this.nomatch_percentage = nomatch_percentage;
-  }
+    public double getIdentityPercentage() {
+        return (double)identityCount / sequenceLength;
+    }
 
-  public String getRaw_output() {
-    return this.raw_output;
-  }
+    public double getStrongPercentage() {
+        return (double)strongCount / sequenceLength;
+    }
 
-  public void setRaw_output(String raw_output) {
-    this.raw_output = raw_output;
-  }
+    public double getWeakPercentage() {
+        return (double)weakCount / sequenceLength;
+    }
+
+    public String getRawOutput() {
+        return this.rawOutput;
+    }
+
+    public void setRawOutput(String rawOutput) {
+        this.rawOutput = rawOutput;
+    }
+
+    public Object getNomatchPercentage() {
+        return 1.0 - (getWeakPercentage() + getStrongPercentage() + getIdentityPercentage());
+    }
 }
