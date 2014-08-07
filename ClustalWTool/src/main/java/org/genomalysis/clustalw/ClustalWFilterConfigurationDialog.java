@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -25,9 +26,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.FlowLayout;
+
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JRadioButton;
 
 public class ClustalWFilterConfigurationDialog extends JDialog {
     private ClustalWFilterConfiguration myConfig;
@@ -45,6 +48,8 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
     private JPanel panel_2;
     private JLabel lblSequenceData;
     private JTextArea txtSequenceData;
+    private JRadioButton rdbtnAllMustBe;
+    private JRadioButton rdbtnAtLeastOne;
 
     public ClustalWFilterConfigurationDialog(Frame parent) {
         super(parent, true);
@@ -93,6 +98,15 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
                 pack();
             }
         });
+
+        ButtonGroup conjunctionGroup = new ButtonGroup();
+        rdbtnAllMustBe = new JRadioButton("All must be true");
+        panel.add(rdbtnAllMustBe);
+
+        rdbtnAtLeastOne = new JRadioButton("At least one must be true");
+        panel.add(rdbtnAtLeastOne);
+        conjunctionGroup.add(rdbtnAllMustBe);
+        conjunctionGroup.add(rdbtnAtLeastOne);
         panel.add(btnAddNewRule);
 
         panel_1 = new JPanel();
@@ -126,17 +140,18 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
 
         pack();
     }
-    
+
     private void addNewRule(ClustalWRule newRule) {
         final ClustalWRuleFragmentUI newUI = new ClustalWRuleFragmentUI();
         rulesPanel.add(newUI);
         ruleFragments.add(newUI);
         newUI.setRule(newRule);
         newUI.getBtnDelete().addActionListener(new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 rulesPanel.remove(newUI);
+                ruleFragments.remove(newUI);
                 pack();
             }
         });
@@ -148,6 +163,11 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
             this.myConfig.getRules().add(fragment.getRule());
         }
         myConfig.setSequenceData(txtSequenceData.getText());
+        if (rdbtnAtLeastOne.isSelected()) {
+            myConfig.setConjunction(ClustalWRuleConjunction.OR);
+        } else {
+            myConfig.setConjunction(ClustalWRuleConjunction.AND);
+        }
         setVisible(false);
     }
 
@@ -174,7 +194,8 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         this.myConfig = initialConfig;
         if (this.myConfig == null) {
             this.myConfig = new ClustalWFilterConfiguration(
-                    new ArrayList<ClustalWRule>(), "");
+                    new ArrayList<ClustalWRule>(), "",
+                    ClustalWRuleConjunction.AND);
         }
         if (myConfig.getRules().isEmpty()) {
             this.myConfig.getRules().add(ClustalWRule.defaultRule());
@@ -185,6 +206,17 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
             addNewRule(rule);
         }
         txtSequenceData.setText(myConfig.getSequenceData());
+        if (myConfig.getConjunction() == null) {
+            myConfig.setConjunction(ClustalWRuleConjunction.AND);
+        }
+        switch (myConfig.getConjunction()) {
+        case OR:
+            rdbtnAtLeastOne.setSelected(true);
+            break;
+        default:
+            rdbtnAllMustBe.setSelected(true);
+            break;
+        }
         pack();
         setVisible(true);
         return this.myConfig;

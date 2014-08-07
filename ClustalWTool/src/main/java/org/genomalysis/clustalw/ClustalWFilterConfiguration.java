@@ -9,6 +9,7 @@ public class ClustalWFilterConfiguration implements Serializable {
     private static final long serialVersionUID = 1L;
     private List<ClustalWRule> rules = new LinkedList<ClustalWRule>();
     private String sequenceData = "";
+    private ClustalWRuleConjunction conjunction;
 
     public List<ClustalWRule> getRules() {
         return rules;
@@ -26,6 +27,14 @@ public class ClustalWFilterConfiguration implements Serializable {
         this.sequenceData = sequenceData;
     }
 
+    public ClustalWRuleConjunction getConjunction() {
+        return conjunction;
+    }
+
+    public void setConjunction(ClustalWRuleConjunction conjunction) {
+        this.conjunction = conjunction;
+    }
+
     public ClustalWFilterConfiguration() {
     }
 
@@ -33,6 +42,8 @@ public class ClustalWFilterConfiguration implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result
+                + ((conjunction == null) ? 0 : conjunction.hashCode());
         result = prime * result + ((rules == null) ? 0 : rules.hashCode());
         result = prime * result
                 + ((sequenceData == null) ? 0 : sequenceData.hashCode());
@@ -48,6 +59,8 @@ public class ClustalWFilterConfiguration implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         ClustalWFilterConfiguration other = (ClustalWFilterConfiguration) obj;
+        if (conjunction != other.conjunction)
+            return false;
         if (rules == null) {
             if (other.rules != null)
                 return false;
@@ -62,10 +75,11 @@ public class ClustalWFilterConfiguration implements Serializable {
     }
 
     public ClustalWFilterConfiguration(List<ClustalWRule> rules,
-            String sequenceData) {
+            String sequenceData, ClustalWRuleConjunction conjunction) {
         super();
         this.rules = rules;
         this.sequenceData = sequenceData;
+        this.conjunction = conjunction;
     }
 
     private String sequenceDataPreview() {
@@ -75,13 +89,12 @@ public class ClustalWFilterConfiguration implements Serializable {
             return sequenceData.substring(0, 5) + "...";
         }
     }
-    
+
     @Override
     public String toString() {
         return "ClustalWFilterConfiguration [rules=" + rules
-                + ", sequenceData=" + sequenceDataPreview() + "]";
+                + ", sequenceData=" + sequenceDataPreview() + ", conjunction="
+                + conjunction + "]";
     }
-    
-    
 
 }

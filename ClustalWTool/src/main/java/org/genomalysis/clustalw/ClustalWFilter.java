@@ -13,8 +13,8 @@ import org.genomalysis.proteintools.ProteinSequence;
 @Documentation("The ClustalW filter uses the ClustalW program to determine how alike proteins are. You can specify how alike proteins must be (to your target protein) by editing the filter configuration.")
 @Author(EmailAddress = "wolfgangmeyers@gmail.com", Name = "Wolfgang Meyers")
 @Configurator(ClustalWFilterConfigurator.class)
-public class ClustalWFilter implements IProteinSequenceFilter, Serializable  {
-    
+public class ClustalWFilter implements IProteinSequenceFilter, Serializable {
+
     private static final long serialVersionUID = 1L;
     private ClustalWInterface parser;
     private String sequenceData;
@@ -48,7 +48,8 @@ public class ClustalWFilter implements IProteinSequenceFilter, Serializable  {
     public boolean filterProteinSequence(ProteinSequence sequence) {
         boolean result;
         try {
-            result = true;
+            result = config.getConjunction() == ClustalWRuleConjunction.OR ? false
+                    : true;
             ProteinSequence criteriaSequence = ProteinSequence.parse(config
                     .getSequenceData());
             if (sequence.getName().equals(criteriaSequence.getName()))
@@ -59,7 +60,9 @@ public class ClustalWFilter implements IProteinSequenceFilter, Serializable  {
                     sequence);
 
             for (ClustalWRule rule : config.getRules()) {
-                result = result && rule.testOutput(output);
+                result = config.getConjunction() == ClustalWRuleConjunction.OR ? result
+                        || rule.testOutput(output)
+                        : result && rule.testOutput(output);
             }
 
             return result;
