@@ -3,6 +3,7 @@ package org.genomalysis.plugin;
 import java.io.Serializable;
 
 public class PluginInstance<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;
     private T instance;
     private String factoryName;
@@ -55,6 +56,7 @@ public class PluginInstance<T> implements Serializable {
         return result;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

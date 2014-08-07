@@ -22,38 +22,42 @@ import org.genomalysis.plugin.configuration.dialogs.StringConfigurator;
  */
 public final class PropertyConfiguratorTable {
 
-    private HashMap<Class, IPropertyConfigurator> configuratorTable;
+    private HashMap<Class<?>, IPropertyConfigurator> configuratorTable;
 
     public PropertyConfiguratorTable() {
-        configuratorTable = new HashMap<Class, IPropertyConfigurator>();
+        configuratorTable = new HashMap<>();
 
-        //integers
+        // integers
         IntConfigurator cfg = new IntConfigurator();
         RegisterPropertyConfigurationDialog(int.class, cfg);
         RegisterPropertyConfigurationDialog(Integer.class, cfg);
 
-        //strings
+        // strings
         BooleanConfigurator booleanConfigurator = new BooleanConfigurator();
         RegisterPropertyConfigurationDialog(Boolean.class, booleanConfigurator);
         RegisterPropertyConfigurationDialog(Boolean.TYPE, booleanConfigurator);
-        RegisterPropertyConfigurationDialog(String.class, new StringConfigurator());
-        //Regular Expressions
-        RegisterPropertyConfigurationDialog(Pattern.class, new PatternConfigurator());
+        RegisterPropertyConfigurationDialog(String.class,
+                new StringConfigurator());
+        // Regular Expressions
+        RegisterPropertyConfigurationDialog(Pattern.class,
+                new PatternConfigurator());
         RegisterPropertyConfigurationDialog(List.class, new ListConfigurator());
-        RegisterPropertyConfigurationDialog(Color.class, new ColorConfigurator());
+        RegisterPropertyConfigurationDialog(Color.class,
+                new ColorConfigurator());
     }
 
-    public void RegisterPropertyConfigurationDialog(Class toBeConfigured, IPropertyConfigurator configurationDialog) {
+    public void RegisterPropertyConfigurationDialog(Class<?> toBeConfigured,
+            IPropertyConfigurator configurationDialog) {
         if (!configuratorTable.containsKey(toBeConfigured)) {
             configuratorTable.put(toBeConfigured, configurationDialog);
         }
     }
 
-    public boolean IsClassRegisteredForConfiguration(Class clazz) {
+    public boolean IsClassRegisteredForConfiguration(Class<?> clazz) {
         return configuratorTable.containsKey(clazz);
     }
 
-    public IPropertyConfigurator getConfigurationDialog(Class clazz) {
+    public IPropertyConfigurator getConfigurationDialog(Class<?> clazz) {
         return configuratorTable.get(clazz);
     }
 }

@@ -14,6 +14,7 @@ import org.genomalysis.plugin.configuration.annotations.Documentation;
 
 @Documentation("Used to indicate that a sequence filter couldn't find necessary resources to run.")
 public class InitializationException extends Exception {
+    private static final long serialVersionUID = 1L;
     private String[] reasons;
 
     public String[] getReasons() {

@@ -14,9 +14,10 @@ import org.genomalysis.plugin.configuration.IPropertyConfigurator;
  *
  * @author ameyers
  */
-public class CustomStringConfigurator implements IPropertyConfigurator{
+public class CustomStringConfigurator implements IPropertyConfigurator {
 
-    public Object showDialog(JComponent base, Object target) throws ConfigurationException {
+    public Object showDialog(JComponent base, Object target)
+            throws ConfigurationException {
         return "CustomStringConfigurator was here!";
     }
 

@@ -37,7 +37,8 @@ public class TMPredictionFilter implements IProteinSequenceFilter {
             e.printStackTrace();
             return false;
         }
-        String header = sequence.getHeader() == null ? ">NO_HEADER" : sequence.getHeader();
+        String header = sequence.getHeader() == null ? ">NO_HEADER" : sequence
+                .getHeader();
         List<TMSegment> segments = this.outputParser.getPredictedSegments(
                 outputString, header.split(" ")[0].substring(1));
         boolean result = (segments.size() >= this.minimumSegments)

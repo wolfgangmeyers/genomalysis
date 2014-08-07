@@ -2,10 +2,7 @@ package org.genomalysis.clustalw;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.sound.midi.Sequencer;
 
 import org.genomalysis.plugin.configuration.annotations.PropertyGetter;
 import org.genomalysis.plugin.configuration.annotations.PropertySetter;
@@ -15,6 +12,13 @@ import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
 
+/**
+ * Runs Clustal and provides strong, weak, identity count and percentage as
+ * text, as well as the non-matched percentage.
+ * 
+ * @author wolfgang
+ *
+ */
 public class ClustalWDiagnosticsTool implements IProteinDiagnosticsTool {
     private ClustalWInterface parser;
     private String sequenceData;
@@ -61,15 +65,16 @@ public class ClustalWDiagnosticsTool implements IProteinDiagnosticsTool {
                 buffer.append(sequenceResult.getRawOutput());
                 buffer.append("\n\nRatios\n====================================\n\n");
                 buffer.append("Identity: "
-                        + sequenceResult.getIdentityCount() + " - "
+                        + sequenceResult.getIdentityCount()
+                        + " - "
                         + formatter.format(sequenceResult
                                 .getIdentityPercentage()) + "\n");
                 buffer.append("Strong: "
-                        + sequenceResult.getStrongCount() + " - "
+                        + sequenceResult.getStrongCount()
+                        + " - "
                         + formatter.format(sequenceResult.getStrongPercentage())
                         + "\n");
-                buffer.append("Weak: "
-                        + sequenceResult.getWeakCount() + " - "
+                buffer.append("Weak: " + sequenceResult.getWeakCount() + " - "
                         + formatter.format(sequenceResult.getWeakPercentage())
                         + "\n");
                 buffer.append("No Match: "

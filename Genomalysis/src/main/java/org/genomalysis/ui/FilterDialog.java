@@ -34,6 +34,7 @@ import org.genomalysis.proteintools.InitializationException;
  */
 public class FilterDialog extends javax.swing.JDialog {
 
+    private static final long serialVersionUID = 1L;
     private FilterControl filterControl;
     private FilterProgressControl filterProgressControl;
     private FilterProgressPanel filterProgressPanel;
@@ -52,12 +53,14 @@ public class FilterDialog extends javax.swing.JDialog {
                 File infile = new File(last.getInfile());
                 if (infile.exists()) {
                     txtInputFile.setText(last.getInfile());
-                    inputFileChooser.setCurrentDirectory(infile.getParentFile());
+                    inputFileChooser
+                            .setCurrentDirectory(infile.getParentFile());
                 }
                 File outfile = new File(last.getOutfile());
                 if (outfile.getParentFile().exists()) {
                     txtOutputFile.setText(last.getOutfile());
-                    outputFileChooser.setCurrentDirectory(outfile.getParentFile());
+                    outputFileChooser.setCurrentDirectory(outfile
+                            .getParentFile());
                 }
             }
         } catch (Exception e) {
@@ -251,7 +254,6 @@ public class FilterDialog extends javax.swing.JDialog {
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnStartActionPerformed
         try {
             boolean goodToGo = true;
-            final FilterDialog dlg = this;
             if (txtInputFile.getText().equals("")) {
                 _showError("Specify an input file", "Error");
                 goodToGo = false;

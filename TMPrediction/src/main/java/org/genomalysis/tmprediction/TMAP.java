@@ -12,10 +12,7 @@ import org.apache.commons.io.IOUtils;
 public class TMAP {
 
     private static final String UTGAVA = "53";
-    private static final int STD_NUMBER = 40;
-    private static final int MSF_NUMBER = 40;
     private static final int TM_NUMBER = 100;
-    private static final int TM_SEQUENCES = 3000;
     /** Max antal profiler */
     private static final int MAX_PROF = 10;
     /** Max antal pred. TM-segment */
@@ -71,30 +68,10 @@ public class TMAP {
             new int[] { 7, 2 }, new int[] { 1, 1 }, new int[] { 0, 0 },
             new int[] { 0, 0 }, new int[] { 0, 0 }, new int[] { 0, 0 } };
 
-    private String[] stand_namn = new String[STD_NUMBER];
-    private String test_namn;
-    private int[][] stand_start = new int[STD_NUMBER][TM_NUMBER];
-    private int[][] stand_stopp = new int[STD_NUMBER][TM_NUMBER];
-    private int[] corr_standard = new int[TM_NUMBER];
-
     private String infile;
-    private String infile2;
-    private String infile3;
-    private String infile4;
     private String outfile;
-    private String outfile2;
 
     private String[] pp_file = new String[MAX_PROF];
-    private String id;
-    private String tempstring;
-    private char tempchar;
-    private String[] tm_idd = new String[TM_SEQUENCES];
-
-    private int count, weight;
-
-    private double[] ntmg = new double[26];
-    private double[] n = new double[26];
-    private double stmg, saa;
     private double[][] profile = new double[MAX_PROF][LENGTH + 1];
 
     /* P values and spans */
@@ -106,13 +83,10 @@ public class TMAP {
     private String[] s = new String[NUMBER];
     private int[] relc = new int[LENGTH];
     private int[] reln = new int[LENGTH];
-    private int l, start1, stopp1;
-    private int nummer, nr, pos;
+    private int nr, pos;
     /** Number of positions in alignment */
     private int poss;
     private String[] idd = new String[NUMBER];
-    private int[] start = new int[TM_NUMBER];
-    private int[] stopp = new int[TM_NUMBER];
 
     private double[] norm_skillnad = new double[NUMBER];
     private int tm_number;
@@ -121,26 +95,11 @@ public class TMAP {
     private int[] npos = new int[MAXHIT];
     private int[] cpos = new int[MAXHIT];
     private int[] pred_mode = new int[TM_NUMBER];
-    private String pred_string;
-    private double[][] charges = new double[TM_NUMBER][3];
-    private double[] gvhcharge = new double[TM_NUMBER];
-    private double[][] mincharges = new double[TM_NUMBER][3];
-    private double[][] maxcharges = new double[TM_NUMBER][3];
-    private double[] mingvhcharge = new double[TM_NUMBER];
-    private double[] maxgvhcharge = new double[TM_NUMBER];
 
-    private int e_spann_min, e_spann_max;
+    private int e_spann_max;
 
-    private double mx_limit, me_limit;
+    private double mx_limit;
     private int[] ali_ok = new int[LENGTH];
-
-    private int refant;
-    private String[] refali = new String[NUMBER];
-    private String[] refnamn = new String[NUMBER];
-
-    private static final int OVERLAPP = 2;
-    private static final int MAX_TM_LANGD = 30;
-    private static final int MIN_TM_LANGD = 25;
 
     /*
      * Definitioner for PostScript-figurer
@@ -160,10 +119,8 @@ public class TMAP {
 
     private static final int V_LABELBREDD = 20;
     private static final int H_LABELBREDD = 5;
-    private static final int LABELHOJD = 10;
 
     private static final int NUMBERSIZE = 8;
-    private static final int LABELSIZE = 10;
     private static final int LEFTMARGIN = 50;
     private static final int SIDBREDD = 400;
 
@@ -235,7 +192,7 @@ public class TMAP {
     /**
      * present_open ------------ Opens outfile for results
      */
-    void present_open() {
+    private void present_open() {
         if (1 == xml_output) {
             fprintf(fp, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
             fprintf(fp, "<tmapresult version=\"1.0\">\n");
@@ -373,7 +330,7 @@ public class TMAP {
      * nr of sequences norm_sk - vector for weights
      *
      */
-    void weights(String[] s, int poss, int nr, double[] norm_sk) {
+    private void weights(String[] s, int poss, int nr, double[] norm_sk) {
         int i, j, testnr;
         int[] skillnad = new int[NUMBER + 1];
         double summa;
@@ -409,9 +366,7 @@ public class TMAP {
 
     } /* weights */
 
-    private void refpos2(int refnr, int poss)
-
-    {
+    private void refpos2(int refnr, int poss) {
         int i, temp;
 
         for (i = 0; i < LENGTH; i++)
@@ -565,10 +520,8 @@ public class TMAP {
 
     } /* plot1 */
 
-    private int pred1(double m_limit, double ml_limit, double e_limit, int nr)
-
-    {
-        int i, j, k, hitnr, length, tm_ant;
+    private int pred1(double m_limit, double ml_limit, double e_limit, int nr) {
+        int i, j, k, length, tm_ant;
         boolean flag;
         int[] start = new int[MAXHIT];
         int[] stopp = new int[MAXHIT];
@@ -584,7 +537,6 @@ public class TMAP {
 
         int starttmp, stopptmp, temp;
 
-        hitnr = 0;
         for (i = 0; i < TM_NUMBER; i++)
             pred_mode[i] = 0;
 
@@ -1323,7 +1275,6 @@ public class TMAP {
             throws IOException {
         int j;
         int[] stand_tmant = new int[TM_NUMBER];
-        int n_spann, m_spann, c_spann;
         double m_limit, ml_limit, e_limit;
         int stand_nr;
         // char *pdf_filename;
@@ -1342,11 +1293,6 @@ public class TMAP {
             this.xml_output = 1;
         }
 
-        n_spann = N_SPANN;
-        m_spann = M_SPANN;
-        c_spann = C_SPANN;
-
-        e_spann_min = E_SPANN_MIN;
         e_spann_max = E_SPANN_MAX;
 
         m_limit = 1.23;
@@ -1354,10 +1300,8 @@ public class TMAP {
         e_limit = 1.07;
 
         mx_limit = 1.18;
-        me_limit = 1.10;
         nr = 0;
         s[0] = sequenceData.toUpperCase();
-        test_namn = infile;
         // stand_nr = -1;
         stand_nr = 0;
 
@@ -1410,11 +1354,11 @@ public class TMAP {
      * ps_init ------- Initierar PostScript-fil
      */
 
-    void ps_init1() {
+    private void ps_init1() {
         fprintf(psfp, "%%! \n");
     }
 
-    void ps_init2() {
+    private void ps_init2() {
         fprintf(psfp, "newpath\n90 rotate\n30 -600 translate\n");
         fprintf(psfp,
                 "/Helvetica findfont\n%d scalefont setfont\n0.5 setlinewidth\n",
@@ -1422,11 +1366,7 @@ public class TMAP {
         fprintf(psfp, "0 0 moveto\n");
     }
 
-    void ps_end() {
-        fprintf(psfp, "stroke\nshowpage\n");
-    }
-
-    void ps_sidbrytning() {
+    private void ps_sidbrytning() {
         fprintf(psfp, "stroke\nshowpage\n");
     }
 
@@ -1436,7 +1376,7 @@ public class TMAP {
      * plot_legend -----------
      */
 
-    void plot_legend(double x, double y, int antal, String[] namn) {
+    private void plot_legend(double x, double y, int antal, String[] namn) {
         int i;
 
         for (i = 0; i < antal; i++) {
@@ -1456,7 +1396,7 @@ public class TMAP {
      * plot_text ---------
      */
 
-    void plot_text(double x, double y, String str) {
+    private void plot_text(double x, double y, String str) {
         fprintf(psfp, "%f %f moveto\n", x * X_SKALA + LEFTMARGIN, y * Y_SKALA
                 + Y_ORIGO);
         fprintf(psfp, "(%s) dup stringwidth pop 2 div neg 0 rmoveto show\n",
@@ -1467,7 +1407,7 @@ public class TMAP {
      * plot_linetype -------------
      */
 
-    void plot_linetype(int a, int b) {
+    private void plot_linetype(int a, int b) {
         if ((a > 0) && (b > 0))
             fprintf(psfp, "[%d %d] 0 setdash\n", a, b);
         else
@@ -1480,7 +1420,7 @@ public class TMAP {
      * parameter 0, normalt 1, bryt i hogerkant 2, bryt i vansterkant
      */
 
-    void plot_tmbar(int x1, int x2, double y, int parameter) {
+    private void plot_tmbar(int x1, int x2, double y, int parameter) {
         fprintf(psfp, "stroke\n1.5 setlinewidth\n");
         plot_x_linje((double) x1, (double) x2, (double) y);
         fprintf(psfp, "0.5 setlinewidth\n");
@@ -1498,7 +1438,7 @@ public class TMAP {
      * plot_x_linje ------------
      */
 
-    void plot_x_linje(double xmin, double xmax, double y) {
+    private void plot_x_linje(double xmin, double xmax, double y) {
         /* fprintf(psfp,"gsave\n[3] 0 setdash\n"); */
         fprintf(psfp, "%f %f moveto\n%f %f lineto\n", xmin * X_SKALA
                 + LEFTMARGIN, y * Y_SKALA + Y_ORIGO, xmax * X_SKALA
@@ -1514,9 +1454,9 @@ public class TMAP {
      * strecktathet - avstand mellan strecken (samma skala som y-varden)
      */
 
-    void plot_x_skala(double y, double xmin, double xmax, double strecklangd,
-            double l_strecklangd, double strecktathet, double siffertathet,
-            int page) {
+    private void plot_x_skala(double y, double xmin, double xmax,
+            double strecklangd, double l_strecklangd, double strecktathet,
+            double siffertathet, int page) {
         double i;
         fprintf(psfp, "%f %f moveto\n%f %f lineto\n", xmin * X_SKALA
                 + LEFTMARGIN, y * Y_SKALA + Y_ORIGO, xmax * X_SKALA
@@ -1553,8 +1493,8 @@ public class TMAP {
      * strecktathet - avstand mellan strecken (samma skala som y-varden)
      */
 
-    void plot_y_skala(double x, double ymin, double ymax, double strecklangd,
-            double strecktathet) {
+    private void plot_y_skala(double x, double ymin, double ymax,
+            double strecklangd, double strecktathet) {
         double i, label_col;
         if (strecklangd > 0)
             label_col = x * X_SKALA - V_LABELBREDD + LEFTMARGIN;

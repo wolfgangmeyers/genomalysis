@@ -6,13 +6,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 
 public class SignalPOutputParser {
 
-    public static void main(String[] args)
-            throws Exception {
+    public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.out.println("Wrong number of arguments");
             return;
@@ -26,7 +24,8 @@ public class SignalPOutputParser {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         PrintWriter pw = new PrintWriter(bout);
 
-        ProcessBuilder builder = new ProcessBuilder(new String[]{"signalp", "-t", "euk", args[0]});
+        ProcessBuilder builder = new ProcessBuilder(new String[] { "signalp",
+                "-t", "euk", args[0] });
         Process process = builder.start();
         InputStream processOutput = process.getInputStream();
         InputStreamReader reader1 = new InputStreamReader(processOutput);
@@ -46,7 +45,8 @@ public class SignalPOutputParser {
         System.out.println("Max y: " + result.getMaxY());
     }
 
-    public SignalPOutputParserResult getResults(InputStream signalPOutput) throws Exception {
+    public SignalPOutputParserResult getResults(InputStream signalPOutput)
+            throws Exception {
         SignalPOutputParserResult result = new SignalPOutputParserResult();
         boolean resultsFound = false;
 
@@ -63,7 +63,8 @@ public class SignalPOutputParser {
                 String maxCLine = reader2.readLine();
                 String maxYLine = reader2.readLine();
                 String maxSLine = reader2.readLine();
-                if ((maxCLine != null) && (maxYLine != null) && (maxSLine != null)) {
+                if ((maxCLine != null) && (maxYLine != null)
+                        && (maxSLine != null)) {
                     resultsFound = true;
 
                     SignalPVariable maxC = parseVariable(maxCLine);
@@ -85,7 +86,8 @@ public class SignalPOutputParser {
 
     private SignalPVariable parseVariable(String data) {
         String[] parts = data.split("\\s+");
-        SignalPVariable result = new SignalPVariable(Double.parseDouble(parts[4]), Double.parseDouble(parts[5]));
+        SignalPVariable result = new SignalPVariable(
+                Double.parseDouble(parts[4]), Double.parseDouble(parts[5]));
         return result;
     }
 }

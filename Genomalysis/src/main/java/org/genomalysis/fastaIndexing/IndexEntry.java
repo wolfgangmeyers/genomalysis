@@ -6,20 +6,25 @@
 package org.genomalysis.fastaIndexing;
 
 import java.io.Serializable;
+
 /**
  *
  * @author ameyers
  */
-public class IndexEntry implements Serializable{
-    
+public class IndexEntry implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private int startIndex;
-    
+
     private int endIndex;
-    
+
     private String sequenceName;
-    
-    public IndexEntry(){}
-    public IndexEntry(int startIndex, int endIndex, String sequenceName){
+
+    public IndexEntry() {
+    }
+
+    public IndexEntry(int startIndex, int endIndex, String sequenceName) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.sequenceName = sequenceName;

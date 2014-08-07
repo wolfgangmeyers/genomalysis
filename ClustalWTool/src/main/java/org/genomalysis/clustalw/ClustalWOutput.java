@@ -45,15 +45,15 @@ public class ClustalWOutput {
     }
 
     public double getIdentityPercentage() {
-        return (double)identityCount / sequenceLength;
+        return (double) identityCount / sequenceLength;
     }
 
     public double getStrongPercentage() {
-        return (double)strongCount / sequenceLength;
+        return (double) strongCount / sequenceLength;
     }
 
     public double getWeakPercentage() {
-        return (double)weakCount / sequenceLength;
+        return (double) weakCount / sequenceLength;
     }
 
     public String getRawOutput() {

@@ -1,7 +1,5 @@
 package org.genomalysis.plugin;
 
-import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,18 +10,9 @@ import java.util.logging.Logger;
 import org.genomalysis.control.EventSupport;
 import org.genomalysis.control.IObserver;
 import org.genomalysis.plugin.configuration.ConfigurationException;
-import org.genomalysis.proteintools.IProteinSequenceFilter;
-import org.genomalysis.proteintools.signalp.LegacyCleavageSiteFilter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
 public class PluginInstanceManager<T> implements IObserver {

@@ -17,13 +17,10 @@ public class ClustalWFilter implements IProteinSequenceFilter, Serializable {
 
     private static final long serialVersionUID = 1L;
     private ClustalWInterface parser;
-    private String sequenceData;
     private ClustalWFilterConfiguration config;
 
     public ClustalWFilter() {
         this.parser = new ClustalWInterface();
-        this.sequenceData = "";
-
         this.config = new ClustalWFilterConfiguration();
     }
 

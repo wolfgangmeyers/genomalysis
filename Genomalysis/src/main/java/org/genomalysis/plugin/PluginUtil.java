@@ -1,7 +1,7 @@
 package org.genomalysis.plugin;
 
 public class PluginUtil {
-    
+
     public static boolean implementsInterface(Class<?> subject, Class<?> iface) {
         boolean result = false;
         try {
@@ -11,5 +11,5 @@ public class PluginUtil {
         }
         return result;
     }
-    
+
 }

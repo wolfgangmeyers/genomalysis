@@ -9,10 +9,9 @@ import org.genomalysis.plugin.configuration.annotations.Documentation;
 
 public class DocumentationTable {
     private Map<String, String> innerTable;
-    private static final String defaultDoc = "No documenation available";
 
     public DocumentationTable() {
-        this.innerTable = new HashMap();
+        this.innerTable = new HashMap<>();
     }
 
     public void registerDocumentation(Class<?> clazz) {

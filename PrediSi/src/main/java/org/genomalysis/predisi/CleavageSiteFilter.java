@@ -17,41 +17,41 @@ import org.genomalysis.proteintools.ProteinSequence;
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
 public class CleavageSiteFilter implements IProteinSequenceFilter {
 
-	private SignalPeptidePredictor pd;
+    private SignalPeptidePredictor pd;
 
-	@Override
-	public void initialize() throws InitializationException {
-		InputStream ins = null;
-		ObjectInputStream oin = null;
+    @Override
+    public void initialize() throws InitializationException {
+        InputStream ins = null;
+        ObjectInputStream oin = null;
 
-		try {
-			//TODO: make this configurable?
-			ins = getClass().getResourceAsStream("eukarya.smx");
-			oin = new ObjectInputStream(ins);
-			SearchMatrix smp = (SearchMatrix) oin.readObject();
-			pd = new SignalPeptidePredictor(smp);
-		} catch (Exception ex) {
-			throw new InitializationException(ex.getMessage());
-		} finally {
-			if (oin != null) {
-				try {
-					oin.close();
-				} catch (IOException ignored) {
-				}
-			}
-			if (ins != null) {
-				try {
-					ins.close();
-				} catch (IOException ignored) {
-				}
-			}
-		}
-	}
+        try {
+            // TODO: make this configurable?
+            ins = getClass().getResourceAsStream("eukarya.smx");
+            oin = new ObjectInputStream(ins);
+            SearchMatrix smp = (SearchMatrix) oin.readObject();
+            pd = new SignalPeptidePredictor(smp);
+        } catch (Exception ex) {
+            throw new InitializationException(ex.getMessage());
+        } finally {
+            if (oin != null) {
+                try {
+                    oin.close();
+                } catch (IOException ignored) {
+                }
+            }
+            if (ins != null) {
+                try {
+                    ins.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
 
-	@Override
-	public boolean filterProteinSequence(ProteinSequence sequence) {
-		pd.predictEnhancedPosition(sequence.getData());
-		return pd.isSignalPeptide();
-	}
+    @Override
+    public boolean filterProteinSequence(ProteinSequence sequence) {
+        pd.predictEnhancedPosition(sequence.getData());
+        return pd.isSignalPeptide();
+    }
 
 }

@@ -5,35 +5,35 @@ import java.util.List;
 
 public class EventSupport implements IObservable {
 
-	private List<IObserver> observers = new ArrayList<IObserver>();
-	
-	public void addObserver(IObserver observer) {
-		synchronized (observers) {
-			if (!observers.contains(observer)) {
-				observers.add(observer);
-			}
-		}
-	}
+    private List<IObserver> observers = new ArrayList<IObserver>();
 
-	public void removeObserver(IObserver observer) {
-		synchronized (observers) {
-			observers.remove(observer);
-		}
-	}
+    public void addObserver(IObserver observer) {
+        synchronized (observers) {
+            if (!observers.contains(observer)) {
+                observers.add(observer);
+            }
+        }
+    }
 
-	public void notifyObserversOfError(String errorMessage) {
-		synchronized (observers) {
-			for (IObserver observer : observers) {
-				observer.showError(errorMessage);
-			}
-		}
-	}
+    public void removeObserver(IObserver observer) {
+        synchronized (observers) {
+            observers.remove(observer);
+        }
+    }
 
-	public void notifyObservers() {
-		synchronized (observers) {
-			for (IObserver observer : observers) {
-				observer.update();
-			}
-		}
-	}
+    public void notifyObserversOfError(String errorMessage) {
+        synchronized (observers) {
+            for (IObserver observer : observers) {
+                observer.showError(errorMessage);
+            }
+        }
+    }
+
+    public void notifyObservers() {
+        synchronized (observers) {
+            for (IObserver observer : observers) {
+                observer.update();
+            }
+        }
+    }
 }

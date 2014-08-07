@@ -19,7 +19,6 @@ public class HistoryManager {
 
     private int limit;
     private File historyFolder = new File("history");
-    private PluginManager pluginManager;
     private Gson gson;
 
     private File getHistoryFolder() {
@@ -65,7 +64,6 @@ public class HistoryManager {
     }
 
     public HistoryManager(PluginManager pluginManager, int limit) {
-        this.pluginManager = pluginManager;
         this.limit = limit;
         this.gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd hh:mm:ss")

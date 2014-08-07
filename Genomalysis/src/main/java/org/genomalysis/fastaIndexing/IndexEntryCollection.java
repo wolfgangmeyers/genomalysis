@@ -13,11 +13,11 @@ import java.util.List;
  *
  * @author ameyers
  */
-public class IndexEntryCollection implements Serializable{
-    
-    
+public class IndexEntryCollection implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private List<IndexEntry> indexEntries = new ArrayList<IndexEntry>();
-    
+
     public List<IndexEntry> getEntries() {
         return indexEntries;
     }
@@ -25,5 +25,5 @@ public class IndexEntryCollection implements Serializable{
     public void setEntries(List<IndexEntry> indexEntries) {
         this.indexEntries = indexEntries;
     }
-    
+
 }

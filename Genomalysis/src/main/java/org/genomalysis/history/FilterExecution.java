@@ -1,19 +1,22 @@
 package org.genomalysis.history;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import org.genomalysis.plugin.PluginInstance;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 
-public class FilterExecution {
-    
+public class FilterExecution implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String infile;
-    
+
     private String outfile;
-    
+
     private Date date;
-    
+
     private List<PluginInstance<IProteinSequenceFilter>> filters;
 
     public String getInfile() {
@@ -47,7 +50,7 @@ public class FilterExecution {
     public void setDate(Date date) {
         this.date = date;
     }
-    
+
     public FilterExecution(String infile, String outfile,
             List<PluginInstance<IProteinSequenceFilter>> filters) {
         this.infile = infile;
@@ -57,7 +60,7 @@ public class FilterExecution {
     }
 
     public FilterExecution() {
-        
+
     }
 
     @Override
@@ -102,6 +105,5 @@ public class FilterExecution {
         return "FilterExecution [infile=" + infile + ", outfile=" + outfile
                 + ", date=" + date + ", filters=" + filters + "]";
     }
-    
-    
+
 }

@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +59,8 @@ public class FilterControl implements IObservable {
         FilterExecution current = new FilterExecution(
                 inputFile.getAbsolutePath(), outputFile.getAbsolutePath(),
                 filterInstances);
-        Iterator<FilterExecution> i = historyManager.getFilterExecutionHistory().iterator();
+        Iterator<FilterExecution> i = historyManager
+                .getFilterExecutionHistory().iterator();
         if (!i.hasNext() || !i.next().equals(current)) {
             historyManager.addFilterExecution(current);
         }

@@ -1,40 +1,30 @@
 package org.genomalysis.clustalw;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.PrintStream;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import java.awt.FlowLayout;
-
-import javax.swing.SwingConstants;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class ClustalWFilterConfigurationDialog extends JDialog {
+
+    private static final long serialVersionUID = 1L;
     private ClustalWFilterConfiguration myConfig;
-    NumberFormat fmt = NumberFormat.getPercentInstance();
     private JButton btnCancel;
     private JButton btnOK;
     private JPanel jPanel4;

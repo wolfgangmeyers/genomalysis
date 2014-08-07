@@ -9,36 +9,36 @@ import org.genomalysis.plugin.configuration.ConfigurationException;
 import org.genomalysis.plugin.configuration.IPropertyConfigurator;
 import org.genomalysis.plugin.configuration.generics.GenericWrapper;
 
-public class ListConfigurator
-  implements IPropertyConfigurator
-{
-  private GenericListDialog dlg;
+public class ListConfigurator implements IPropertyConfigurator {
+    private GenericListDialog dlg;
 
-  public ListConfigurator()
-  {
-    this.dlg = null; }
-
-  public Object showDialog(JComponent base, Object target) throws ConfigurationException {
-    if (this.dlg == null)
-      this.dlg = new GenericListDialog(DialogHelper.getRootFrame(base));
-
-    Object result = target;
-    if (result instanceof GenericWrapper) {
-      List list;
-      GenericWrapper gw = (GenericWrapper)result;
-      Object o = gw.getValue();
-      if (o instanceof List) {
-        list = (List)o;
-        this.dlg.showDialog(list, gw.getValueType());
-      } else if (o == null) {
-        list = new ArrayList();
-        gw.setValue(list);
-        this.dlg.showDialog(list, gw.getValueType());
-      }
-    } else if (result instanceof List) {
-      List list = (List)result;
-      this.dlg.showDialog(list, Object.class);
+    public ListConfigurator() {
+        this.dlg = null;
     }
-    return result;
-  }
+
+    @SuppressWarnings("unchecked")
+    public Object showDialog(JComponent base, Object target)
+            throws ConfigurationException {
+        if (this.dlg == null)
+            this.dlg = new GenericListDialog(DialogHelper.getRootFrame(base));
+
+        Object result = target;
+        if (result instanceof GenericWrapper) {
+            List<Object> list;
+            GenericWrapper gw = (GenericWrapper) result;
+            Object o = gw.getValue();
+            if (o instanceof List) {
+                list = (List<Object>) o;
+                this.dlg.showDialog(list, gw.getValueType());
+            } else if (o == null) {
+                list = new ArrayList<>();
+                gw.setValue(list);
+                this.dlg.showDialog(list, gw.getValueType());
+            }
+        } else if (result instanceof List) {
+            List<Object> list = (List<Object>) result;
+            this.dlg.showDialog(list, Object.class);
+        }
+        return result;
+    }
 }

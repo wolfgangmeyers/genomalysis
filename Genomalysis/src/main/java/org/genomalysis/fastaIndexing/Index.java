@@ -6,20 +6,25 @@
 package org.genomalysis.fastaIndexing;
 
 import java.io.Serializable;
+
 /**
  *
  * @author ameyers
  */
 
-public class Index implements Serializable{
-    
+public class Index implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private IndexEntryCollection indexEntries = new IndexEntryCollection();
-    
+
     private String indexedFileName;
     private long lastModified;
-    
-    public Index(){}
-    public Index(String indexedFileName){
+
+    public Index() {
+    }
+
+    public Index(String indexedFileName) {
         this.indexedFileName = indexedFileName;
     }
 
@@ -38,7 +43,7 @@ public class Index implements Serializable{
     public void setIndexedFileName(String indexedFileName) {
         this.indexedFileName = indexedFileName;
     }
-    
+
     public long getLastModified() {
         return lastModified;
     }

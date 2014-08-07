@@ -10,13 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.genomalysis.fastaIndexing.FileIndexIO;
 import org.genomalysis.fastaIndexing.Index;
 import org.genomalysis.fastaIndexing.IndexEntry;
 import org.genomalysis.fastaIndexing.IndexPager;
-import org.genomalysis.fastaIndexing.io.FileIndexIO;
 import org.genomalysis.proteintools.ProteinSequence;
 
 /**
@@ -31,7 +29,7 @@ public class SequencePagerControl {
 
     public boolean nextPage() {
         boolean success = false;
-        if(currentPage + 1 < pager.getNumberOfPages()){
+        if (currentPage + 1 < pager.getNumberOfPages()) {
             currentPage++;
             success = true;
             cachedEntries = null;
@@ -41,7 +39,7 @@ public class SequencePagerControl {
 
     public boolean previousPage() {
         boolean success = false;
-        if(currentPage > 0){
+        if (currentPage > 0) {
             currentPage--;
             success = true;
             cachedEntries = null;
@@ -50,8 +48,8 @@ public class SequencePagerControl {
     }
 
     public boolean firstPage() {
-         boolean success = false;
-        if(currentPage > 0){
+        boolean success = false;
+        if (currentPage > 0) {
             currentPage = 0;
             success = true;
             cachedEntries = null;
@@ -61,7 +59,7 @@ public class SequencePagerControl {
 
     public boolean lastPage() {
         boolean success = false;
-        if(currentPage < pager.getNumberOfPages() - 1){
+        if (currentPage < pager.getNumberOfPages() - 1) {
             currentPage = pager.getNumberOfPages() - 1;
             success = true;
             cachedEntries = null;
@@ -71,12 +69,12 @@ public class SequencePagerControl {
 
     public List<String> getCurrentPageItems() throws IOException {
         List<String> pageItems = new ArrayList<String>();
-        
-        if(cachedEntries == null){
+
+        if (cachedEntries == null) {
             cachedEntries = pager.getPage(currentPage);
         }
-        
-        for(IndexEntry entry : cachedEntries){
+
+        for (IndexEntry entry : cachedEntries) {
             pageItems.add(entry.getSequenceName());
         }
         return pageItems;
@@ -87,7 +85,7 @@ public class SequencePagerControl {
     }
 
     public boolean hasNextPage() {
-         return currentPage < pager.getNumberOfPages() - 1;
+        return currentPage < pager.getNumberOfPages() - 1;
     }
 
     public boolean hasPreviousPage() {
@@ -104,33 +102,31 @@ public class SequencePagerControl {
 
     public void loadFile(File file) throws IOException {
         String filename = file.getName();
-        if(!file.exists()){
+        if (!file.exists()) {
             throw new FileNotFoundException(filename + " could not be found");
         }
-        
-        
-        
-        //the index file will be the same as the original, except the
-        //extension (if there is one) will be replaced with ".index"
+
+        // the index file will be the same as the original, except the
+        // extension (if there is one) will be replaced with ".index"
         int indexOfExtension = filename.lastIndexOf(".");
         String basename = filename;
-        if(indexOfExtension != -1){
+        if (indexOfExtension != -1) {
             basename = filename.substring(0, indexOfExtension);
         }
         String indexName = basename + ".index";
-        //if the index file does not exist, creat it
+        // if the index file does not exist, creat it
         File indexFile = new File(indexName);
         Index index = null;
-        if(!indexFile.exists()){
+        if (!indexFile.exists()) {
             indexFile.createNewFile();
             index = indexIO.indexFasta(file);
             indexIO.writeBinaryIndex(index, indexFile);
-        }else{
+        } else {
             index = indexIO.readBinaryIndex(indexFile);
-            if(index.getLastModified() != indexFile.lastModified()){
+            if (index.getLastModified() != indexFile.lastModified()) {
                 index = indexIO.indexFasta(file);
                 indexIO.writeBinaryIndex(index, indexFile);
-            }else{
+            } else {
                 index = indexIO.readBinaryIndex(indexFile);
             }
         }
@@ -146,14 +142,14 @@ public class SequencePagerControl {
     public void setResultsPerPage(int results) {
         pager.setPageSize(results);
     }
-    
-    public void reset(){
+
+    public void reset() {
         try {
             pager.setIndex(null);
             currentPage = 0;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
+
     }
 }

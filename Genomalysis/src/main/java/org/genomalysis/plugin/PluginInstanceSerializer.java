@@ -17,7 +17,7 @@ public class PluginInstanceSerializer implements
 
     private final Gson gson = new Gson();
     private PluginManager pluginManager;
-    
+
     public PluginInstanceSerializer(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
     }

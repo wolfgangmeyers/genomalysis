@@ -1,31 +1,30 @@
 package org.genomalysis.clustalw;
 
-import javax.swing.JPanel;
-
-import java.awt.GridLayout;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JCheckBox;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.JButton;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Color;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.border.LineBorder;
 
 public class ClustalWRuleFragmentUI extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     public ClustalWRule getRule() {
         ClustalWRule rule = new ClustalWRule();
         rule.setWeak(chckbxWeak.isSelected());
         rule.setStrong(chckbxStrong.isSelected());
         rule.setIdentity(chckbxIdentity.isSelected());
-        rule.setComparisonType((ClustalWRuleComparisonType)cbComparisonType.getSelectedItem());
-        rule.setAmountType((ClustalWRuleAmountType)cbAmountType.getSelectedItem());
+        rule.setComparisonType((ClustalWRuleComparisonType) cbComparisonType
+                .getSelectedItem());
+        rule.setAmountType((ClustalWRuleAmountType) cbAmountType
+                .getSelectedItem());
         rule.setAmount((Integer) spinnerAmount.getValue());
         return rule;
     }
@@ -50,8 +49,8 @@ public class ClustalWRuleFragmentUI extends JPanel {
     private JCheckBox chckbxStrong;
     private JCheckBox chckbxIdentity;
     private JSpinner spinnerAmount;
-    private JComboBox cbComparisonType;
-    private JComboBox cbAmountType;
+    private JComboBox<ClustalWRuleComparisonType> cbComparisonType;
+    private JComboBox<ClustalWRuleAmountType> cbAmountType;
 
     /**
      * Create the panel.
@@ -61,7 +60,6 @@ public class ClustalWRuleFragmentUI extends JPanel {
         setLayout(new BorderLayout(0, 0));
 
         JPanel panel = new JPanel();
-        FlowLayout flowLayout = (FlowLayout) panel.getLayout();
         add(panel);
 
         JLabel lblCombinationOf = new JLabel("Combination of:");
@@ -75,30 +73,29 @@ public class ClustalWRuleFragmentUI extends JPanel {
 
         chckbxIdentity = new JCheckBox("Identity");
         panel.add(chckbxIdentity);
-        
-                JLabel lblMustBe = new JLabel("Must be:");
-                panel.add(lblMustBe);
-                
-                cbComparisonType = new JComboBox();
-                panel.add(cbComparisonType);
-                cbComparisonType.setModel(new DefaultComboBoxModel(ClustalWRuleComparisonType.values()));
-                        
-                                spinnerAmount = new JSpinner();
-                                panel.add(spinnerAmount);
-                                
-                                cbAmountType = new JComboBox();
-                                panel.add(cbAmountType);
-                                cbAmountType.setModel(new DefaultComboBoxModel(ClustalWRuleAmountType.values()));
-                        
-                                JPanel panel_1 = new JPanel();
-                                add(panel_1, BorderLayout.SOUTH);
-                                
-                                        btnDeleteThisRule = new JButton("Delete this rule");
-                                        panel_1.add(btnDeleteThisRule);
 
-        ButtonGroup comparisonGroup = new ButtonGroup();
+        JLabel lblMustBe = new JLabel("Must be:");
+        panel.add(lblMustBe);
 
-        ButtonGroup amountTypeGroup = new ButtonGroup();
+        cbComparisonType = new JComboBox<ClustalWRuleComparisonType>();
+        panel.add(cbComparisonType);
+        cbComparisonType
+                .setModel(new DefaultComboBoxModel<ClustalWRuleComparisonType>(
+                        ClustalWRuleComparisonType.values()));
+
+        spinnerAmount = new JSpinner();
+        panel.add(spinnerAmount);
+
+        cbAmountType = new JComboBox<ClustalWRuleAmountType>();
+        panel.add(cbAmountType);
+        cbAmountType.setModel(new DefaultComboBoxModel<ClustalWRuleAmountType>(
+                ClustalWRuleAmountType.values()));
+
+        JPanel panel_1 = new JPanel();
+        add(panel_1, BorderLayout.SOUTH);
+
+        btnDeleteThisRule = new JButton("Delete this rule");
+        panel_1.add(btnDeleteThisRule);
 
     }
 

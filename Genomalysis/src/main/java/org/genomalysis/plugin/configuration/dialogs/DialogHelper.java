@@ -7,11 +7,8 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,155 +24,150 @@ import org.genomalysis.plugin.configuration.ConfigurationTables;
 import org.genomalysis.plugin.configuration.Property;
 import org.genomalysis.plugin.configuration.PropertyDescriptor;
 import org.genomalysis.plugin.configuration.PropertyIntrospector;
-import org.genomalysis.plugin.configuration.ReplacementTable;
 import org.genomalysis.plugin.configuration.VoidConfigurator;
 
 public class DialogHelper {
-	public static Frame getRootFrame(JComponent component) {
-		Component c = component;
-		while (!(c instanceof Frame))
-			c = c.getParent();
+    public static Frame getRootFrame(JComponent component) {
+        Component c = component;
+        while (!(c instanceof Frame))
+            c = c.getParent();
 
-		return ((Frame) c);
-	}
+        return ((Frame) c);
+    }
 
-	public static void attemptNullPropertyInstantiation(
-			Property configurationProperty, Object host, JComponent base)
-			throws ConfigurationException {
-		Frame frame = getRootFrame(base);
-		TypeSelectionDialog typeSelectionDlg = new TypeSelectionDialog(frame);
+    public static void attemptNullPropertyInstantiation(
+            Property configurationProperty, Object host, JComponent base)
+            throws ConfigurationException {
+        Frame frame = getRootFrame(base);
+        TypeSelectionDialog typeSelectionDlg = new TypeSelectionDialog(frame);
 
-		System.out
-				.println("DialogHelper: attempting to create instance for null property...");
+        System.out
+                .println("DialogHelper: attempting to create instance for null property...");
 
-		Class propertyType = configurationProperty.getPropertyType();
-		System.out.println("DialogHelper: Property type: "
-				+ propertyType.getName());
+        Class<?> propertyType = configurationProperty.getPropertyType();
+        System.out.println("DialogHelper: Property type: "
+                + propertyType.getName());
 
-		List replacements = new ArrayList();
-		replacements.addAll(ConfigurationTables.getReplacementTable()
-				.recursivelyGetReplacements(propertyType));
+        List<Class<?>> replacements = new ArrayList<>();
+        replacements.addAll(ConfigurationTables.getReplacementTable()
+                .recursivelyGetReplacements(propertyType));
 
-		System.out.println("DialogHelper: Possible replacement types:");
-		for (Iterator i$ = replacements.iterator(); i$.hasNext();) {
-			Class clazzm = (Class) i$.next();
-			System.out.println("DialogHelper:      " + clazzm.getName());
-		}
+        System.out.println("DialogHelper: Possible replacement types:");
+        for (Class<?> clazzm : replacements) {
+            System.out.println("DialogHelper:      " + clazzm.getName());
+        }
 
-		if (replacements.size() > 0) {
-			if ((!(propertyType.isInterface()))
-					&& (propertyType != Object.class)) {
-				replacements.add(0, propertyType);
-			}
+        if (replacements.size() > 0) {
+            if ((!(propertyType.isInterface()))
+                    && (propertyType != Object.class)) {
+                replacements.add(0, propertyType);
+            }
 
-			Class selectedReplacement = null;
+            Class<?> selectedReplacement = null;
 
-			if (replacements.size() > 1)
-				if (typeSelectionDlg.showDialog(replacements))
-					selectedReplacement = typeSelectionDlg.getSelectedType();
-				else
-					selectedReplacement = (Class) replacements.get(0);
+            if (replacements.size() > 1) {
+                if (typeSelectionDlg.showDialog(replacements)) {
+                    selectedReplacement = typeSelectionDlg.getSelectedType();
+                } else {
+                    selectedReplacement = replacements.get(0);
+                }
 
-			else {
-				selectedReplacement = (Class) replacements.get(0);
-			}
+            } else {
+                selectedReplacement = replacements.get(0);
+            }
 
-			try {
-				Constructor ctor = selectedReplacement
-						.getConstructor(new Class[0]);
-				Object instance = ctor.newInstance(new Object[0]);
+            try {
+                Constructor<?> ctor = selectedReplacement
+                        .getConstructor(new Class[0]);
+                Object instance = ctor.newInstance(new Object[0]);
 
-				configurationProperty.getSetter().invoke(host,
-						new Object[] { instance });
+                configurationProperty.getSetter().invoke(host,
+                        new Object[] { instance });
 
-				PropertyIntrospector.setPropertyConfigurator(
-						configurationProperty, host);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				throw new ConfigurationException(
-						"Could not instantiate new instance", ex);
-			}
-		}
-	}
+                PropertyIntrospector.setPropertyConfigurator(
+                        configurationProperty, host);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new ConfigurationException(
+                        "Could not instantiate new instance", ex);
+            }
+        }
+    }
 
-	public static void populateGenericDialog(GenericDialog dlg,
-			final Object toBeConfigured) throws ConfigurationException {
-		JPanel mainPanel = dlg.getMainPanel();
+    public static void populateGenericDialog(GenericDialog dlg,
+            final Object toBeConfigured) throws ConfigurationException {
+        JPanel mainPanel = dlg.getMainPanel();
 
-		mainPanel.removeAll();
-		mainPanel.setLayout(new GridLayout(0, 1, 5, 5));
+        mainPanel.removeAll();
+        mainPanel.setLayout(new GridLayout(0, 1, 5, 5));
 
-		final GenericDialog configDlg = dlg;
+        final GenericDialog configDlg = dlg;
 
-		dlg.setTitle("Configuration: "
-				+ toBeConfigured.getClass().getSimpleName());
+        dlg.setTitle("Configuration: "
+                + toBeConfigured.getClass().getSimpleName());
 
-		PropertyDescriptor descriptor = PropertyIntrospector
-				.getProperties(toBeConfigured);
-		Property[] arr$ = descriptor.getProperties();
-		int len$ = arr$.length;
-		for (int i$ = 0; i$ < len$; ++i$) {
-			Property prop = arr$[i$];
+        PropertyDescriptor descriptor = PropertyIntrospector
+                .getProperties(toBeConfigured);
+        for (Property prop : descriptor.getProperties()) {
+            final JPanel panel = new JPanel(new BorderLayout());
+            panel.setVisible(true);
+            JLabel nameLabel = new JLabel(prop.getPropertyName() + ": ");
+            nameLabel.setVisible(true);
+            String labelText = (prop.getPropertyValue() == null) ? "null"
+                    : prop.getPropertyValue().toString();
+            final JLabel valueLabel = new JLabel(labelText);
 
-			final JPanel panel = new JPanel(new BorderLayout());
-			panel.setVisible(true);
-			JLabel nameLabel = new JLabel(prop.getPropertyName() + ": ");
-			nameLabel.setVisible(true);
-			String labelText = (prop.getPropertyValue() == null) ? "null"
-					: prop.getPropertyValue().toString();
-			final JLabel valueLabel = new JLabel(labelText);
+            JButton configureButton = new JButton("Configure...");
 
-			JButton configureButton = new JButton("Configure...");
+            panel.add(nameLabel, "West");
+            panel.add(valueLabel, "Center");
+            panel.add(configureButton, "East");
 
-			panel.add(nameLabel, "West");
-			panel.add(valueLabel, "Center");
-			panel.add(configureButton, "East");
+            if (prop.getConfigurator() instanceof VoidConfigurator) {
+                configureButton.setEnabled(false);
+            }
 
-			if (prop.getConfigurator() instanceof VoidConfigurator) {
-				configureButton.setEnabled(false);
-			}
+            mainPanel.add(panel);
 
-			mainPanel.add(panel);
+            final Property configurationProperty = prop;
+            configureButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent arg0) {
+                    try {
+                        if (configurationProperty.getPropertyValue() == null) {
+                            DialogHelper.attemptNullPropertyInstantiation(
+                                    configurationProperty, toBeConfigured,
+                                    panel);
+                        }
 
-			final Property configurationProperty = prop;
-			configureButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					try {
-						if (configurationProperty.getPropertyValue() == null) {
-							DialogHelper.attemptNullPropertyInstantiation(
-									configurationProperty, toBeConfigured,
-									panel);
-						}
+                        configurationProperty.configure(panel);
+                        String text = (configurationProperty.getPropertyValue() == null) ? "null"
+                                : configurationProperty.getPropertyValue()
+                                        .toString();
+                        valueLabel.setText((text.length() > 10) ? text
+                                .substring(0, 10) + "..." : text);
 
-						configurationProperty.configure(panel);
-						String text = (configurationProperty.getPropertyValue() == null) ? "null"
-								: configurationProperty.getPropertyValue()
-										.toString();
-						valueLabel.setText((text.length() > 10) ? text
-								.substring(0, 10) + "..." : text);
+                        configDlg.pack();
+                    } catch (ConfigurationException ex) {
+                        Logger.getLogger(DialogHelper.class.getName()).log(
+                                Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(panel, ex.getMessage(),
+                                "Configuration Error", 0);
+                    }
+                }
+            });
+        }
 
-						configDlg.pack();
-					} catch (ConfigurationException ex) {
-						Logger.getLogger(DialogHelper.class.getName()).log(
-								Level.SEVERE, null, ex);
-						JOptionPane.showMessageDialog(panel, ex.getMessage(),
-								"Configuration Error", 0);
-					}
-				}
-			});
-		}
+        JPanel controlPanel = new JPanel(new FlowLayout());
+        JButton okButton = new JButton("OK");
+        controlPanel.add(okButton);
 
-		JPanel controlPanel = new JPanel(new FlowLayout());
-		JButton okButton = new JButton("OK");
-		controlPanel.add(okButton);
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                configDlg.setVisible(false);
+            }
 
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				configDlg.setVisible(false);
-			}
-
-		});
-		mainPanel.add(controlPanel);
-		dlg.pack();
-	}
+        });
+        mainPanel.add(controlPanel);
+        dlg.pack();
+    }
 }

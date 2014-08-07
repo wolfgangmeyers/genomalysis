@@ -5,7 +5,6 @@ import java.io.FileFilter;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,122 +20,123 @@ import org.genomalysis.plugin.script.ScriptPlugin;
 
 public class PluginManager implements IPluginFoundCallback {
 
-	/**
-	 * Map from interface name to list of implementing classes
-	 */
-	private Map<String, List<PluginInstanceFactory<?>>> pluginTypes;
-	private Map<String, PluginInstanceFactory<?>> factoriesByName;
-	protected List<Class<?>> pluginInterfaces;
-	private EventSupport eventSupport = new EventSupport();
+    /**
+     * Map from interface name to list of implementing classes
+     */
+    private Map<String, List<PluginInstanceFactory<?>>> pluginTypes;
+    private Map<String, PluginInstanceFactory<?>> factoriesByName;
+    protected List<Class<?>> pluginInterfaces;
+    private EventSupport eventSupport = new EventSupport();
     private FileFilter jarFilter;
     private ScriptManager scriptManager;
 
-	public PluginManager() {
-		this.pluginTypes = new HashMap<>();
-		this.factoriesByName = new HashMap<>();
-		this.pluginInterfaces = new ArrayList<>();
+    public PluginManager() {
+        this.pluginTypes = new HashMap<>();
+        this.factoriesByName = new HashMap<>();
+        this.pluginInterfaces = new ArrayList<>();
         this.jarFilter = new JarFilter();
         this.scriptManager = new ScriptManager();
         addPluginInterface(ScriptPlugin.class);
-	}
+    }
 
-	/**
-	 * Gets all known implementing classes of the given interface
-	 * 
-	 * @param pluginInterface
-	 * @return
-	 */
-	public List<PluginInstanceFactory<?>> getPluginTypes(Class<?> pluginInterface) {
-		String classname = pluginInterface.getName();
-		List<PluginInstanceFactory<?>> result = null;
-		result = this.pluginTypes.get(classname);
-		if (result == null) {
-			result = new ArrayList<>();
-			this.pluginTypes.put(classname, result);
-		}
-		return result;
-	}
+    /**
+     * Gets all known implementing classes of the given interface
+     * 
+     * @param pluginInterface
+     * @return
+     */
+    public List<PluginInstanceFactory<?>> getPluginTypes(
+            Class<?> pluginInterface) {
+        String classname = pluginInterface.getName();
+        List<PluginInstanceFactory<?>> result = null;
+        result = this.pluginTypes.get(classname);
+        if (result == null) {
+            result = new ArrayList<>();
+            this.pluginTypes.put(classname, result);
+        }
+        return result;
+    }
 
-	/**
-	 * Clear everything
-	 */
-	public void clearAllPlugins() {
-		this.pluginInterfaces.clear();
-		this.pluginTypes.clear();
-		notifyObservers();
-	}
+    /**
+     * Clear everything
+     */
+    public void clearAllPlugins() {
+        this.pluginInterfaces.clear();
+        this.pluginTypes.clear();
+        notifyObservers();
+    }
 
-	/**
-	 * Registers the plugin interface with this plugin manager. I have yet to
-	 * figure out why we would want to do this...
-	 * 
-	 * @param iface
-	 */
-	public void addPluginInterface(Class<?> iface) {
-		if (!(this.pluginInterfaces.contains(iface))) {
-			this.pluginInterfaces.add(iface);
-		}
-	}
+    /**
+     * Registers the plugin interface with this plugin manager. I have yet to
+     * figure out why we would want to do this...
+     * 
+     * @param iface
+     */
+    public void addPluginInterface(Class<?> iface) {
+        if (!(this.pluginInterfaces.contains(iface))) {
+            this.pluginInterfaces.add(iface);
+        }
+    }
 
-	/**
-	 * This method appears to relay a message to any observers of this object.
-	 */
-	public void showError(String message) {
-		notifyObserversOfError(message);
-	}
+    /**
+     * This method appears to relay a message to any observers of this object.
+     */
+    public void showError(String message) {
+        notifyObserversOfError(message);
+    }
 
-	/**
-	 * Gets the appropriate property configurator for the given object.
-	 * Configurators spawn user interface dialogs that are used to set
-	 * properties on the object. Once instantiated, property configurators are
-	 * cached in a PropertyConfigurationTable, and reused on subsequent calls
-	 * for objects of the same class.
-	 * 
-	 * Objects that don't specify a configurator, or whose configurator throws
-	 * an exception during instantiation, are assigned a generic configurator
-	 * that displays editable properties found by type introspection.
-	 * 
-	 * @param toBeConfigured
-	 * @return
-	 */
-	public IPropertyConfigurator getConfigurator(Object toBeConfigured) {
-		IPropertyConfigurator configurator = null;
-		PropertyConfiguratorTable propertyConfigurationTable = ConfigurationTables
-				.getPropertyConfiguratorTable();
+    /**
+     * Gets the appropriate property configurator for the given object.
+     * Configurators spawn user interface dialogs that are used to set
+     * properties on the object. Once instantiated, property configurators are
+     * cached in a PropertyConfigurationTable, and reused on subsequent calls
+     * for objects of the same class.
+     * 
+     * Objects that don't specify a configurator, or whose configurator throws
+     * an exception during instantiation, are assigned a generic configurator
+     * that displays editable properties found by type introspection.
+     * 
+     * @param toBeConfigured
+     * @return
+     */
+    public IPropertyConfigurator getConfigurator(Object toBeConfigured) {
+        IPropertyConfigurator configurator = null;
+        PropertyConfiguratorTable propertyConfigurationTable = ConfigurationTables
+                .getPropertyConfiguratorTable();
 
-		// first, see if there is a configurator cached
-		if (propertyConfigurationTable
-				.IsClassRegisteredForConfiguration(toBeConfigured.getClass())) {
-			// if so, use it.
-			configurator = propertyConfigurationTable
-					.getConfigurationDialog(toBeConfigured.getClass());
+        // first, see if there is a configurator cached
+        if (propertyConfigurationTable
+                .IsClassRegisteredForConfiguration(toBeConfigured.getClass())) {
+            // if so, use it.
+            configurator = propertyConfigurationTable
+                    .getConfigurationDialog(toBeConfigured.getClass());
 
-		} else if (toBeConfigured.getClass().getAnnotation(Configurator.class) != null) {
-			// if not, create it and cache it.
-			Configurator ann = (Configurator) toBeConfigured.getClass()
-					.getAnnotation(Configurator.class);
-			Class<?> cfgClass = ann.value();
-			try {
-				Constructor<?> ctor = cfgClass.getConstructor(new Class[0]);
+        } else if (toBeConfigured.getClass().getAnnotation(Configurator.class) != null) {
+            // if not, create it and cache it.
+            Configurator ann = (Configurator) toBeConfigured.getClass()
+                    .getAnnotation(Configurator.class);
+            Class<?> cfgClass = ann.value();
+            try {
+                Constructor<?> ctor = cfgClass.getConstructor(new Class[0]);
 
-				configurator = (IPropertyConfigurator) ctor
-						.newInstance(new Object[0]);
-			} catch (Exception ex) {
-				// TODO: log an error here?
-				configurator = new GenericConfigurator();
-			}
-			// cache it
-			propertyConfigurationTable.RegisterPropertyConfigurationDialog(
-					toBeConfigured.getClass(), configurator);
-		} else {
-			// in the case that a configurator hasn't been specified, this type
-			// of object gets a generic configurator.
-			configurator = new GenericConfigurator();
-			propertyConfigurationTable.RegisterPropertyConfigurationDialog(
-					toBeConfigured.getClass(), configurator);
-		}
-		return configurator;
-	}
+                configurator = (IPropertyConfigurator) ctor
+                        .newInstance(new Object[0]);
+            } catch (Exception ex) {
+                // TODO: log an error here?
+                configurator = new GenericConfigurator();
+            }
+            // cache it
+            propertyConfigurationTable.RegisterPropertyConfigurationDialog(
+                    toBeConfigured.getClass(), configurator);
+        } else {
+            // in the case that a configurator hasn't been specified, this type
+            // of object gets a generic configurator.
+            configurator = new GenericConfigurator();
+            propertyConfigurationTable.RegisterPropertyConfigurationDialog(
+                    toBeConfigured.getClass(), configurator);
+        }
+        return configurator;
+    }
 
     /**
      * Searches the plugins directory for jar files and auto-discovers
@@ -145,7 +145,7 @@ public class PluginManager implements IPluginFoundCallback {
     public void findPlugins() {
         File pluginDir;
         System.out.println("FilePluginManager::findPlugins");
-        
+
         pluginDir = new File("plugins");
         List<File> plugins = new ArrayList<>();
         Class<?>[] pluginInterfaceArray = new Class<?>[this.pluginInterfaces
@@ -155,15 +155,17 @@ public class PluginManager implements IPluginFoundCallback {
         System.out.println("FilePluginManager(findPlugins): I have "
                 + pluginInterfaceArray.length + " plugins to search for.");
         scanPlugins(plugins, pluginDir, pluginInterfaceArray);
-        
+
         // now, do a secondary lookup using script plugins
         List<PluginInstanceFactory<?>> scriptPluginFactories = getPluginTypes(ScriptPlugin.class);
         for (PluginInstanceFactory<?> factory : scriptPluginFactories) {
             try {
-                ScriptPlugin scriptPlugin = (ScriptPlugin)factory.createInstance().getPluginInstance();
+                ScriptPlugin scriptPlugin = (ScriptPlugin) factory
+                        .createInstance().getPluginInstance();
                 scriptManager.registerScriptPlugin(scriptPlugin);
             } catch (Exception e) {
-                System.out.println("Unable to instantiate script plugin " + factory.getName());
+                System.out.println("Unable to instantiate script plugin "
+                        + factory.getName());
                 e.printStackTrace();
             }
         }
@@ -228,70 +230,74 @@ public class PluginManager implements IPluginFoundCallback {
             return file.getName().endsWith(".jar");
         }
     }
-	/**
-	 * Registers an observer that can listen for state changes in the plugin
-	 * manager.
-	 * 
-	 * @param observer
-	 */
-	public void addObserver(IObserver observer) {
-		eventSupport.addObserver(observer);
-	}
 
-	/**
-	 * Unregisters an observer
-	 * 
-	 * @param observer
-	 */
-	public void removeObserver(IObserver observer) {
-		eventSupport.removeObserver(observer);
-	}
+    /**
+     * Registers an observer that can listen for state changes in the plugin
+     * manager.
+     * 
+     * @param observer
+     */
+    public void addObserver(IObserver observer) {
+        eventSupport.addObserver(observer);
+    }
 
-	/**
-	 * Retrieves documentation for this type, specified in the @Documentation
-	 * annotation.
-	 * 
-	 * @param clazz
-	 * @return
-	 */
-	public String getDocumentation(Class<?> clazz) {
-		return ConfigurationTables.getDocumentationTable().getDocumentation(
-				clazz);
-	}
-	
-	@Override
-	public void pluginFound(Class<?> pluginInterface, PluginInstanceFactory<?> factory) {
-	    System.out.println("pluginFound " + pluginInterface.getName() + ", " + factory.getName());
-	    String classname = pluginInterface.getName();
-	    List<PluginInstanceFactory<?>> plugins = this.pluginTypes.get(classname);
+    /**
+     * Unregisters an observer
+     * 
+     * @param observer
+     */
+    public void removeObserver(IObserver observer) {
+        eventSupport.removeObserver(observer);
+    }
+
+    /**
+     * Retrieves documentation for this type, specified in the @Documentation
+     * annotation.
+     * 
+     * @param clazz
+     * @return
+     */
+    public String getDocumentation(Class<?> clazz) {
+        return ConfigurationTables.getDocumentationTable().getDocumentation(
+                clazz);
+    }
+
+    @Override
+    public void pluginFound(Class<?> pluginInterface,
+            PluginInstanceFactory<?> factory) {
+        System.out.println("pluginFound " + pluginInterface.getName() + ", "
+                + factory.getName());
+        String classname = pluginInterface.getName();
+        List<PluginInstanceFactory<?>> plugins = this.pluginTypes
+                .get(classname);
         if (plugins == null) {
             plugins = new ArrayList<>();
             this.pluginTypes.put(classname, plugins);
         }
-        if(!plugins.contains(factory)) {
+        if (!plugins.contains(factory)) {
             plugins.add(factory);
         }
         factoriesByName.put(factory.getName(), factory);
-	}
-	
-	public PluginInstanceFactory<?> getFactoryByName(String name) {
-	    return factoriesByName.get(name);
-	}
+    }
 
-	/**
-	 * Notifies observers that the state of this plugin manager has changed.
-	 */
-	protected void notifyObservers() {
-		eventSupport.notifyObservers();
-	}
+    public PluginInstanceFactory<?> getFactoryByName(String name) {
+        return factoriesByName.get(name);
+    }
 
-	/**
-	 * Notifies observers that an error has occurred, and that the end user may
-	 * need to be notified that something has broken.
-	 * 
-	 * @param errorMsg
-	 */
-	protected void notifyObserversOfError(String errorMsg) {
-		eventSupport.notifyObserversOfError(errorMsg);
-	}
+    /**
+     * Notifies observers that the state of this plugin manager has changed.
+     */
+    protected void notifyObservers() {
+        eventSupport.notifyObservers();
+    }
+
+    /**
+     * Notifies observers that an error has occurred, and that the end user may
+     * need to be notified that something has broken.
+     * 
+     * @param errorMsg
+     */
+    protected void notifyObserversOfError(String errorMsg) {
+        eventSupport.notifyObserversOfError(errorMsg);
+    }
 }

@@ -10,7 +10,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.genomalysis.plugin.configuration.*;
+import org.genomalysis.plugin.configuration.IPropertyConfigurator;
+import org.genomalysis.plugin.configuration.VoidConfigurator;
 
 /**
  *
@@ -20,5 +21,6 @@ import org.genomalysis.plugin.configuration.*;
 @Target(ElementType.METHOD)
 public @interface PropertySetter {
     String PropertyName();
+
     Class<? extends IPropertyConfigurator> ConfiguratorType() default VoidConfigurator.class;
 }
