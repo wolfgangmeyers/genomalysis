@@ -120,6 +120,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         panel_2.add(lblSequenceData, BorderLayout.NORTH);
 
         txtSequenceData = new JTextArea();
+        txtSequenceData.setLineWrap(true);
         txtSequenceData.setRows(8);
         panel_2.add(txtSequenceData, BorderLayout.CENTER);
         this.jPanel5.add(this.btnCancel);
