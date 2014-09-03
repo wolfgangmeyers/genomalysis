@@ -16,6 +16,8 @@ public class ClustalWRuleFragmentUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
+    
+    
     public ClustalWRule getRule() {
         ClustalWRule rule = new ClustalWRule();
         rule.setWeak(chckbxWeak.isSelected());
