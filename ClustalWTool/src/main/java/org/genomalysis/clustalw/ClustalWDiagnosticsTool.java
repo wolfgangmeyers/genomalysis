@@ -12,6 +12,8 @@ import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
 
+
+
 /**
  * Runs Clustal and provides strong, weak, identity count and percentage as
  * text, as well as the non-matched percentage.
