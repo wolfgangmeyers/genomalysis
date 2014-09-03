@@ -15,6 +15,9 @@ import org.genomalysis.proteintools.ProteinSequence;
 @Configurator(ClustalWFilterConfigurator.class)
 public class ClustalWFilter implements IProteinSequenceFilter, Serializable {
 
+	
+	
+	
     private static final long serialVersionUID = 1L;
     private ClustalWInterface parser;
     private ClustalWFilterConfiguration config;
