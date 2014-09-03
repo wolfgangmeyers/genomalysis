@@ -1,5 +1,7 @@
 package org.genomalysis.clustalw;
 
+
+
 import java.io.Serializable;
 
 public class ClustalWRule implements Serializable {
