@@ -61,7 +61,7 @@ public class PluginInstanceSerializer implements
                         throw new RuntimeException(e);
                     }
                 }
-                return new PluginInstance<Object>(instance, instanceName);
+                return new PluginInstance<Object>(instance, instanceClass.getSimpleName(), instanceName);
             } else if (obj.has("factoryName")) {
                 String factoryName = obj.get("factoryName").getAsString();
                 PluginInstanceFactory<?> factory = pluginManager
