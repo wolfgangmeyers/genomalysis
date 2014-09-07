@@ -59,3 +59,11 @@ HydropathyPlot/target/scala-2.10/hydropathy-plots_2.10-1.0.jar
 
 StandardFilters/target/scala-2.10/standard-filters_2.10-1.0.jar
 ```
+
+Debugging
+------------
+For windows, run this on the command line before running genomalysis.bat:
+```
+set JAVA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999
+```
+and use a debugger like eclipse to attach to port 9999
