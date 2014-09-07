@@ -23,8 +23,8 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "D:\java-workspace\Genomalysis\Genomalysis\target\universal\stage\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\java-workspace\Genomalysis\dna-icon.ico"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Genomalysis\target\universal\stage\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dna-icon.ico"; DestDir: "{app}";
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
