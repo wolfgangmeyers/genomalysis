@@ -15,12 +15,18 @@ public class ProteinSequence {
     public static ProteinSequence parse(String fastaSequence) {
         ProteinSequence sequence = new ProteinSequence();
         String[] parts = fastaSequence.split("\n");
-        sequence.setHeader(parts[0]);
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 1; i < parts.length; ++i)
-            buffer.append(parts[i]);
+        if (parts.length == 1) {
+            sequence.setHeader(">No Header");
+            sequence.setData(parts[0]);
+        } else {
+            sequence.setHeader(parts[0]);
+            StringBuffer buffer = new StringBuffer();
+            for (int i = 1; i < parts.length; ++i)
+                buffer.append(parts[i]);
 
-        sequence.setData(buffer.toString());
+            sequence.setData(buffer.toString());
+        }
+        
         return sequence;
     }
 
