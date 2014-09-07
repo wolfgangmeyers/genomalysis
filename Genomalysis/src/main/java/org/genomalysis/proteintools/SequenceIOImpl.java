@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
 import org.genomalysis.plugin.configuration.annotations.Author;
 import org.genomalysis.plugin.configuration.annotations.Documentation;
 
@@ -32,96 +34,43 @@ public class SequenceIOImpl implements ISequenceIO {
 
     public Iterator<ProteinSequence> readSequences(InputStream inFile)
             throws IOException {
-        final List<ProteinSequence> result = new ArrayList<>();
         InputStreamReader reader1 = new InputStreamReader(inFile);
-        final BufferedReader reader2 = new BufferedReader(reader1);
-
+        final LineIterator lineIterator = IOUtils.lineIterator(reader1);
         Iterator<ProteinSequence> iterator = new Iterator<ProteinSequence>() {
-
-            private Iterator<ProteinSequence> internalIterator;
-
-            public boolean hasNext() {
-                if (internalIterator == null) {
-                    internalIterator = result.iterator();
-                }
-                if (!internalIterator.hasNext()) {
-                    if (!refillBuffer()) {
-                        return false;
-                    } else {
-                        internalIterator = result.iterator();
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
-            }
-
-            public ProteinSequence next() {
-                if (hasNext()) {
-                    return internalIterator.next();
-                }
-                return null;
-            }
-
+            
+            private String header = lineIterator.next();
+            
+            @Override
             public void remove() {
-                // internalIterator.remove();
+                throw new RuntimeException("Not Implemented");
             }
-
-            private boolean refillBuffer() {
-                String line;
-                try {
-                    line = "";
-                    result.clear();
-                    this.internalIterator = null;
-                    ProteinSequence current = new ProteinSequence();
-                    StringBuffer buffer = new StringBuffer();
-                    String lastLine = null;
-                    boolean EOF = false;
-
-                    while (result.size() < 300 && !EOF) {
-                        do {
-                            if ((line = reader2.readLine()) == null) {
-                                EOF = true;
-                            }
-                        } while (line != null && line.equals(""));
-                        if (!EOF) {
-                            if (line.startsWith(">")) {
-                                if (current.getHeader() == null) {
-                                    current.setHeader(line);
-                                } else {
-                                    buffer.append(lastLine);
-                                    current.setData(buffer.toString());
-                                    if ((current.getData().indexOf("*") != -1)
-                                            || (current.getData().indexOf("*") == current
-                                                    .getData().lastIndexOf("*"))) {
-                                        result.add(current);
-                                    }
-                                    buffer = new StringBuffer();
-                                    current = new ProteinSequence();
-                                    current.setHeader(line);
-                                }
-                            } else if (line.length() < 50) {
-                                buffer.append(line);
-                                current.setData(buffer.toString());
-                                if ((current.getData().indexOf("*") != -1)
-                                        || (current.getData().indexOf("*") == current
-                                                .getData().lastIndexOf("*"))) {
-                                    result.add(current);
-                                }
-                                buffer = new StringBuffer();
-                                current = new ProteinSequence();
-                            } else {
-                                buffer.append(line);
-                            }
-                            lastLine = line;
-                        }
-                    }
-
-                    return (result.size() > 0);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+            
+            @Override
+            public ProteinSequence next() {
+                if (!lineIterator.hasNext()) {
+                    return null;
                 }
-
+                StringBuffer buff = new StringBuffer(header);
+                header = null;
+                while (lineIterator.hasNext()) {
+                    String line = lineIterator.next();
+                    if (line.isEmpty()) {
+                        continue;
+                    }
+                    if (line.startsWith(">")) {
+                        header = line;
+                        break;
+                    } else {
+                        buff.append("\n" + line);
+                    }
+                }
+                ProteinSequence seq = ProteinSequence.parse(buff.toString());
+                return seq;
+            }
+            
+            @Override
+            public boolean hasNext() {
+                return lineIterator.hasNext() && header != null;
             }
         };
         return iterator;
