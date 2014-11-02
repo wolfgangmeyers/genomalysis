@@ -489,7 +489,7 @@ public class FrmMain extends JFrame implements
         this.clipboardMenu.add(this.menuViewSequeneCopy);
 
         setDefaultCloseOperation(3);
-        setTitle("Genomalysis - DNA and Protein Sequence Analysis Software");
+        setTitle("Genomalysis - Protein Sequence Mining and Viewing Software");
 
         this.mainPanel.setLayout(new BorderLayout());
 
