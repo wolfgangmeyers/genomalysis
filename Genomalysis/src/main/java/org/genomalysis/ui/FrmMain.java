@@ -193,11 +193,6 @@ public class FrmMain extends JFrame implements
         this.diagnosticsInstanceManager = new PluginInstanceManager<IProteinDiagnosticsTool>(
                 IProteinDiagnosticsTool.class, this.pluginManager);
 
-        this.diagnosticInstancePanel = new InstancePanel<IProteinDiagnosticsTool>(
-                this.diagnosticsInstanceManager, this.pluginManager);
-        this.tabPageMain.addTab("Diagnostic Tools",
-                this.diagnosticInstancePanel);
-
         this.pluginManager.addPluginInterface(IProteinSequenceFilter.class);
         this.pluginManager.addPluginInterface(IProteinDiagnosticsTool.class);
         this.pluginManager.findPlugins();
@@ -381,32 +376,6 @@ public class FrmMain extends JFrame implements
         this.menuViewSequeneCopy = new JMenuItem();
         this.mainPanel = new JPanel();
         this.tabPageMain = new JTabbedPane();
-        this.panelViewSequences = new JPanel();
-        this.pagingPanel = new JPanel();
-        this.jScrollPane1 = new JScrollPane();
-        this.lstViewSequences = new JList<>();
-        this.jPanel1 = new JPanel();
-        this.btnViewSequenceFirstPage = new javax.swing.JButton();
-        this.btnViewSequencePrevPage = new javax.swing.JButton();
-        this.btnViewSequenceNextPage = new javax.swing.JButton();
-        this.btnViewSequenceLastPage = new javax.swing.JButton();
-        this.jPanel2 = new JPanel();
-        this.jPanel4 = new JPanel();
-        this.jLabel1 = new JLabel();
-        this.lblPage = new JLabel();
-        this.jPanel5 = new JPanel();
-        this.jLabel2 = new JLabel();
-        this.lblTotalPages = new JLabel();
-        this.panelViewSequence = new JPanel();
-        this.jScrollPane2 = new JScrollPane();
-        this.txtViewSequence = new JTextArea();
-        txtViewSequence.setEditable(false);
-        this.jPanel10 = new JPanel();
-        this.jPanel11 = new JPanel();
-        this.jLabel4 = new JLabel();
-        this.jPanel12 = new JPanel();
-        this.btnRunDiagnostics = new javax.swing.JButton();
-        this.btnAddToCache = new javax.swing.JButton();
         this.panelFilterSequences = new JPanel();
         this.panelFilterPlugins = new JPanel();
         this.spSequenceFilters = new JScrollPane();
@@ -423,7 +392,6 @@ public class FrmMain extends JFrame implements
         this.btnExecuteFilters = new javax.swing.JButton();
         this.jScrollPane3 = new JScrollPane();
         this.lstFilterInstances = new JList<>();
-        this.panelSequencesCache = new JPanel();
         this.jPanel13 = new JPanel();
         this.jPanel16 = new JPanel();
         this.jPanel17 = new JPanel();
@@ -453,7 +421,6 @@ public class FrmMain extends JFrame implements
         this.jLabel6 = new JLabel();
         this.jScrollPane4 = new JScrollPane();
         this.lstCacheSequences = new JList<>();
-        this.panelDiagnosticResults = new JPanel();
         this.tabPageDiagnosticResults = new JTabbedPane();
         this.jMenuBar1 = new JMenuBar();
         this.jMenu1 = new JMenu();
@@ -526,151 +493,10 @@ public class FrmMain extends JFrame implements
 
         this.mainPanel.setLayout(new BorderLayout());
 
-        this.panelViewSequences.setLayout(new BorderLayout(20, 10));
-
-        this.pagingPanel.setLayout(new BorderLayout(10, 10));
-
-        this.lstViewSequences
-                .setComponentPopupMenu(this.viewSequencesPopupMenu);
-        this.lstViewSequences.setModel(new AbstractListModel<String>() {
-
-            String[] strings = new String[] { "Open fasta file to view sequences here" };
-
-            public int getSize() {
-                return this.strings.length;
-            }
-
-            public String getElementAt(int i) {
-                return this.strings[i];
-            }
-        });
-        this.lstViewSequences
-                .addListSelectionListener(new ListSelectionListener() {
-
-                    public void valueChanged(ListSelectionEvent evt) {
-                        lstViewSequencesValueChanged(evt);
-                    }
-                });
-        this.jScrollPane1.setViewportView(this.lstViewSequences);
-
-        this.pagingPanel.add(this.jScrollPane1, "Center");
-
-        this.btnViewSequenceFirstPage.setText("First");
-        this.btnViewSequenceFirstPage.setEnabled(false);
-        this.btnViewSequenceFirstPage.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent evt) {
-                btnViewSequenceFirstPageActionPerformed(evt);
-            }
-        });
-        this.jPanel1.add(this.btnViewSequenceFirstPage);
-
-        this.btnViewSequencePrevPage.setText("Previous");
-        this.btnViewSequencePrevPage.setEnabled(false);
-        this.btnViewSequencePrevPage.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent evt) {
-                btnViewSequencePrevPageActionPerformed(evt);
-            }
-        });
-        this.jPanel1.add(this.btnViewSequencePrevPage);
-
-        this.btnViewSequenceNextPage.setText("Next");
-        this.btnViewSequenceNextPage.setEnabled(false);
-        this.btnViewSequenceNextPage.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent evt) {
-                btnViewSequenceNextPageActionPerformed(evt);
-            }
-        });
-        this.jPanel1.add(this.btnViewSequenceNextPage);
-
-        this.btnViewSequenceLastPage.setText("Last");
-        this.btnViewSequenceLastPage.setEnabled(false);
-        this.btnViewSequenceLastPage.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent evt) {
-                btnViewSequenceLastPageActionPerformed(evt);
-            }
-        });
-        this.jPanel1.add(this.btnViewSequenceLastPage);
-
-        this.pagingPanel.add(this.jPanel1, "North");
-
-        this.jPanel2.setLayout(new BorderLayout());
-
-        this.jLabel1.setText("Page:");
-        this.jPanel4.add(this.jLabel1);
-
-        this.lblPage.setText("0");
-        this.jPanel4.add(this.lblPage);
-
-        this.jPanel2.add(this.jPanel4, "West");
-
-        this.jLabel2.setText("Total Pages:");
-        this.jPanel5.add(this.jLabel2);
-
-        this.lblTotalPages.setText("0");
-        this.jPanel5.add(this.lblTotalPages);
-
-        this.jPanel2.add(this.jPanel5, "East");
-
-        this.pagingPanel.add(this.jPanel2, "Last");
-
-        this.panelViewSequences.add(this.pagingPanel, "West");
-
-        this.panelViewSequence.setLayout(new BorderLayout(0, 20));
-
-        this.txtViewSequence.setColumns(20);
-        this.txtViewSequence.setComponentPopupMenu(this.clipboardMenu);
-        this.txtViewSequence.setFont(new Font("Lucida Console", 0, 12));
-        this.txtViewSequence.setRows(5);
-        this.jScrollPane2.setViewportView(this.txtViewSequence);
-
-        this.panelViewSequence.add(this.jScrollPane2, "Center");
-
-        this.jPanel10.setLayout(new BorderLayout());
-
-        this.jLabel4.setHorizontalAlignment(0);
-        this.jLabel4.setText("Sequence Data");
-        this.jPanel11.add(this.jLabel4);
-
-        this.jPanel10.add(this.jPanel11, "North");
-
-        this.jPanel12.setLayout(new GridLayout(1, 0, 10, 10));
-
-        this.btnRunDiagnostics.setText("Run Diagnostics...");
-        this.btnRunDiagnostics.setEnabled(false);
-        this.btnRunDiagnostics.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent evt) {
-                btnRunDiagnosticsActionPerformed(evt);
-            }
-        });
-        this.jPanel12.add(this.btnRunDiagnostics);
-
-        this.btnAddToCache.setText("Add to Cache");
-        this.btnAddToCache.setEnabled(false);
-        this.btnAddToCache.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent evt) {
-                btnAddToCacheActionPerformed(evt);
-            }
-        });
-        this.jPanel12.add(this.btnAddToCache);
-
-        this.jPanel10.add(this.jPanel12, "Center");
-
-        this.panelViewSequence.add(this.jPanel10, "North");
-
-        this.panelViewSequences.add(this.panelViewSequence, "Center");
-
-        this.tabPageMain.addTab("View Sequences", this.panelViewSequences);
-
         this.panelFilterSequences.setLayout(new BorderLayout(20, 0));
 
         this.panelFilterPlugins.setMinimumSize(new Dimension(150, 46));
-        this.panelFilterPlugins.setPreferredSize(new Dimension(250, 100));
+        this.panelFilterPlugins.setPreferredSize(new Dimension(250, 300));
         this.panelFilterPlugins.setLayout(new BorderLayout());
 
         this.lstSequenceFilters
@@ -892,8 +718,6 @@ public class FrmMain extends JFrame implements
 
         this.tabPageMain.addTab("Filter Sequences", this.panelFilterSequences);
 
-        this.panelSequencesCache.setLayout(new GridLayout(1, 0, 20, 0));
-
         this.jPanel13.setLayout(new GridLayout(2, 1, 0, 20));
 
         this.jPanel16.setLayout(new BorderLayout());
@@ -1034,8 +858,6 @@ public class FrmMain extends JFrame implements
 
         this.jPanel13.add(this.jPanel18);
 
-        this.panelSequencesCache.add(this.jPanel13);
-
         this.jPanel14.setLayout(new BorderLayout());
 
         this.jLabel6.setText("Sequences:");
@@ -1051,20 +873,152 @@ public class FrmMain extends JFrame implements
                         lstCacheSequencesValueChanged(evt);
                     }
                 });
+        this.panelViewSequences = new JPanel();
+        this.pagingPanel = new JPanel();
+        this.jScrollPane1 = new JScrollPane();
+        this.lstViewSequences = new JList<>();
+        this.jPanel1 = new JPanel();
+        this.btnViewSequenceFirstPage = new javax.swing.JButton();
+        this.btnViewSequencePrevPage = new javax.swing.JButton();
+        this.btnViewSequenceNextPage = new javax.swing.JButton();
+        this.btnViewSequenceLastPage = new javax.swing.JButton();
+        this.jPanel2 = new JPanel();
+        this.jPanel4 = new JPanel();
+        this.jLabel1 = new JLabel();
+        this.lblPage = new JLabel();
+        this.jPanel5 = new JPanel();
+        this.jLabel2 = new JLabel();
+        this.lblTotalPages = new JLabel();
+        this.panelViewSequence = new JPanel();
+        this.jScrollPane2 = new JScrollPane();
+        this.txtViewSequence = new JTextArea();
+        txtViewSequence.setEditable(false);
+        this.jPanel10 = new JPanel();
+        this.jPanel11 = new JPanel();
+        this.jLabel4 = new JLabel();
+        this.jPanel12 = new JPanel();
+        this.btnRunDiagnostics = new javax.swing.JButton();
+        this.btnAddToCache = new javax.swing.JButton();
+        
+                this.panelViewSequences.setLayout(new BorderLayout(20, 10));
+                
+                        this.pagingPanel.setLayout(new BorderLayout(10, 10));
+                        
+                                this.lstViewSequences
+                                        .setComponentPopupMenu(this.viewSequencesPopupMenu);
+                                this.lstViewSequences.setModel(new AbstractListModel<String>() {
+
+                                    String[] strings = new String[] { "Open fasta file to view sequences here" };
+
+                                    public int getSize() {
+                                        return this.strings.length;
+                                    }
+
+                                    public String getElementAt(int i) {
+                                        return this.strings[i];
+                                    }
+                                });
+                                this.lstViewSequences
+                                        .addListSelectionListener(new ListSelectionListener() {
+
+                                            public void valueChanged(ListSelectionEvent evt) {
+                                                lstViewSequencesValueChanged(evt);
+                                            }
+                                        });
+                                this.jScrollPane1.setViewportView(this.lstViewSequences);
+                                
+                                        this.pagingPanel.add(this.jScrollPane1, "Center");
+                                        
+                                                this.btnViewSequenceFirstPage.setText("First");
+                                                this.btnViewSequenceFirstPage.setEnabled(false);
+                                                this.btnViewSequenceFirstPage.addActionListener(new ActionListener() {
+
+                                                    public void actionPerformed(ActionEvent evt) {
+                                                        btnViewSequenceFirstPageActionPerformed(evt);
+                                                    }
+                                                });
+                                                this.jPanel1.add(this.btnViewSequenceFirstPage);
+                                                
+                                                        this.btnViewSequencePrevPage.setText("Previous");
+                                                        this.btnViewSequencePrevPage.setEnabled(false);
+                                                        this.btnViewSequencePrevPage.addActionListener(new ActionListener() {
+
+                                                            public void actionPerformed(ActionEvent evt) {
+                                                                btnViewSequencePrevPageActionPerformed(evt);
+                                                            }
+                                                        });
+                                                        this.jPanel1.add(this.btnViewSequencePrevPage);
+                                                        
+                                                                this.btnViewSequenceNextPage.setText("Next");
+                                                                this.btnViewSequenceNextPage.setEnabled(false);
+                                                                this.btnViewSequenceNextPage.addActionListener(new ActionListener() {
+
+                                                                    public void actionPerformed(ActionEvent evt) {
+                                                                        btnViewSequenceNextPageActionPerformed(evt);
+                                                                    }
+                                                                });
+                                                                this.jPanel1.add(this.btnViewSequenceNextPage);
+                                                                
+                                                                        this.btnViewSequenceLastPage.setText("Last");
+                                                                        this.btnViewSequenceLastPage.setEnabled(false);
+                                                                        this.btnViewSequenceLastPage.addActionListener(new ActionListener() {
+
+                                                                            public void actionPerformed(ActionEvent evt) {
+                                                                                btnViewSequenceLastPageActionPerformed(evt);
+                                                                            }
+                                                                        });
+                                                                        this.jPanel1.add(this.btnViewSequenceLastPage);
+                                                                        
+                                                                                this.pagingPanel.add(this.jPanel1, "North");
+                                                                                
+                                                                                        this.jPanel2.setLayout(new BorderLayout());
+                                                                                        
+                                                                                                this.jLabel1.setText("Page:");
+                                                                                                this.jPanel4.add(this.jLabel1);
+                                                                                                
+                                                                                                        this.lblPage.setText("0");
+                                                                                                        this.jPanel4.add(this.lblPage);
+                                                                                                        
+                                                                                                                this.jPanel2.add(this.jPanel4, "West");
+                                                                                                                
+                                                                                                                        this.jLabel2.setText("Total Pages:");
+                                                                                                                        this.jPanel5.add(this.jLabel2);
+                                                                                                                        
+                                                                                                                                this.lblTotalPages.setText("0");
+                                                                                                                                this.jPanel5.add(this.lblTotalPages);
+                                                                                                                                
+                                                                                                                                        this.jPanel2.add(this.jPanel5, "East");
+                                                                                                                                        
+                                                                                                                                                this.pagingPanel.add(this.jPanel2, "Last");
+                                                                                                                                                
+                                                                                                                                                        this.panelViewSequences.add(this.pagingPanel, "West");
+                                                                                                                                                        
+                                                                                                                                                                this.panelViewSequence.setLayout(new BorderLayout(0, 20));
+                                                                                                                                                                
+                                                                                                                                                                        this.txtViewSequence.setColumns(20);
+                                                                                                                                                                        this.txtViewSequence.setComponentPopupMenu(this.clipboardMenu);
+                                                                                                                                                                        this.txtViewSequence.setFont(new Font("Lucida Console", 0, 12));
+                                                                                                                                                                        this.txtViewSequence.setRows(5);
+                                                                                                                                                                        this.jScrollPane2.setViewportView(this.txtViewSequence);
+                                                                                                                                                                        
+                                                                                                                                                                                this.panelViewSequence.add(this.jScrollPane2, "Center");
+                                                                                                                                                                                
+                                                                                                                                                                                        this.jPanel10.setLayout(new BorderLayout());
+                                                                                                                                                                                        
+                                                                                                                                                                                                this.jLabel4.setHorizontalAlignment(0);
+                                                                                                                                                                                                this.jLabel4.setText("Sequence Data");
+                                                                                                                                                                                                this.jPanel11.add(this.jLabel4);
+                                                                                                                                                                                                
+                                                                                                                                                                                                        this.jPanel10.add(this.jPanel11, "North");
+                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                this.panelViewSequence.add(this.jPanel10, "North");
+                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                        this.panelViewSequences.add(this.panelViewSequence, "Center");
+                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                this.tabPageMain.addTab("View Sequences", this.panelViewSequences);
         this.jScrollPane4.setViewportView(this.lstCacheSequences);
 
         this.jPanel14.add(this.jScrollPane4, "Center");
-
-        this.panelSequencesCache.add(this.jPanel14);
-
-        this.tabPageMain.addTab("Sequences Cache", this.panelSequencesCache);
-
-        this.panelDiagnosticResults.setLayout(new BorderLayout());
-        this.panelDiagnosticResults
-                .add(this.tabPageDiagnosticResults, "Center");
-
-        this.tabPageMain.addTab("Diagnostic Results",
-                this.panelDiagnosticResults);
 
         this.mainPanel.add(this.tabPageMain, BorderLayout.NORTH);
 
