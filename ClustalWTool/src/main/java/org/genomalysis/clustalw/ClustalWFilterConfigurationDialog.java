@@ -125,7 +125,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         panel_1.add(panel_2, BorderLayout.CENTER);
         panel_2.setLayout(new BorderLayout(0, 5));
 
-        lblSequenceData = new JLabel("Sequence Data (Case Sensitive)");
+        lblSequenceData = new JLabel("Sequence data: a single contiguous sequence (case sensitive)");
         lblSequenceData.setHorizontalAlignment(SwingConstants.CENTER);
         panel_2.add(lblSequenceData, BorderLayout.NORTH);
 
