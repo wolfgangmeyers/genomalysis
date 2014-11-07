@@ -40,7 +40,7 @@ public class HistoryManager {
     private void saveFilterExecutionHistory(List<FilterExecution> history)
             throws IOException {
         File historyFile = getHistoryFile();
-        FileUtils.write(historyFile, gson.toJson(history));
+        
     }
 
     public List<FilterExecution> getFilterExecutionHistory() throws IOException {
