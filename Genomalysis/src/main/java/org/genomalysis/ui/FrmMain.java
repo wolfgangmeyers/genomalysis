@@ -177,8 +177,6 @@ public class FrmMain extends JFrame implements
     private JTextArea txtViewSequence;
     private JPopupMenu viewSequencesPopupMenu;
     private JPopupMenu filterInstanceOptions;
-    private JButton btnSaveConfiguration;
-    private JButton btnLoadConfiguration;
 
     @SuppressWarnings("serial")
     public FrmMain() {
@@ -566,117 +564,6 @@ public class FrmMain extends JFrame implements
                 btnExecuteFiltersActionPerformed(evt);
             }
         });
-
-        btnSaveConfiguration = new JButton("Save Configuration...");
-        btnSaveConfiguration.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                File configurations = new File("configurations");
-                if (!configurations.exists()) {
-                    configurations.mkdir();
-                }
-                final JFileChooser savedlg = new JFileChooser(configurations);
-                savedlg.setDialogTitle("Save filters configuration");
-                savedlg.setFileFilter(new FileFilter() {
-
-                    @Override
-                    public String getDescription() {
-                        return "Filter configurations";
-                    }
-
-                    @Override
-                    public boolean accept(File f) {
-                        return f.getName().endsWith(".filterconfig");
-                    }
-                });
-                savedlg.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        File selectedFile = savedlg.getSelectedFile();
-                        if (selectedFile == null) {
-                            return;
-                        }
-                        try {
-                            if (!selectedFile.exists()) {
-                                if (!selectedFile.getName().endsWith(
-                                        ".filterconfig")) {
-                                    selectedFile = new File(selectedFile
-                                            + ".filterconfig");
-                                }
-                                selectedFile.createNewFile();
-                            }
-                            FileOutputStream fout = null;
-                            try {
-                                fout = new FileOutputStream(selectedFile);
-                                fout.write(filterInstanceManager.save()
-                                        .getBytes("utf-8"));
-                            } finally {
-                                if (fout != null) {
-                                    fout.close();
-                                }
-                            }
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    }
-                });
-                savedlg.showSaveDialog(FrmMain.this);
-            }
-        });
-        jPanel3.add(btnSaveConfiguration);
-
-        btnLoadConfiguration = new JButton("Load Configuration...");
-        btnLoadConfiguration.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                File configurations = new File("configurations");
-                if (!configurations.exists()) {
-                    configurations.mkdir();
-                }
-                final JFileChooser loaddlg = new JFileChooser(configurations);
-                loaddlg.setApproveButtonText("Load");
-                loaddlg.setDialogTitle("Load filters configuration");
-                loaddlg.setFileFilter(new FileFilter() {
-
-                    @Override
-                    public String getDescription() {
-                        return "Filter configurations";
-                    }
-
-                    @Override
-                    public boolean accept(File f) {
-                        return f.getName().endsWith(".filterconfig");
-                    }
-                });
-                loaddlg.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        File selectedFile = loaddlg.getSelectedFile();
-                        if (selectedFile == null) {
-                            return;
-                        }
-                        try {
-                            FileInputStream fin = null;
-                            try {
-                                fin = new FileInputStream(selectedFile);
-                                String data = IOUtils.toString(fin, "utf-8");
-                                filterInstanceManager.load(data);
-                            } finally {
-                                if (fin != null) {
-                                    fin.close();
-                                }
-                            }
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                });
-                loaddlg.showOpenDialog(FrmMain.this);
-
-            }
-        });
-        jPanel3.add(btnLoadConfiguration);
         this.jPanel3.add(this.btnExecuteFilters);
 
         this.jPanel9.add(this.jPanel3, "Center");
