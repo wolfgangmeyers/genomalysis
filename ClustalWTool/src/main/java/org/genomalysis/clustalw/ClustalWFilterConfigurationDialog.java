@@ -20,6 +20,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
+
 
 public class ClustalWFilterConfigurationDialog extends JDialog {
 
@@ -40,6 +46,10 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
     private JTextArea txtSequenceData;
     private JRadioButton rdbtnAllMustBe;
     private JRadioButton rdbtnAtLeastOne;
+    private JPopupMenu popupMenu;
+    private JMenuItem mntmCut;
+    private JMenuItem mntmCopy;
+    private JMenuItem mntmPaste;
 
     public ClustalWFilterConfigurationDialog(Frame parent) {
         super(parent, true);
@@ -123,6 +133,35 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         txtSequenceData.setLineWrap(true);
         txtSequenceData.setRows(8);
         panel_2.add(txtSequenceData, BorderLayout.CENTER);
+        
+        popupMenu = new JPopupMenu();
+        addPopup(txtSequenceData, popupMenu);
+        
+        mntmCut = new JMenuItem("Cut");
+        popupMenu.add(mntmCut);
+        this.mntmCut.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCutActionPerformed(evt);
+            }
+        });
+        mntmCopy = new JMenuItem("Copy");
+        popupMenu.add(mntmCopy);
+        this.mntmCopy.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCopyActionPerformed(evt);
+            }
+        });
+        mntmPaste = new JMenuItem("Paste");
+        popupMenu.add(mntmPaste);
+        this.mntmPaste.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequencePasteActionPerformed(evt);
+            }
+        });
+        
         this.jPanel5.add(this.btnCancel);
 
         this.jPanel4.add(this.jPanel5, BorderLayout.SOUTH);
@@ -212,4 +251,30 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         setVisible(true);
         return this.myConfig;
     }
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
+	private void menuViewSequenceCutActionPerformed(ActionEvent evt) {
+        this.txtSequenceData.cut();
+    }
+	private void menuViewSequenceCopyActionPerformed(ActionEvent evt) {
+        this.txtSequenceData.copy();
+	}
+	private void menuViewSequencePasteActionPerformed(ActionEvent evt) {
+        this.txtSequenceData.paste();
+	}    
 }
