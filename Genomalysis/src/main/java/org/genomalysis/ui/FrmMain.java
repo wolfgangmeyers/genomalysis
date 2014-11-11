@@ -68,6 +68,7 @@ import org.genomalysis.proteintools.ProteinDiagnosticImageElement;
 import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
+import java.awt.Component;
 
 public class FrmMain extends JFrame implements
         org.genomalysis.control.IObserver {
@@ -114,7 +115,6 @@ public class FrmMain extends JFrame implements
     private JLabel jLabel7;
     private JLabel jLabel8;
     private JMenu jMenu1;
-    private JMenu jMenu2;
     private JMenuBar jMenuBar1;
     private JPanel jPanel1;
     private JPanel jPanel10;
@@ -177,6 +177,8 @@ public class FrmMain extends JFrame implements
     private JTextArea txtViewSequence;
     private JPopupMenu viewSequencesPopupMenu;
     private JPopupMenu filterInstanceOptions;
+    private JPopupMenu popupMenu;
+    private JMenuItem mntmCopy;
 
     @SuppressWarnings("serial")
     public FrmMain() {
@@ -424,7 +426,6 @@ public class FrmMain extends JFrame implements
         this.jMenu1 = new JMenu();
         this.menuFileOpenFasta = new JMenuItem();
         this.menuFileExit = new JMenuItem();
-        this.jMenu2 = new JMenu();
 
         this.menuViewSequencesRunDiagnostics.setText("Run Diagnostics");
         this.menuViewSequencesRunDiagnostics.setEnabled(false);
@@ -468,11 +469,11 @@ public class FrmMain extends JFrame implements
         });
         this.availableFiltersPopupMenu.add(this.menuAvailableFiltersInfo);
 
-        this.menuViewSequenceCut.setText("Cut");
+        this.menuViewSequenceCut.setText("Copy");
         this.menuViewSequenceCut.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent evt) {
-                menuViewSequenceCutActionPerformed(evt);
+        	public void actionPerformed(ActionEvent evt) {
+                menuViewSequeneCopyActionPerformed(evt);
             }
         });
         this.clipboardMenu.add(this.menuViewSequenceCut);
@@ -791,8 +792,7 @@ public class FrmMain extends JFrame implements
                 
                         this.pagingPanel.setLayout(new BorderLayout(10, 10));
                         
-                                this.lstViewSequences
-                                        .setComponentPopupMenu(this.viewSequencesPopupMenu);
+                                
                                 this.lstViewSequences.setModel(new AbstractListModel<String>() {
 
                                     String[] strings = new String[] { "Open fasta file to view sequences here" };
@@ -883,11 +883,22 @@ public class FrmMain extends JFrame implements
                                                                                                                                                                 this.panelViewSequence.setLayout(new BorderLayout(0, 20));
                                                                                                                                                                 
                                                                                                                                                                         this.txtViewSequence.setColumns(20);
-                                                                                                                                                                        this.txtViewSequence.setComponentPopupMenu(this.clipboardMenu);
+                                                                                                                                                                        
                                                                                                                                                                         this.txtViewSequence.setFont(new Font("Lucida Console", 0, 12));
                                                                                                                                                                         this.txtViewSequence.setRows(5);
                                                                                                                                                                         this.jScrollPane2.setViewportView(this.txtViewSequence);
                                                                                                                                                                         
+                                                                                                                                                                        popupMenu = new JPopupMenu();
+                                                                                                                                                                        addPopup(txtViewSequence, popupMenu);
+                                                                                                                                                                        
+                                                                                                                                                                        mntmCopy = new JMenuItem("Copy");
+                                                                                                                                                                        popupMenu.add(mntmCopy);
+                                                                                                                                                                        this.mntmCopy.addActionListener(new ActionListener() {
+
+                                                                                                                                                                            public void actionPerformed(ActionEvent evt) {
+                                                                                                                                                                            	menuViewSequeneCopyActionPerformed(evt);
+                                                                                                                                                                            }
+                                                                                                                                                                        });
                                                                                                                                                                                 this.panelViewSequence.add(this.jScrollPane2, "Center");
                                                                                                                                                                                 
                                                                                                                                                                                         this.jPanel10.setLayout(new BorderLayout());
@@ -932,9 +943,6 @@ public class FrmMain extends JFrame implements
         this.jMenu1.add(this.menuFileExit);
 
         this.jMenuBar1.add(this.jMenu1);
-
-        this.jMenu2.setText("Edit");
-        this.jMenuBar1.add(this.jMenu2);
 
         setJMenuBar(this.jMenuBar1);
 
@@ -1457,4 +1465,21 @@ public class FrmMain extends JFrame implements
             showError(ex.getMessage());
         }
     }
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }
