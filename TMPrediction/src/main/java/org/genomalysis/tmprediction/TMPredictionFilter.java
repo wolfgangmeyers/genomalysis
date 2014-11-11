@@ -3,12 +3,20 @@ package org.genomalysis.tmprediction;
 import java.io.IOException;
 import java.util.List;
 
+import org.genomalysis.plugin.configuration.annotations.Author;
+import org.genomalysis.plugin.configuration.annotations.Configurator;
+import org.genomalysis.plugin.configuration.annotations.Documentation;
 import org.genomalysis.plugin.configuration.annotations.PropertyGetter;
 import org.genomalysis.plugin.configuration.annotations.PropertySetter;
+import org.genomalysis.plugin.configuration.dialogs.GenericConfigurator;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.InitializationException;
 import org.genomalysis.proteintools.ProteinSequence;
-
+@Documentation("Trans Membrane Filter:  "
+        + "This filter only accepts sequences that have "
+        + "the specified number of trans membrane segments.")
+@Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
+@Configurator(GenericConfigurator.class)
 public class TMPredictionFilter implements IProteinSequenceFilter {
 
     private TMOutputParser outputParser;
