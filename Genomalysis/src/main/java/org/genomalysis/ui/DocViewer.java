@@ -9,6 +9,7 @@ package org.genomalysis.ui;
 import java.awt.Frame;
 
 import javax.swing.JComponent;
+import javax.swing.WindowConstants;
 
 import org.genomalysis.plugin.configuration.dialogs.DialogHelper;
 
@@ -58,7 +59,7 @@ public class DocViewer extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
