@@ -68,6 +68,7 @@ import org.genomalysis.proteintools.ProteinDiagnosticImageElement;
 import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
+
 import java.awt.Component;
 
 public class FrmMain extends JFrame implements
@@ -179,6 +180,10 @@ public class FrmMain extends JFrame implements
     private JPopupMenu filterInstanceOptions;
     private JPopupMenu popupMenu;
     private JMenuItem mntmCopy;
+    private JMenu mnInfo;
+    private JMenuItem mntmDocumentation;
+    private JMenuItem mntmGitProjectPage;
+    private JMenuItem mntmProjectHomePage;
 
     @SuppressWarnings("serial")
     public FrmMain() {
@@ -945,6 +950,35 @@ public class FrmMain extends JFrame implements
         this.jMenuBar1.add(this.jMenu1);
 
         setJMenuBar(this.jMenuBar1);
+        
+        mnInfo = new JMenu("Info");
+        jMenuBar1.add(mnInfo);
+        
+        mntmProjectHomePage = new JMenuItem("Project Home Page");
+        mnInfo.add(mntmProjectHomePage);
+        this.mntmProjectHomePage.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menumntmProjectHomePage(evt);
+            }
+        });
+        mntmGitProjectPage = new JMenuItem("Git Project Page");
+        mnInfo.add(mntmGitProjectPage);
+        this.mntmGitProjectPage.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menumntmGitProjectPage(evt);
+            }
+        });
+        mntmDocumentation = new JMenuItem("Documentation");
+        mnInfo.add(mntmDocumentation);
+        
+        this.mntmDocumentation.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewmntmDocumentation(evt);
+            }
+        });
 
         pack();
     }
@@ -1348,7 +1382,37 @@ public class FrmMain extends JFrame implements
     private void menuViewSequenceCutActionPerformed(ActionEvent evt) {
         this.txtViewSequence.cut();
     }
-
+    private void menumntmProjectHomePage(java.awt.event.ActionEvent evt){
+    	try
+        {
+          Runtime.getRuntime().exec("cmd /c start http://www.genomalysis.org");
+        } 
+      catch (IOException e) 
+        {
+          System.out.println(e);
+        }
+    }
+    private void menumntmGitProjectPage(java.awt.event.ActionEvent evt){
+    	try
+        {
+          Runtime.getRuntime().exec("cmd /c start https://github.com/wolfgangmeyers/genomalysis");
+        } 
+      catch (IOException e) 
+        {
+          System.out.println(e);
+        }
+    }
+    private void menuViewmntmDocumentation(java.awt.event.ActionEvent evt){
+    	
+    	try
+        {
+          Runtime.getRuntime().exec("cmd /c start Documentation/FilterAlgorithms.odt");
+        } 
+      catch (IOException e) 
+        {
+          System.out.println(e);
+        }
+    }
     private void menuViewSequeneCopyActionPerformed(ActionEvent evt) {
         this.txtViewSequence.copy();
     }
@@ -1480,6 +1544,8 @@ public class FrmMain extends JFrame implements
 			private void showMenu(MouseEvent e) {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}
+	
 		});
+		
 	}
 }
