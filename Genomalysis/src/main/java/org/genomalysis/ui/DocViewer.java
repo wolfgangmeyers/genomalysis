@@ -7,6 +7,7 @@
 package org.genomalysis.ui;
 
 import java.awt.Frame;
+import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.WindowConstants;
@@ -63,7 +64,7 @@ public class DocViewer extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        btnOK.setText("OK");
+        btnOK.setText("Filters Documentation");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOKActionPerformed(evt);
@@ -88,7 +89,14 @@ public class DocViewer extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnOKActionPerformed
-        setVisible(false);
+    	try
+        {
+          Runtime.getRuntime().exec("cmd /c start Documentation/FilterAlgorithms.odt");
+        } 
+      catch (IOException e) 
+        {
+          System.out.println(e);
+        }
     }// GEN-LAST:event_btnOKActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
