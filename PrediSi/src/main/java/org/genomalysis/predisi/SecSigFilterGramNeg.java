@@ -15,7 +15,7 @@ import org.genomalysis.proteintools.ProteinSequence;
 
 @Documentation("CleavageSiteFilter:   This filter uses the PrediSi library (http://www.predisi.de/home.html) to predict cleavage sites and secretion signals. Sequences without cleavage sites and secretion signals will not pass this filter.")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
-public class CleavageSiteFilter implements IProteinSequenceFilter {
+public class SecSigFilterGramNeg implements IProteinSequenceFilter {
 
     private SignalPeptidePredictor pd;
 
@@ -26,7 +26,7 @@ public class CleavageSiteFilter implements IProteinSequenceFilter {
 
         try {
             // TODO: make this configurable?
-            ins = getClass().getResourceAsStream("eukarya.smx");
+            ins = getClass().getResourceAsStream("gramn.smx");
             oin = new ObjectInputStream(ins);
             SearchMatrix smp = (SearchMatrix) oin.readObject();
             pd = new SignalPeptidePredictor(smp);
