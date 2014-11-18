@@ -25,8 +25,8 @@ import org.genomalysis.proteintools.ProteinSequence;
 @Configurator(GenericConfigurator.class)
 public class SequenceLengthFilter implements IProteinSequenceFilter {
 
-    private int minLength;
-    private int maxLength;
+    private int minLength = 1;
+    private int maxLength = 10000;
 
     public boolean filterProteinSequence(ProteinSequence sequence) {
         return sequence.getLength() >= this.minLength
