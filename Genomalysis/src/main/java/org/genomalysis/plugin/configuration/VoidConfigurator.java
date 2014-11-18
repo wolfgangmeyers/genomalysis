@@ -24,8 +24,8 @@ public class VoidConfigurator implements IPropertyConfigurator {
     public Object showDialog(JComponent base, Object target)
             throws ConfigurationException {
         JOptionPane.showMessageDialog(base,
-                "The specified property is not set up for configuration",
-                "Oops!", 2);
+                "The secretion signal filters are not set up for configuration.",
+                "Sorry", 2);
         return target;
     }
 }
