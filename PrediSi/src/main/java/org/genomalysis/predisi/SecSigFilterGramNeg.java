@@ -8,13 +8,17 @@ import jspp.SearchMatrix;
 import jspp.SignalPeptidePredictor;
 
 import org.genomalysis.plugin.configuration.annotations.Author;
+import org.genomalysis.plugin.configuration.annotations.Configurator;
 import org.genomalysis.plugin.configuration.annotations.Documentation;
+import org.genomalysis.plugin.configuration.dialogs.GenericConfigurator;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.InitializationException;
 import org.genomalysis.proteintools.ProteinSequence;
+import org.genomalysis.plugin.configuration.VoidConfigurator;
 
 @Documentation("CleavageSiteFilter:   This filter uses the PrediSi library (http://www.predisi.de/home.html) to predict cleavage sites and secretion signals. Sequences without cleavage sites and secretion signals will not pass this filter.")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
+@Configurator(VoidConfigurator.class)
 public class SecSigFilterGramNeg implements IProteinSequenceFilter {
 
     private SignalPeptidePredictor pd;
