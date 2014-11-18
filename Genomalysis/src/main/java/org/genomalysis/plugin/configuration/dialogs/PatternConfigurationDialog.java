@@ -11,6 +11,15 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JMenuItem;
 
 /**
  *
@@ -64,7 +73,7 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
         btnTest = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtTestRegex = new javax.swing.JTextArea();
-
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setLayout(new java.awt.GridLayout(2, 1, 5, 5));
@@ -80,7 +89,34 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
             }
         });
         jPanel1.add(txtPattern, java.awt.BorderLayout.CENTER);
+        
+        popupMenu = new JPopupMenu();
+        addPopup(txtPattern, popupMenu);
+        
+        mntmCut = new JMenuItem("Cut");
+        popupMenu.add(mntmCut);
+        this.mntmCut.addActionListener(new ActionListener() {
 
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCutActionPerformed(evt);
+            }
+        });
+        mntmCopy = new JMenuItem("Copy");
+        popupMenu.add(mntmCopy);
+        this.mntmCopy.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCopyActionPerformed(evt);
+            }
+        });
+        mntmPaste = new JMenuItem("Paste");
+        popupMenu.add(mntmPaste);
+        this.mntmPaste.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequencePasteActionPerformed(evt);
+            }
+        });
         jPanel2.add(jPanel1);
 
         lblErrorMessage.setForeground(new java.awt.Color(255, 51, 51));
@@ -111,7 +147,7 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
         jPanel4.add(jPanel5, java.awt.BorderLayout.SOUTH);
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER,
-                50, 5));
+                56, 5));
 
         jLabel2.setText("Test Regex Pattern in Text Area Below");
         jPanel6.add(jLabel2);
@@ -128,10 +164,38 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
 
         txtTestRegex.setColumns(20);
         txtTestRegex.setRows(5);
+        txtTestRegex.setLineWrap(true);
         txtTestRegex
                 .setText("Enter text here to test Regular Expression Pattern");
         jScrollPane1.setViewportView(txtTestRegex);
+        
+        popupMenu_1 = new JPopupMenu();
+        addPopup(txtTestRegex, popupMenu_1);
+        
+        mntmCut_1 = new JMenuItem("Cut");
+        popupMenu_1.add(mntmCut_1);
+        this.mntmCut_1.addActionListener(new ActionListener() {
 
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCutActionPerformed2(evt);
+            }
+        });
+        mntmCopy_1 = new JMenuItem("Copy");
+        popupMenu_1.add(mntmCopy_1);
+        this.mntmCopy_1.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCopyActionPerformed2(evt);
+            }
+        });
+        mntmPaste_1 = new JMenuItem("Paste");
+        popupMenu_1.add(mntmPaste_1);
+        this.mntmPaste_1.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequencePasteActionPerformed2(evt);
+            }
+        });
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel4, java.awt.BorderLayout.CENTER);
@@ -207,6 +271,50 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
     private javax.swing.JLabel lblErrorMessage;
     private javax.swing.JTextField txtPattern;
     private javax.swing.JTextArea txtTestRegex;
+    private JPopupMenu popupMenu;
+    private JMenuItem mntmCopy;
+    private JMenuItem mntmPaste;
+    private JMenuItem mntmCut;
+    private JPopupMenu popupMenu_1;
+    private JMenuItem mntmCut_1;
+    private JMenuItem mntmCopy_1;
+    private JMenuItem mntmPaste_1;
     // End of variables declaration//GEN-END:variables
 
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+		
+	}
+	private void menuViewSequencePasteActionPerformed(ActionEvent evt) {
+        this.txtPattern.paste();
+	} 
+	private void menuViewSequenceCopyActionPerformed(ActionEvent evt) {
+        this.txtPattern.copy();
+	}
+	private void menuViewSequenceCutActionPerformed(ActionEvent evt) {
+        this.txtPattern.cut();
+    }
+	private void menuViewSequencePasteActionPerformed2(ActionEvent evt) {
+        this.txtTestRegex.paste();
+	} 
+	private void menuViewSequenceCopyActionPerformed2(ActionEvent evt) {
+        this.txtTestRegex.copy();
+	}
+	private void menuViewSequenceCutActionPerformed2(ActionEvent evt) {
+        this.txtTestRegex.cut();
+    }
 }
