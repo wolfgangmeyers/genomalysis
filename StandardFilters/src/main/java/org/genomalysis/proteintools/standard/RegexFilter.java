@@ -32,7 +32,7 @@ public class RegexFilter implements IProteinSequenceFilter {
 
     private Pattern pattern;
     private int minimumOccurrences = 1;
-    private int maximumOccurrences = Integer.MAX_VALUE;
+    private int maximumOccurrences = 10;
 
     @PropertyGetter(PropertyName = "Minimum Occurrences")
     public int getMinimumOccurrences() {
