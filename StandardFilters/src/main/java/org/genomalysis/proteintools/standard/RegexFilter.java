@@ -22,10 +22,7 @@ import org.genomalysis.proteintools.ProteinSequence;
  *
  * @author ameyers
  */
-@Documentation("The Regex Filter uses regular expressions to find"
-        + " patterns in protein sequences. Set the Minimum Occurrences property"
-        + " to the minimum number of times that the specified regular"
-        + " expressions pattern must appear in the sequence.")
+@Documentation("RegexFilter: this filter uses standard regular expressions for mining specific patterns out of protein or DNA sequences. Some basic examples of regular expressions that will match amino acid patterns in proteins are as follows: \n \nExpression ---> What it matches \n \nC ---> Cysteine residues \n \nCARWV ---> The exact sequence “CARWV” \n \nG\\w{8}R ---> Any sequence where a glycine is followed by 8 residues then an arginine \n \nC\\w{2,10}C ---> Any sequence where there are 2 to 10 residues between two cysteines \n \nFor a more detailed discussion of how to construct expressions see “A Primer on Regex” at the end of the filters documentation accessed by using the button below.")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
 @Configurator(GenericConfigurator.class)
 public class RegexFilter implements IProteinSequenceFilter {
