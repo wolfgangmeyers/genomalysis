@@ -80,7 +80,7 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.BorderLayout(5, 5));
 
-        jLabel1.setText("Regex Pattern:");
+        jLabel1.setText("Regex Pattern (Case Sensitive):");
         jPanel1.add(jLabel1, java.awt.BorderLayout.WEST);
 
         txtPattern.addKeyListener(new java.awt.event.KeyAdapter() {
