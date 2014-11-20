@@ -1,6 +1,6 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
-public enum ClustalWRuleComparisonType {
+public enum ClustalOmegaRuleComparisonType {
     GT {
         @Override
         public String toString() {

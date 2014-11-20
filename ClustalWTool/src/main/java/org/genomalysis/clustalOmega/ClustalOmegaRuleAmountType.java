@@ -1,6 +1,6 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
-public enum ClustalWRuleAmountType {
+public enum ClustalOmegaRuleAmountType {
     PERCENTAGE {
         @Override
         public String toString() {

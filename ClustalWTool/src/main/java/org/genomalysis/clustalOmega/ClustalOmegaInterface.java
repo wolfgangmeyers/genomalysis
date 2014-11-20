@@ -1,4 +1,4 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.genomalysis.proteintools.ProteinSequence;
 
-public class ClustalWInterface {
-    public ClustalWOutput runClustal(ProteinSequence a, ProteinSequence b)
+public class ClustalOmegaInterface {
+    public ClustalOmegaOutput runClustal(ProteinSequence a, ProteinSequence b)
             throws IOException {
-        ClustalWOutput result = null;
+        ClustalOmegaOutput result = null;
         File tmpdir = new File("tmp");
         if (!tmpdir.exists()) {
             tmpdir.mkdir();
@@ -52,7 +52,7 @@ public class ClustalWInterface {
             outfile.delete();
             infile.delete();
         } catch (InterruptedException ex) {
-            Logger.getLogger(ClustalWInterface.class.getName()).log(
+            Logger.getLogger(ClustalOmegaInterface.class.getName()).log(
                     Level.SEVERE, null, ex);
         } finally {
             if (fout != null)
@@ -65,7 +65,7 @@ public class ClustalWInterface {
         return result;
     }
 
-    private ClustalWOutput parseOutput(List<String> lines, int sequenceLength) {
+    private ClustalOmegaOutput parseOutput(List<String> lines, int sequenceLength) {
         int identity = 0;
         int strong = 0;
         int weak = 0;
@@ -92,7 +92,7 @@ public class ClustalWInterface {
             }
         }
 
-        return new ClustalWOutput(rawOutput.toString(), sequenceLength,
+        return new ClustalOmegaOutput(rawOutput.toString(), sequenceLength,
                 identity, strong, weak);
     }
 }

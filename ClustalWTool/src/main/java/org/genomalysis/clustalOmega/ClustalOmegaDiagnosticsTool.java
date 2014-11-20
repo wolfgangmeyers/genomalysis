@@ -1,4 +1,4 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -21,12 +21,12 @@ import org.genomalysis.proteintools.ProteinSequence;
  * @author wolfgang
  *
  */
-public class ClustalWDiagnosticsTool implements IProteinDiagnosticsTool {
-    private ClustalWInterface parser;
+public class ClustalOmegaDiagnosticsTool implements IProteinDiagnosticsTool {
+    private ClustalOmegaInterface parser;
     private String sequenceData;
 
-    public ClustalWDiagnosticsTool() {
-        this.parser = new ClustalWInterface();
+    public ClustalOmegaDiagnosticsTool() {
+        this.parser = new ClustalOmegaInterface();
         this.sequenceData = "";
     }
 
@@ -37,7 +37,7 @@ public class ClustalWDiagnosticsTool implements IProteinDiagnosticsTool {
             builder.start();
         } catch (IOException ex) {
             throw new InitializationException(
-                    new String[] { "ClustalWDiagnosticsTool: ClustalW is not installed" });
+                    new String[] { "ClustalOmegaDiagnosticsTool: ClustalOmega is not installed" });
         }
         try {
             ProteinSequence sequence = ProteinSequence.parse(this.sequenceData);
@@ -60,10 +60,10 @@ public class ClustalWDiagnosticsTool implements IProteinDiagnosticsTool {
                     testSequence.setHeader(">copy_of_"
                             + testSequence.getHeader().replaceAll(">", ""));
 
-                ClustalWOutput sequenceResult = this.parser.runClustal(
+                ClustalOmegaOutput sequenceResult = this.parser.runClustal(
                         sequence, testSequence);
                 StringBuffer buffer = new StringBuffer();
-                buffer.append("ClustalW Output\n===============================\n\n");
+                buffer.append("ClustalOmega Output\n===============================\n\n");
                 buffer.append(sequenceResult.getRawOutput());
                 buffer.append("\n\nRatios\n====================================\n\n");
                 buffer.append("Identity: "

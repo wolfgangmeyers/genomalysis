@@ -1,4 +1,4 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -27,10 +27,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 
 
-public class ClustalWFilterConfigurationDialog extends JDialog {
+public class ClustalOmegaFilterConfigurationDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private ClustalWFilterConfiguration myConfig;
+    private ClustalOmegaFilterConfiguration myConfig;
     private JButton btnCancel;
     private JButton btnOK;
     private JPanel jPanel4;
@@ -39,7 +39,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
     private JPanel panel;
     private JButton btnAddNewRule;
 
-    private List<ClustalWRuleFragmentUI> ruleFragments = new LinkedList<ClustalWRuleFragmentUI>();
+    private List<ClustalOmegaRuleFragmentUI> ruleFragments = new LinkedList<ClustalOmegaRuleFragmentUI>();
     private JPanel panel_1;
     private JPanel panel_2;
     private JLabel lblSequenceData;
@@ -51,7 +51,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
     private JMenuItem mntmCopy;
     private JMenuItem mntmPaste;
 
-    public ClustalWFilterConfigurationDialog(Frame parent) {
+    public ClustalOmegaFilterConfigurationDialog(Frame parent) {
         super(parent, true);
         initComponents();
     }
@@ -63,7 +63,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         this.btnCancel = new JButton();
 
         setDefaultCloseOperation(2);
-        setTitle("Configure ClustalW Filter");
+        setTitle("Configure ClustalOmega Filter");
         GridLayout gridLayout = new GridLayout(0, 1);
         gridLayout.setVgap(5);
         gridLayout.setHgap(5);
@@ -93,7 +93,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         btnAddNewRule = new JButton("Add new rule");
         btnAddNewRule.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                ClustalWRule newRule = ClustalWRule.defaultRule();
+                ClustalOmegaRule newRule = ClustalOmegaRule.defaultRule();
                 addNewRule(newRule);
                 pack();
             }
@@ -117,7 +117,7 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         panel_1.add(rulesPanel, BorderLayout.NORTH);
         rulesPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-        ClustalWRuleFragmentUI initialRuleUI = new ClustalWRuleFragmentUI();
+        ClustalOmegaRuleFragmentUI initialRuleUI = new ClustalOmegaRuleFragmentUI();
         rulesPanel.add(initialRuleUI);
 
         panel_2 = new JPanel();
@@ -171,8 +171,8 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         pack();
     }
 
-    private void addNewRule(ClustalWRule newRule) {
-        final ClustalWRuleFragmentUI newUI = new ClustalWRuleFragmentUI();
+    private void addNewRule(ClustalOmegaRule newRule) {
+        final ClustalOmegaRuleFragmentUI newUI = new ClustalOmegaRuleFragmentUI();
         rulesPanel.add(newUI);
         ruleFragments.add(newUI);
         newUI.setRule(newRule);
@@ -189,14 +189,14 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
 
     private void btnOKActionPerformed(ActionEvent evt) {
         this.myConfig.getRules().clear();
-        for (ClustalWRuleFragmentUI fragment : ruleFragments) {
+        for (ClustalOmegaRuleFragmentUI fragment : ruleFragments) {
             this.myConfig.getRules().add(fragment.getRule());
         }
         myConfig.setSequenceData(txtSequenceData.getText());
         if (rdbtnAtLeastOne.isSelected()) {
-            myConfig.setConjunction(ClustalWRuleConjunction.OR);
+            myConfig.setConjunction(ClustalOmegaRuleConjunction.OR);
         } else {
-            myConfig.setConjunction(ClustalWRuleConjunction.AND);
+            myConfig.setConjunction(ClustalOmegaRuleConjunction.AND);
         }
         setVisible(false);
     }
@@ -209,8 +209,8 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 JFrame frame = new JFrame();
-                ClustalWFilterConfiguration config = new ClustalWFilterConfiguration();
-                ClustalWFilterConfiguration newConfig = new ClustalWFilterConfigurationDialog(
+                ClustalOmegaFilterConfiguration config = new ClustalOmegaFilterConfiguration();
+                ClustalOmegaFilterConfiguration newConfig = new ClustalOmegaFilterConfigurationDialog(
                         frame).showDialog(config);
                 System.out.println("Old config:\n\n" + config.toString()
                         + "\n\n");
@@ -219,25 +219,25 @@ public class ClustalWFilterConfigurationDialog extends JDialog {
         });
     }
 
-    public ClustalWFilterConfiguration showDialog(
-            ClustalWFilterConfiguration initialConfig) {
+    public ClustalOmegaFilterConfiguration showDialog(
+            ClustalOmegaFilterConfiguration initialConfig) {
         this.myConfig = initialConfig;
         if (this.myConfig == null) {
-            this.myConfig = new ClustalWFilterConfiguration(
-                    new ArrayList<ClustalWRule>(), "",
-                    ClustalWRuleConjunction.AND);
+            this.myConfig = new ClustalOmegaFilterConfiguration(
+                    new ArrayList<ClustalOmegaRule>(), "",
+                    ClustalOmegaRuleConjunction.AND);
         }
         if (myConfig.getRules().isEmpty()) {
-            this.myConfig.getRules().add(ClustalWRule.defaultRule());
+            this.myConfig.getRules().add(ClustalOmegaRule.defaultRule());
         }
         rulesPanel.removeAll();
         ruleFragments.clear();
-        for (ClustalWRule rule : myConfig.getRules()) {
+        for (ClustalOmegaRule rule : myConfig.getRules()) {
             addNewRule(rule);
         }
         txtSequenceData.setText(myConfig.getSequenceData());
         if (myConfig.getConjunction() == null) {
-            myConfig.setConjunction(ClustalWRuleConjunction.AND);
+            myConfig.setConjunction(ClustalOmegaRuleConjunction.AND);
         }
         switch (myConfig.getConjunction()) {
         case OR:

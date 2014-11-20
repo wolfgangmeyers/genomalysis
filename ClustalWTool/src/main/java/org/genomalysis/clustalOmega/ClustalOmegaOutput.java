@@ -1,6 +1,6 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
-public class ClustalWOutput {
+public class ClustalOmegaOutput {
 
     private int identityCount;
     private int strongCount;
@@ -8,10 +8,10 @@ public class ClustalWOutput {
     private int sequenceLength;
     private String rawOutput = "";
 
-    public ClustalWOutput() {
+    public ClustalOmegaOutput() {
     }
 
-    public ClustalWOutput(String raw_output, int sequenceLength,
+    public ClustalOmegaOutput(String raw_output, int sequenceLength,
             int identityCount, int strongCount, int weakCount) {
         this.rawOutput = raw_output;
         this.sequenceLength = sequenceLength;

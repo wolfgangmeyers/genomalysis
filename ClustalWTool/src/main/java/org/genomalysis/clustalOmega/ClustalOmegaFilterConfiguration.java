@@ -1,21 +1,21 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ClustalWFilterConfiguration implements Serializable {
+public class ClustalOmegaFilterConfiguration implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private List<ClustalWRule> rules = new LinkedList<ClustalWRule>();
+    private List<ClustalOmegaRule> rules = new LinkedList<ClustalOmegaRule>();
     private String sequenceData = "";
-    private ClustalWRuleConjunction conjunction;
+    private ClustalOmegaRuleConjunction conjunction;
 
-    public List<ClustalWRule> getRules() {
+    public List<ClustalOmegaRule> getRules() {
         return rules;
     }
 
-    public void setRules(List<ClustalWRule> rules) {
+    public void setRules(List<ClustalOmegaRule> rules) {
         this.rules = rules;
     }
 
@@ -27,15 +27,15 @@ public class ClustalWFilterConfiguration implements Serializable {
         this.sequenceData = sequenceData;
     }
 
-    public ClustalWRuleConjunction getConjunction() {
+    public ClustalOmegaRuleConjunction getConjunction() {
         return conjunction;
     }
 
-    public void setConjunction(ClustalWRuleConjunction conjunction) {
+    public void setConjunction(ClustalOmegaRuleConjunction conjunction) {
         this.conjunction = conjunction;
     }
 
-    public ClustalWFilterConfiguration() {
+    public ClustalOmegaFilterConfiguration() {
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ClustalWFilterConfiguration implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ClustalWFilterConfiguration other = (ClustalWFilterConfiguration) obj;
+        ClustalOmegaFilterConfiguration other = (ClustalOmegaFilterConfiguration) obj;
         if (conjunction != other.conjunction)
             return false;
         if (rules == null) {
@@ -74,8 +74,8 @@ public class ClustalWFilterConfiguration implements Serializable {
         return true;
     }
 
-    public ClustalWFilterConfiguration(List<ClustalWRule> rules,
-            String sequenceData, ClustalWRuleConjunction conjunction) {
+    public ClustalOmegaFilterConfiguration(List<ClustalOmegaRule> rules,
+            String sequenceData, ClustalOmegaRuleConjunction conjunction) {
         super();
         this.rules = rules;
         this.sequenceData = sequenceData;
@@ -92,7 +92,7 @@ public class ClustalWFilterConfiguration implements Serializable {
 
     @Override
     public String toString() {
-        return "ClustalWFilterConfiguration [rules=" + rules
+        return "ClustalOmegaFilterConfiguration [rules=" + rules
                 + ", sequenceData=" + sequenceDataPreview() + ", conjunction="
                 + conjunction + "]";
     }

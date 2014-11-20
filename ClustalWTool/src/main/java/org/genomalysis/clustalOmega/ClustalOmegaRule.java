@@ -1,18 +1,18 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
 
 
 import java.io.Serializable;
 
-public class ClustalWRule implements Serializable {
+public class ClustalOmegaRule implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private boolean weak;
     private boolean strong;
     private boolean identity;
-    private ClustalWRuleComparisonType comparisonType;
+    private ClustalOmegaRuleComparisonType comparisonType;
     private int amount;
-    private ClustalWRuleAmountType amountType;
+    private ClustalOmegaRuleAmountType amountType;
 
     public boolean isWeak() {
         return weak;
@@ -38,11 +38,11 @@ public class ClustalWRule implements Serializable {
         this.identity = identity;
     }
 
-    public ClustalWRuleComparisonType getComparisonType() {
+    public ClustalOmegaRuleComparisonType getComparisonType() {
         return comparisonType;
     }
 
-    public void setComparisonType(ClustalWRuleComparisonType comparisonType) {
+    public void setComparisonType(ClustalOmegaRuleComparisonType comparisonType) {
         this.comparisonType = comparisonType;
     }
 
@@ -54,17 +54,17 @@ public class ClustalWRule implements Serializable {
         this.amount = amount;
     }
 
-    public ClustalWRuleAmountType getAmountType() {
+    public ClustalOmegaRuleAmountType getAmountType() {
         return amountType;
     }
 
-    public void setAmountType(ClustalWRuleAmountType amountType) {
+    public void setAmountType(ClustalOmegaRuleAmountType amountType) {
         this.amountType = amountType;
     }
 
-    public ClustalWRule(boolean weak, boolean strong, boolean identity,
-            ClustalWRuleComparisonType comparisonType, int amount,
-            ClustalWRuleAmountType amountType) {
+    public ClustalOmegaRule(boolean weak, boolean strong, boolean identity,
+            ClustalOmegaRuleComparisonType comparisonType, int amount,
+            ClustalOmegaRuleAmountType amountType) {
         super();
         this.weak = weak;
         this.strong = strong;
@@ -74,14 +74,14 @@ public class ClustalWRule implements Serializable {
         this.amountType = amountType;
     }
 
-    public ClustalWRule() {
+    public ClustalOmegaRule() {
 
     }
 
-    public static ClustalWRule defaultRule() {
-        return new ClustalWRule(true, true, true,
-                ClustalWRuleComparisonType.EQ, 50,
-                ClustalWRuleAmountType.PERCENTAGE);
+    public static ClustalOmegaRule defaultRule() {
+        return new ClustalOmegaRule(true, true, true,
+                ClustalOmegaRuleComparisonType.EQ, 50,
+                ClustalOmegaRuleAmountType.PERCENTAGE);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ClustalWRule implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ClustalWRule other = (ClustalWRule) obj;
+        ClustalOmegaRule other = (ClustalOmegaRule) obj;
         if (amount != other.amount)
             return false;
         if (amountType != other.amountType)
@@ -125,13 +125,13 @@ public class ClustalWRule implements Serializable {
 
     @Override
     public String toString() {
-        return "ClustalWRuleFragment [weak=" + weak + ", strong=" + strong
+        return "ClustalOmegaRuleFragment [weak=" + weak + ", strong=" + strong
                 + ", identity=" + identity + ", comparisonType="
                 + comparisonType + ", amount=" + amount + ", amountType="
                 + amountType + "]";
     }
 
-    public boolean testOutput(ClustalWOutput output) {
+    public boolean testOutput(ClustalOmegaOutput output) {
         int amount = getAmount(output);
         switch (getComparisonType()) {
         case GT:
@@ -143,7 +143,7 @@ public class ClustalWRule implements Serializable {
         }
     }
 
-    private int getAmount(ClustalWOutput output) {
+    private int getAmount(ClustalOmegaOutput output) {
         switch (getAmountType()) {
         case PERCENTAGE:
             return getAmountPercentage(output);
@@ -152,7 +152,7 @@ public class ClustalWRule implements Serializable {
         }
     }
 
-    private int getAmountTotalCount(ClustalWOutput output) {
+    private int getAmountTotalCount(ClustalOmegaOutput output) {
         int result = 0;
         if (weak) {
             result += output.getWeakCount();
@@ -166,7 +166,7 @@ public class ClustalWRule implements Serializable {
         return result;
     }
 
-    private int getAmountPercentage(ClustalWOutput output) {
+    private int getAmountPercentage(ClustalOmegaOutput output) {
         int result = 0;
         if (weak) {
             result += (int) (output.getWeakPercentage() * 100);

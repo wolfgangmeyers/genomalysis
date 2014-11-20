@@ -1,4 +1,4 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,35 +12,35 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.LineBorder;
 
-public class ClustalWRuleFragmentUI extends JPanel {
+public class ClustalOmegaRuleFragmentUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     
     
-    public ClustalWRule getRule() {
-        ClustalWRule rule = new ClustalWRule();
+    public ClustalOmegaRule getRule() {
+        ClustalOmegaRule rule = new ClustalOmegaRule();
         rule.setWeak(chckbxWeak.isSelected());
         rule.setStrong(chckbxStrong.isSelected());
         rule.setIdentity(chckbxIdentity.isSelected());
-        rule.setComparisonType((ClustalWRuleComparisonType) cbComparisonType
+        rule.setComparisonType((ClustalOmegaRuleComparisonType) cbComparisonType
                 .getSelectedItem());
-        rule.setAmountType((ClustalWRuleAmountType) cbAmountType
+        rule.setAmountType((ClustalOmegaRuleAmountType) cbAmountType
                 .getSelectedItem());
         rule.setAmount((Integer) spinnerAmount.getValue());
         return rule;
     }
 
-    public void setRule(ClustalWRule rule) {
+    public void setRule(ClustalOmegaRule rule) {
         chckbxWeak.setSelected(rule.isWeak());
         chckbxStrong.setSelected(rule.isStrong());
         chckbxIdentity.setSelected(rule.isIdentity());
         if (rule.getComparisonType() == null) {
-            rule.setComparisonType(ClustalWRuleComparisonType.GT);
+            rule.setComparisonType(ClustalOmegaRuleComparisonType.GT);
         }
         cbComparisonType.setSelectedItem(rule.getComparisonType());
         if (rule.getAmountType() == null) {
-            rule.setAmountType(ClustalWRuleAmountType.PERCENTAGE);
+            rule.setAmountType(ClustalOmegaRuleAmountType.PERCENTAGE);
         }
         cbAmountType.setSelectedItem(rule.getAmountType());
         spinnerAmount.setValue(rule.getAmount());
@@ -51,13 +51,13 @@ public class ClustalWRuleFragmentUI extends JPanel {
     private JCheckBox chckbxStrong;
     private JCheckBox chckbxIdentity;
     private JSpinner spinnerAmount;
-    private JComboBox<ClustalWRuleComparisonType> cbComparisonType;
-    private JComboBox<ClustalWRuleAmountType> cbAmountType;
+    private JComboBox<ClustalOmegaRuleComparisonType> cbComparisonType;
+    private JComboBox<ClustalOmegaRuleAmountType> cbAmountType;
 
     /**
      * Create the panel.
      */
-    public ClustalWRuleFragmentUI() {
+    public ClustalOmegaRuleFragmentUI() {
         setBorder(new LineBorder(new Color(0, 0, 0)));
         setLayout(new BorderLayout(0, 0));
 
@@ -79,19 +79,19 @@ public class ClustalWRuleFragmentUI extends JPanel {
         JLabel lblMustBe = new JLabel("Must be:");
         panel.add(lblMustBe);
 
-        cbComparisonType = new JComboBox<ClustalWRuleComparisonType>();
+        cbComparisonType = new JComboBox<ClustalOmegaRuleComparisonType>();
         panel.add(cbComparisonType);
         cbComparisonType
-                .setModel(new DefaultComboBoxModel<ClustalWRuleComparisonType>(
-                        ClustalWRuleComparisonType.values()));
+                .setModel(new DefaultComboBoxModel<ClustalOmegaRuleComparisonType>(
+                        ClustalOmegaRuleComparisonType.values()));
 
         spinnerAmount = new JSpinner();
         panel.add(spinnerAmount);
 
-        cbAmountType = new JComboBox<ClustalWRuleAmountType>();
+        cbAmountType = new JComboBox<ClustalOmegaRuleAmountType>();
         panel.add(cbAmountType);
-        cbAmountType.setModel(new DefaultComboBoxModel<ClustalWRuleAmountType>(
-                ClustalWRuleAmountType.values()));
+        cbAmountType.setModel(new DefaultComboBoxModel<ClustalOmegaRuleAmountType>(
+                ClustalOmegaRuleAmountType.values()));
 
         JPanel panel_1 = new JPanel();
         add(panel_1, BorderLayout.SOUTH);

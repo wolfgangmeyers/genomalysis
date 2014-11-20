@@ -1,5 +1,5 @@
-package org.genomalysis.clustalw;
+package org.genomalysis.clustalOmega;
 
-public enum ClustalWRuleConjunction {
+public enum ClustalOmegaRuleConjunction {
     AND, OR
 }
