@@ -12,9 +12,7 @@ import org.genomalysis.plugin.configuration.dialogs.GenericConfigurator;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.InitializationException;
 import org.genomalysis.proteintools.ProteinSequence;
-@Documentation("Trans Membrane Filter:  "
-        + "This filter only accepts sequences that have "
-        + "the specified number of trans membrane segments.")
+@Documentation("TMPredictionFilter: this filter uses the single sequence version of TMAP to predict transmembrane segments in protein sequences. TMAP is an algorithm that was developed using weighted positional frequencies of amino acids in multiple sequence alignments of homologous proteins containing transmembrane segments. This is very much an oversimplification of the developers' process. By differentially scoring amino acids of transmembrane and membrane flanking segments vs. non-transmembrane segments they were able to obtain far more accurate predictions than previous computational methodologies.\n \n \nReferences: \n \nPersson B, Argos P. Prediction of transmembrane segments in proteins utilising multiple sequence alignments. J Mol Biol. 1994 Mar 25;237(2):182-92. \n \nPersson B, Argos P. Topology prediction of membrane proteins. Protein Sci. 1996 Feb;5(2):363-71. ")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
 @Configurator(GenericConfigurator.class)
 public class TMPredictionFilter implements IProteinSequenceFilter {
