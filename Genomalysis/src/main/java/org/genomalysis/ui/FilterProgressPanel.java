@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 
 import org.genomalysis.control.FilterProgressControl;
 import org.genomalysis.control.IObserver;
+import java.awt.Font;
+import java.awt.Component;
 
 /**
  *
@@ -41,6 +43,7 @@ public class FilterProgressPanel extends javax.swing.JPanel implements
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel2.setFont(new Font("Tahoma", Font.BOLD, 11));
         lblEstimatedTimeRemaining = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         lblSequencesRead = new javax.swing.JLabel();
@@ -55,16 +58,18 @@ public class FilterProgressPanel extends javax.swing.JPanel implements
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel11.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+        jLabel11.setFont(new Font("Tahoma", Font.BOLD, 11));
         progressBarComplete = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.BorderLayout(20, 20));
 
         jPanel1.setLayout(new java.awt.GridLayout(6, 2, 5, 5));
 
-        jLabel2.setText("Estimated Time Remaining:");
+        jLabel2.setText("Input/Output Parameters");
         jPanel1.add(jLabel2);
 
-        lblEstimatedTimeRemaining.setText("0:0:0");
+        lblEstimatedTimeRemaining.setText("");
         jPanel1.add(lblEstimatedTimeRemaining);
 
         jLabel1.setText("Sequences Read:");
