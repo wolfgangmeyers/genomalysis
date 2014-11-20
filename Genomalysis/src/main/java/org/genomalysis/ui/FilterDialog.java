@@ -74,6 +74,7 @@ public class FilterDialog extends javax.swing.JDialog {
     public FilterDialog(java.awt.Frame parent, HistoryManager historyManager,
             boolean modal) {
         super(parent, modal);
+        setResizable(false);
         this.historyManager = historyManager;
         initComponents();
         filterControl = new FilterControl(historyManager);
