@@ -14,6 +14,16 @@ import javax.swing.WindowConstants;
 
 import org.genomalysis.plugin.configuration.dialogs.DialogHelper;
 
+import javax.swing.JPopupMenu;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JMenuItem;
+
 /**
  *
  * @author ameyers
@@ -80,7 +90,18 @@ public class DocViewer extends javax.swing.JDialog {
         jTextArea1.setRows(5);
         jTextArea1.setWrapStyleWord(true);
         jScrollPane1.setViewportView(jTextArea1);
+        
+        popupMenu = new JPopupMenu();
+        addPopup(jTextArea1, popupMenu);
+        
+        mntmCopy = new JMenuItem("Copy");
+        popupMenu.add(mntmCopy);
+        this.mntmCopy.addActionListener(new ActionListener() {
 
+            public void actionPerformed(ActionEvent evt) {
+                menuViewSequenceCopyActionPerformed(evt);
+            }
+        });
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -105,6 +126,29 @@ public class DocViewer extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private JPopupMenu popupMenu;
+    private JMenuItem mntmCopy;
     // End of variables declaration//GEN-END:variables
 
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+		
+	}
+	private void menuViewSequenceCopyActionPerformed(ActionEvent evt) {
+        this.jTextArea1.copy();
+	}
 }
