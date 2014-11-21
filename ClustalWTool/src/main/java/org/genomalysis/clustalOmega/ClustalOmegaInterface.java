@@ -39,8 +39,8 @@ public class ClustalOmegaInterface {
             fout = null;
 
             ProcessBuilder builder = new ProcessBuilder(new String[] {
-                    "clustalo", "-infile=tmp/csinput.fsa",
-                    "-outfile=tmp/csoutput.aln" });
+                    "clustalo", "-i", "tmp/csinput.fsa", "-o", "tmp/csoutput.aln", "--outfmt=clustal", "-v", "--force"
+                     });
             Process p = builder.start();
             p.waitFor();
 
