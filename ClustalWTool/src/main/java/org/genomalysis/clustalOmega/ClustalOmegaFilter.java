@@ -10,7 +10,7 @@ import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.InitializationException;
 import org.genomalysis.proteintools.ProteinSequence;
 
-@Documentation("The ClustalOmega filter uses the ClustalOmega program to determine how alike proteins are. You can specify how alike proteins must be (to your target protein) by editing the filter configuration.")
+@Documentation("ClustalOmegaFilter: This filter uses Clustal Omega to do sequential pairwise alignments of a user-entered protein or DNA sequence to sequences in a fasta file. Yes, you read correctly, Clustal for pairwise alignments; turns out you can do that. Each sequence in the fasta file either passes or fails the filter based on rules, designated by the user, that specify how similar to the user-entered sequence the fasta file sequences have to be. The user can choose combinations of strong groups, weak groups, identities and designate specific numbers of matches or percentages. Additionally, the user can designate multiple rules in order to further restrict results. \n \nClustal Omega is typically used for multiple sequence alignments and employs multiple algorithms and options to create high quality alignments of large numbers of protein or DNA sequences. The usage here is atypical, but works well. \n \nClustal home page: http://www.clustal.org/")
 @Author(EmailAddress = "wolfgangmeyers@gmail.com", Name = "Wolfgang Meyers")
 @Configurator(ClustalOmegaFilterConfigurator.class)
 public class ClustalOmegaFilter implements IProteinSequenceFilter, Serializable {
