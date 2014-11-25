@@ -62,6 +62,7 @@ public class ClustalOmegaFilterConfigurationDialog extends JDialog {
         this.btnOK = new JButton();
         this.btnCancel = new JButton();
 
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(2);
         setTitle("Configure ClustalOmega Filter");
         GridLayout gridLayout = new GridLayout(0, 1);

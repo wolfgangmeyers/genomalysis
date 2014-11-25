@@ -75,7 +75,8 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
         txtTestRegex = new javax.swing.JTextArea();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
+        setLocationRelativeTo(null);
+        
         jPanel2.setLayout(new java.awt.GridLayout(2, 1, 5, 5));
 
         jPanel1.setLayout(new java.awt.BorderLayout(5, 5));

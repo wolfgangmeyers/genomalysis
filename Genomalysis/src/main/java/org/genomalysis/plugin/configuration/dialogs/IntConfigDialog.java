@@ -41,7 +41,8 @@ public class IntConfigDialog extends javax.swing.JDialog {
         btnOK = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Enter Integer Value");
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridLayout(2, 0, 20, 20));

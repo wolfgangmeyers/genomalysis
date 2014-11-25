@@ -42,6 +42,7 @@ public class DocViewer extends javax.swing.JDialog {
         if (instance == null) {
             Frame frame = DialogHelper.getRootFrame(base);
             instance = new DocViewer(frame);
+            
         }
         instance.jTextArea1.setText(doc);
         instance.setTitle(title);
@@ -53,6 +54,7 @@ public class DocViewer extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         this.setSize(500, 500);
+        
     }
 
     /**
@@ -69,7 +71,7 @@ public class DocViewer extends javax.swing.JDialog {
         btnOK = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setLayout(new java.awt.BorderLayout());

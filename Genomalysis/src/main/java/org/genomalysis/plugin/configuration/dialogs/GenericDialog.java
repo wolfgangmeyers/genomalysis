@@ -24,6 +24,7 @@ public class GenericDialog extends javax.swing.JDialog {
     public GenericDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
