@@ -18,9 +18,7 @@ import org.genomalysis.proteintools.ProteinSequence;
  *
  * @author ameyers
  */
-@Documentation("Sequence Length Filter:  "
-        + "This filter only accepts sequences that are "
-        + "between the specified minimum and maximum lengths.")
+@Documentation("SequenceLengthFilter: This filter, quite simply, accepts protein or DNA sequences that are between two user-designated lengths, minimum and maximum. This is a very fast filter and if the user knows that she is looking for sequences that are in a particular range of lengths, then executing this filter first will dramatically increase the processing speed of the overall method.")
 @Author(Name = "Wolfgang Meyers", EmailAddress = "wolfgangmeyers@gmail.com")
 @Configurator(GenericConfigurator.class)
 public class SequenceLengthFilter implements IProteinSequenceFilter {
