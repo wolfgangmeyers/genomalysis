@@ -1,6 +1,7 @@
 package org.genomalysis.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -40,6 +41,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
@@ -47,6 +49,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import org.apache.commons.io.IOUtils;
 import org.genomalysis.control.IObserver;
@@ -184,11 +189,13 @@ public class FrmMain extends JFrame implements
     private JMenuItem mntmDocumentation;
     private JMenuItem mntmGitProjectPage;
     private JMenuItem mntmProjectHomePage;
+    private JMenuItem mntmAbout;
 
     @SuppressWarnings("serial")
     public FrmMain() {
         initComponents();
         final FrmMain mainform = this;
+        mainform.setLocationRelativeTo(null);
         File pluginDir = new File("plugins");
         pluginDir.mkdir();
         this.pluginManager.addObserver(this);
@@ -493,7 +500,7 @@ public class FrmMain extends JFrame implements
         this.clipboardMenu.add(this.menuViewSequeneCopy);
 
         setDefaultCloseOperation(3);
-        setTitle("Genomalysis - Protein Sequence Mining and Viewing Software");
+        setTitle("Genomalysis - Protein and DNA Sequence Mining and Viewing Software");
 
         this.mainPanel.setLayout(new BorderLayout());
 
@@ -953,7 +960,6 @@ public class FrmMain extends JFrame implements
         
         mnInfo = new JMenu("Info");
         jMenuBar1.add(mnInfo);
-        
         mntmProjectHomePage = new JMenuItem("Project Home Page");
         mnInfo.add(mntmProjectHomePage);
         this.mntmProjectHomePage.addActionListener(new ActionListener() {
@@ -972,6 +978,15 @@ public class FrmMain extends JFrame implements
         });
         mntmDocumentation = new JMenuItem("Documentation");
         mnInfo.add(mntmDocumentation);
+        
+        mntmAbout = new JMenuItem("About");
+        mnInfo.add(mntmAbout);
+        this.mntmAbout.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                menumntmAbout(evt);
+            }
+        });
         
         this.mntmDocumentation.addActionListener(new ActionListener() {
 
@@ -1381,6 +1396,29 @@ public class FrmMain extends JFrame implements
 
     private void menuViewSequenceCutActionPerformed(ActionEvent evt) {
         this.txtViewSequence.cut();
+    }
+    private void menumntmAbout(ActionEvent evt) {
+    	{     
+    	    JFrame frame2 = new JFrame("About Genomalysis");
+    	    frame2.setResizable(false);
+    	    frame2.setVisible(true);
+    	    frame2.setSize(300,425);
+    	    JTextPane txtpnasrdrgfjasdjfasdfAskdf = new JTextPane();
+    	    txtpnasrdrgfjasdjfasdfAskdf.setHighlighter(null);
+    		txtpnasrdrgfjasdjfasdfAskdf.setText("Created by:\nBenjamin Patterson and Wolfgang Meyers.\n \nConcept and research:\nBenjamin Patterson\n \nOriginal code in Java/Swing:\nWolfgang Meyers\n \nFinal code edit and version:\nBenjamin Patterson\n \nDocumentation:\nBenjamin Patterson and Wolfgang Meyers\n \nCopyright:\nYou are free to use, incorporate and modify Genomalysis code however you wish.\n \nTHE USE OF GENOMALYSIS AND/OR ITS CODE IS AT YOUR OWN RISK. THERE ARE NO WARRANTIES EXPRESS AND/OR IMPLIED.");
+    		txtpnasrdrgfjasdjfasdfAskdf.setEditable(false);
+    		txtpnasrdrgfjasdjfasdfAskdf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    		frame2.add(txtpnasrdrgfjasdjfasdfAskdf, BorderLayout.CENTER);
+    		txtpnasrdrgfjasdjfasdfAskdf.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+
+    		StyledDocument doc = txtpnasrdrgfjasdjfasdfAskdf.getStyledDocument();
+    		SimpleAttributeSet center = new SimpleAttributeSet();
+    		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+    		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+    	    
+    	    frame2.setLocationRelativeTo(null);
+    	    
+    	  }
     }
     private void menumntmProjectHomePage(java.awt.event.ActionEvent evt){
     	try
