@@ -156,6 +156,7 @@ public class FilterDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Protein Sequences Filter");
+        setLocationRelativeTo(null);
 
         mainPanel.setLayout(new java.awt.BorderLayout());
 
