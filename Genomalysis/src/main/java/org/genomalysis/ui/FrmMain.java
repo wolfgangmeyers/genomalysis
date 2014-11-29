@@ -189,6 +189,8 @@ public class FrmMain extends JFrame implements
     private JLabel lblTotalSequences;
     private JLabel label;
 	private ISequenceIO sequenceIO = SequenceIOImpl.getDefaultIO();
+	private JPopupMenu popupMenu_1;
+	private JMenuItem mntmOpenFastaFile;
 	
     @SuppressWarnings("serial")
     public FrmMain() {
@@ -805,7 +807,7 @@ public class FrmMain extends JFrame implements
                                 
                                 this.lstViewSequences.setModel(new AbstractListModel<String>() {
 
-                                    String[] strings = new String[] { "Open fasta file to list sequences here" };
+                                    String[] strings = new String[] { "Right click to open a fasta file" };
 
                                     public int getSize() {
                                         return this.strings.length;
@@ -824,9 +826,20 @@ public class FrmMain extends JFrame implements
                                         });
                                 this.jScrollPane1.setViewportView(this.lstViewSequences);
                                 
+                                popupMenu_1 = new JPopupMenu();
+                                addPopup(lstViewSequences, popupMenu_1);
+                                
+                                mntmOpenFastaFile = new JMenuItem("Open Fasta File");
+                                popupMenu_1.add(mntmOpenFastaFile);
+                                this.mntmOpenFastaFile.addActionListener(new ActionListener() {
+
+                                    public void actionPerformed(ActionEvent evt) {
+                                        menuFileOpenFastaActionPerformed(evt);
+                                    }
+                                });
                                         this.pagingPanel.add(this.jScrollPane1, "Center");
                                         
-                                                this.btnViewSequenceFirstPage.setText("First");
+                                                this.btnViewSequenceFirstPage.setText("Page 1");
                                                 this.btnViewSequenceFirstPage.setEnabled(false);
                                                 this.btnViewSequenceFirstPage.addActionListener(new ActionListener() {
 
