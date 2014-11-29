@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -48,12 +46,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import org.apache.commons.io.IOUtils;
 import org.genomalysis.control.IObserver;
 import org.genomalysis.control.SequenceCacheControl;
 import org.genomalysis.control.SequencePagerControl;
@@ -65,7 +61,6 @@ import org.genomalysis.plugin.PluginInstanceManager;
 import org.genomalysis.plugin.PluginManager;
 import org.genomalysis.plugin.configuration.ConfigurationException;
 import org.genomalysis.plugin.configuration.IPropertyConfigurator;
-import org.genomalysis.plugin.configuration.ui.InstancePanel;
 import org.genomalysis.proteintools.IProteinDiagnosticsTool;
 import org.genomalysis.proteintools.IProteinSequenceFilter;
 import org.genomalysis.proteintools.InitializationException;
@@ -74,7 +69,10 @@ import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
 
+import org.genomalysis.proteintools.ISequenceIO;
+import org.genomalysis.proteintools.SequenceIOImpl;
 import java.awt.Component;
+import java.awt.FlowLayout;
 
 public class FrmMain extends JFrame implements
         org.genomalysis.control.IObserver {
@@ -88,7 +86,6 @@ public class FrmMain extends JFrame implements
     private HistoryManager historyManager = new HistoryManager(pluginManager, 5);
     private FilterDialog filterDialog = new FilterDialog(this, historyManager,
             true);
-    private InstancePanel<IProteinDiagnosticsTool> diagnosticInstancePanel = null;
     private SequenceCacheControl sequenceCacheControl = new SequenceCacheControl();
     private int selectedFilterInstanceIndex = -1;
     private JPopupMenu availableFiltersPopupMenu;
@@ -125,7 +122,6 @@ public class FrmMain extends JFrame implements
     private JPanel jPanel1;
     private JPanel jPanel10;
     private JPanel jPanel11;
-    private JPanel jPanel12;
     private JPanel jPanel13;
     private JPanel jPanel14;
     private JPanel jPanel15;
@@ -174,7 +170,6 @@ public class FrmMain extends JFrame implements
     private JPanel panelFilterInstances;
     private JPanel panelFilterPlugins;
     private JPanel panelFilterSequences;
-    private JPanel panelSequencesCache;
     private JPanel panelViewSequence;
     private JPanel panelViewSequences;
     private JScrollPane spSequenceFilters;
@@ -190,7 +185,11 @@ public class FrmMain extends JFrame implements
     private JMenuItem mntmGitProjectPage;
     private JMenuItem mntmProjectHomePage;
     private JMenuItem mntmAbout;
-
+    private JPanel panel;
+    private JLabel lblTotalSequences;
+    private JLabel label;
+	private ISequenceIO sequenceIO = SequenceIOImpl.getDefaultIO();
+	
     @SuppressWarnings("serial")
     public FrmMain() {
         initComponents();
@@ -796,7 +795,6 @@ public class FrmMain extends JFrame implements
         this.jPanel10 = new JPanel();
         this.jPanel11 = new JPanel();
         this.jLabel4 = new JLabel();
-        this.jPanel12 = new JPanel();
         this.btnRunDiagnostics = new javax.swing.JButton();
         this.btnAddToCache = new javax.swing.JButton();
         
@@ -807,7 +805,7 @@ public class FrmMain extends JFrame implements
                                 
                                 this.lstViewSequences.setModel(new AbstractListModel<String>() {
 
-                                    String[] strings = new String[] { "Open fasta file to view sequences here" };
+                                    String[] strings = new String[] { "Open fasta file to list sequences here" };
 
                                     public int getSize() {
                                         return this.strings.length;
@@ -890,6 +888,17 @@ public class FrmMain extends JFrame implements
                                                                                                                                         
                                                                                                                                                 this.pagingPanel.add(this.jPanel2, "Last");
                                                                                                                                                 
+                                                                                                                                                panel = new JPanel();
+                                                                                                                                                FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+                                                                                                                                                flowLayout.setAlignment(FlowLayout.LEFT);
+                                                                                                                                                jPanel2.add(panel, BorderLayout.SOUTH);
+                                                                                                                                                
+                                                                                                                                                lblTotalSequences = new JLabel("Total Sequences:");
+                                                                                                                                                panel.add(lblTotalSequences);
+                                                                                                                                                
+                                                                                                                                                label = new JLabel("0");
+                                                                                                                                                panel.add(label);
+                                                                                                                                                
                                                                                                                                                         this.panelViewSequences.add(this.pagingPanel, "West");
                                                                                                                                                         
                                                                                                                                                                 this.panelViewSequence.setLayout(new BorderLayout(0, 20));
@@ -916,7 +925,7 @@ public class FrmMain extends JFrame implements
                                                                                                                                                                                         this.jPanel10.setLayout(new BorderLayout());
                                                                                                                                                                                         
                                                                                                                                                                                                 this.jLabel4.setHorizontalAlignment(0);
-                                                                                                                                                                                                this.jLabel4.setText("Sequence Data");
+                                                                                                                                                                                                this.jLabel4.setText("Sequence:");
                                                                                                                                                                                                 this.jPanel11.add(this.jLabel4);
                                                                                                                                                                                                 
                                                                                                                                                                                                         this.jPanel10.add(this.jPanel11, "North");
@@ -1003,6 +1012,15 @@ public class FrmMain extends JFrame implements
             try {
                 File fastaFile = this.fileDlg.getSelectedFile();
                 loadFastaFile(fastaFile);
+                FileInputStream fin = new FileInputStream(fastaFile);
+                Iterator<ProteinSequence> sequenceIterator = sequenceIO
+                        .readSequences(fin);
+                int counter = 0;
+                while (sequenceIterator.hasNext()) {
+                    sequenceIterator.next();
+                    counter++;
+                }
+                label.setText(String.valueOf(counter));
             } catch (IOException ex) {
                 Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE,
                         null, ex);
@@ -1392,10 +1410,7 @@ public class FrmMain extends JFrame implements
 
         this.selectedFilterInstanceIndex = index;
         this.lstFilterInstances.setSelectedIndex(index);
-    }
-
-    private void menuViewSequenceCutActionPerformed(ActionEvent evt) {
-        this.txtViewSequence.cut();
+    
     }
     private void menumntmAbout(ActionEvent evt) {
     	{     
@@ -1408,7 +1423,7 @@ public class FrmMain extends JFrame implements
     		txtpnasrdrgfjasdjfasdfAskdf.setText("Created by:\nBenjamin Patterson and Wolfgang Meyers.\n \nConcept and research:\nBenjamin Patterson\n \nOriginal code in Java/Swing:\nWolfgang Meyers\n \nFinal code edit and version:\nBenjamin Patterson\n \nDocumentation:\nBenjamin Patterson and Wolfgang Meyers\n \nCopyright:\nYou are free to use, incorporate and modify Genomalysis code however you wish.\n \nTHE USE OF GENOMALYSIS AND/OR ITS CODE IS AT YOUR OWN RISK. THERE ARE NO WARRANTIES EXPRESS AND/OR IMPLIED.");
     		txtpnasrdrgfjasdjfasdfAskdf.setEditable(false);
     		txtpnasrdrgfjasdjfasdfAskdf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-    		frame2.add(txtpnasrdrgfjasdjfasdfAskdf, BorderLayout.CENTER);
+    		frame2.getContentPane().add(txtpnasrdrgfjasdjfasdfAskdf, BorderLayout.CENTER);
     		txtpnasrdrgfjasdjfasdfAskdf.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 
     		StyledDocument doc = txtpnasrdrgfjasdjfasdfAskdf.getStyledDocument();
