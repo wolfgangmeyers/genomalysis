@@ -807,7 +807,7 @@ public class FrmMain extends JFrame implements
                                 
                                 this.lstViewSequences.setModel(new AbstractListModel<String>() {
 
-                                    String[] strings = new String[] { "Right click to open a fasta file" };
+                                    String[] strings = new String[] { "Right click to open a FASTA file" };
 
                                     public int getSize() {
                                         return this.strings.length;
@@ -829,7 +829,7 @@ public class FrmMain extends JFrame implements
                                 popupMenu_1 = new JPopupMenu();
                                 addPopup(lstViewSequences, popupMenu_1);
                                 
-                                mntmOpenFastaFile = new JMenuItem("Open Fasta File");
+                                mntmOpenFastaFile = new JMenuItem("Open FASTA File");
                                 popupMenu_1.add(mntmOpenFastaFile);
                                 this.mntmOpenFastaFile.addActionListener(new ActionListener() {
 
@@ -958,7 +958,7 @@ public class FrmMain extends JFrame implements
 
         this.jMenu1.setText("File");
 
-        this.menuFileOpenFasta.setText("Open Fasta File");
+        this.menuFileOpenFasta.setText("Open FASTA File");
         this.menuFileOpenFasta.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent evt) {
@@ -1021,7 +1021,7 @@ public class FrmMain extends JFrame implements
     }
 
     private void menuFileOpenFastaActionPerformed(ActionEvent evt) {
-        if (this.fileDlg.showDialog(this, "Open Fasta File") == 0) {
+        if (this.fileDlg.showDialog(this, "Open FASTA File") == 0) {
             try {
                 File fastaFile = this.fileDlg.getSelectedFile();
                 loadFastaFile(fastaFile);
@@ -1222,7 +1222,7 @@ public class FrmMain extends JFrame implements
 
     private void btnLoadCacheActionPerformed(ActionEvent evt) {
         if (this.fileDlg.showDialog(this.mainPanel,
-                "Select a fasta file to load") == 0) {
+                "Select a FASTA file to load") == 0) {
             try {
                 this.sequenceCacheControl.readFromFile(this.fileDlg
                         .getSelectedFile().getName(), this.fileDlg
