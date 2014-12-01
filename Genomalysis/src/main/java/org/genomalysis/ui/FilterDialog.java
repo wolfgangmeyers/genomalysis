@@ -242,7 +242,7 @@ public class FilterDialog extends javax.swing.JDialog {
         jLabel2.setText("Output File:");
         jPanel4.add(jLabel2);
 
-        jLabel3.setText("Options:");
+        jLabel3.setText("I/O Controls:");
         jPanel4.add(jLabel3);
 
         topPanel.add(jPanel4, java.awt.BorderLayout.WEST);
