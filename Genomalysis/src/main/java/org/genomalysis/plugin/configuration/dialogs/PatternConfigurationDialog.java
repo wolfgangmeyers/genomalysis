@@ -223,7 +223,7 @@ public class PatternConfigurationDialog extends javax.swing.JDialog {
     }// GEN-LAST:event_btnCancelActionPerformed
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnOKActionPerformed
-        oldValue = newValue;
+        oldValue = Pattern.compile(txtPattern.getText());
         setVisible(false);
     }// GEN-LAST:event_btnOKActionPerformed
 
