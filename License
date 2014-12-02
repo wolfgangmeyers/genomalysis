@@ -1,6 +1,10 @@
 The MIT License (MIT)
 
-Copyright (c) 2014 Wolfgange Meyers, Benjamin Patterson.
+<<<<<<< HEAD
+Copyright (c) 2014 Wolfgang Meyers, Benjamin Patterson.
+=======
+Copyright (c) 2014 Wolfgang Meyers, Benjamin Patterson
+>>>>>>> 5781fbe24c9b35616225273c0c28e1046db84223
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
