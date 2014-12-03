@@ -91,7 +91,7 @@ public class ClustalOmegaFilterConfigurationDialog extends JDialog {
         panel = new JPanel();
         jPanel4.add(panel, BorderLayout.NORTH);
 
-        btnAddNewRule = new JButton("Add new rule");
+        btnAddNewRule = new JButton("Add New Rule");
         btnAddNewRule.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 ClustalOmegaRule newRule = ClustalOmegaRule.defaultRule();

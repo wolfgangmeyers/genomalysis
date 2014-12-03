@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.LineBorder;
+import java.awt.Rectangle;
+import java.awt.Dimension;
 
 public class ClustalOmegaRuleFragmentUI extends JPanel {
 
@@ -86,6 +88,8 @@ public class ClustalOmegaRuleFragmentUI extends JPanel {
                         ClustalOmegaRuleComparisonType.values()));
 
         spinnerAmount = new JSpinner();
+        spinnerAmount.setMinimumSize(new Dimension(60, 20));
+        spinnerAmount.setPreferredSize(new Dimension(60, 20));
         panel.add(spinnerAmount);
 
         cbAmountType = new JComboBox<ClustalOmegaRuleAmountType>();
@@ -96,7 +100,7 @@ public class ClustalOmegaRuleFragmentUI extends JPanel {
         JPanel panel_1 = new JPanel();
         add(panel_1, BorderLayout.SOUTH);
 
-        btnDeleteThisRule = new JButton("Delete this rule");
+        btnDeleteThisRule = new JButton("Delete This Rule");
         panel_1.add(btnDeleteThisRule);
 
     }
