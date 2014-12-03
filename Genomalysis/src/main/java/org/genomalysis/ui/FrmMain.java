@@ -1430,10 +1430,10 @@ public class FrmMain extends JFrame implements
     	    JFrame frame2 = new JFrame("About Genomalysis");
     	    frame2.setResizable(false);
     	    frame2.setVisible(true);
-    	    frame2.setSize(300,425);
+    	    frame2.setSize(300,385);
     	    JTextPane txtpnasrdrgfjasdjfasdfAskdf = new JTextPane();
     	    txtpnasrdrgfjasdjfasdfAskdf.setHighlighter(null);
-    		txtpnasrdrgfjasdjfasdfAskdf.setText("Created by:\nBenjamin Patterson and Wolfgang Meyers.\n \nConcept and research:\nBenjamin Patterson\n \nOriginal code in Java/Swing:\nWolfgang Meyers\n \nFinal code edit and version:\nBenjamin Patterson\n \nDocumentation:\nBenjamin Patterson and Wolfgang Meyers\n \nCopyright:\nYou are free to use, incorporate and modify Genomalysis code however you wish.\n \nTHE USE OF GENOMALYSIS AND/OR ITS CODE IS AT YOUR OWN RISK. THERE ARE NO WARRANTIES EXPRESS AND/OR IMPLIED.");
+    		txtpnasrdrgfjasdjfasdfAskdf.setText("Created by:\nBenjamin Patterson and Wolfgang Meyers.\n \nConcept and research:\nBenjamin Patterson\n \nOriginal code in Java/Swing:\nWolfgang Meyers\n \nFinal code edit and version:\nBenjamin Patterson\n \nDocumentation:\nBenjamin Patterson and Wolfgang Meyers\n \nCopyright:\nGenomalysis is open source and is distributed under the MIT license. You are generally free to copy, use and incorporate Genomalysis binaries and code, subject only to MIT license restrictions.");
     		txtpnasrdrgfjasdjfasdfAskdf.setEditable(false);
     		txtpnasrdrgfjasdjfasdfAskdf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     		frame2.getContentPane().add(txtpnasrdrgfjasdjfasdfAskdf, BorderLayout.CENTER);
