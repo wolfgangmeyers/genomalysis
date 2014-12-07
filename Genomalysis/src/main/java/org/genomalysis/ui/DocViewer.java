@@ -76,7 +76,7 @@ public class DocViewer extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        btnOK.setText("Filters Documentation");
+        btnOK.setText("User Guide");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOKActionPerformed(evt);
@@ -110,15 +110,18 @@ public class DocViewer extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnOKActionPerformed
     	try
         {
-          Runtime.getRuntime().exec("cmd /c start Documentation/FilterAlgorithms.odt");
+    	String pre="cmd /c start ";
+    	String path=System.getProperty("user.dir");
+    	String path2="\\UserGuide.pdf";
+    	String path3=pre+=path+=path2;
+        Runtime.getRuntime().exec(path3);
         } 
       catch (IOException e) 
         {
-          System.out.println(e);
+        System.out.println(e);
         }
     }// GEN-LAST:event_btnOKActionPerformed
 
