@@ -68,9 +68,9 @@ import org.genomalysis.proteintools.ProteinDiagnosticImageElement;
 import org.genomalysis.proteintools.ProteinDiagnosticResult;
 import org.genomalysis.proteintools.ProteinDiagnosticTextElement;
 import org.genomalysis.proteintools.ProteinSequence;
-
 import org.genomalysis.proteintools.ISequenceIO;
 import org.genomalysis.proteintools.SequenceIOImpl;
+
 import java.awt.Component;
 import java.awt.FlowLayout;
 
@@ -998,7 +998,7 @@ public class FrmMain extends JFrame implements
                 menumntmGitProjectPage(evt);
             }
         });
-        mntmDocumentation = new JMenuItem("Documentation");
+        mntmDocumentation = new JMenuItem("User Guide");
         mnInfo.add(mntmDocumentation);
         
         mntmAbout = new JMenuItem("About");
@@ -1433,7 +1433,7 @@ public class FrmMain extends JFrame implements
     	    frame2.setSize(300,385);
     	    JTextPane txtpnasrdrgfjasdjfasdfAskdf = new JTextPane();
     	    txtpnasrdrgfjasdjfasdfAskdf.setHighlighter(null);
-    		txtpnasrdrgfjasdjfasdfAskdf.setText("Created by:\nBenjamin Patterson and Wolfgang Meyers.\n \nConcept and research:\nBenjamin Patterson\n \nOriginal code in Java/Swing:\nWolfgang Meyers\n \nFinal code edit and version:\nBenjamin Patterson\n \nDocumentation:\nBenjamin Patterson and Wolfgang Meyers\n \nCopyright:\nGenomalysis is open source and is distributed under the MIT license. You are generally free to copy, use and incorporate Genomalysis binaries and code, subject only to MIT license restrictions.");
+    		txtpnasrdrgfjasdjfasdfAskdf.setText("Created by:\nBenjamin Patterson and Wolfgang Meyers.\n \nConcept and research:\nBenjamin Patterson\n \nOriginal code in Java/Swing:\nWolfgang Meyers\n \nFinal code edit and version:\nBenjamin Patterson\n \nDocumentation:\nBenjamin Patterson and Wolfgang Meyers\n \nCopyright:\nGenomalysis is open source and is distributed under the MIT license. You are generally free to copy, use and incorporate Genomalysis binaries and code, subject to MIT license restrictions.");
     		txtpnasrdrgfjasdjfasdfAskdf.setEditable(false);
     		txtpnasrdrgfjasdjfasdfAskdf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     		frame2.getContentPane().add(txtpnasrdrgfjasdjfasdfAskdf, BorderLayout.CENTER);
@@ -1469,14 +1469,17 @@ public class FrmMain extends JFrame implements
         }
     }
     private void menuViewmntmDocumentation(java.awt.event.ActionEvent evt){
-    	
     	try
         {
-          Runtime.getRuntime().exec("cmd /c start Documentation/FilterAlgorithms.odt");
+    	String pre="cmd /c start ";
+    	String path=System.getProperty("user.dir");
+    	String path2="\\UserGuide.pdf";
+    	String path3=pre+=path+=path2;
+        Runtime.getRuntime().exec(path3);
         } 
       catch (IOException e) 
         {
-          System.out.println(e);
+        System.out.println(e);
         }
     }
     private void menuViewSequeneCopyActionPerformed(ActionEvent evt) {
