@@ -807,7 +807,7 @@ public class FrmMain extends JFrame implements
                                 
                                 this.lstViewSequences.setModel(new AbstractListModel<String>() {
 
-                                    String[] strings = new String[] { "Right click to open a FASTA file" };
+                                    String[] strings = new String[] { "Right click to open a FASTA file." };
 
                                     public int getSize() {
                                         return this.strings.length;
